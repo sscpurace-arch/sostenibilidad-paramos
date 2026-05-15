@@ -1,0 +1,19 @@
+# Graphify Ignore
+node_modules/
+.next/
+.git/
+node_modules/
+dist/
+.venv/
+build/
+__pycache__/
+*.min.js
+*.map
+backup_v1/
+data_import/
+docs/
+scratch/
+scripts/
+02_import_datos_historicos.sql
+page_debug.html
+debug_*.html

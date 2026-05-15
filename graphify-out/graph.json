@@ -1,0 +1,5309 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "middleware.js",
+      "file_type": "code",
+      "source_file": "middleware.js",
+      "source_location": "L1",
+      "id": "middleware_js",
+      "community": 13,
+      "norm_label": "middleware.js"
+    },
+    {
+      "label": "middleware()",
+      "file_type": "code",
+      "source_file": "middleware.js",
+      "source_location": "L4",
+      "id": "sostenibilidad_paramos_middleware_middleware",
+      "community": 13,
+      "norm_label": "middleware()"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "middleware.js",
+      "source_location": "L72",
+      "id": "sostenibilidad_paramos_middleware_config",
+      "community": 13,
+      "norm_label": "config"
+    },
+    {
+      "label": "next.config.js",
+      "file_type": "code",
+      "source_file": "next.config.js",
+      "source_location": "L1",
+      "id": "next_config_js",
+      "community": 14,
+      "norm_label": "next.config.js"
+    },
+    {
+      "label": "withPWA",
+      "file_type": "code",
+      "source_file": "next.config.js",
+      "source_location": "L1",
+      "id": "sostenibilidad_paramos_next_config_withpwa",
+      "community": 14,
+      "norm_label": "withpwa"
+    },
+    {
+      "label": "nextConfig",
+      "file_type": "code",
+      "source_file": "next.config.js",
+      "source_location": "L7",
+      "id": "sostenibilidad_paramos_next_config_nextconfig",
+      "community": 14,
+      "norm_label": "nextconfig"
+    },
+    {
+      "label": "postcss.config.mjs",
+      "file_type": "code",
+      "source_file": "postcss.config.mjs",
+      "source_location": "L1",
+      "id": "postcss_config_mjs",
+      "community": 17,
+      "norm_label": "postcss.config.mjs"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "postcss.config.mjs",
+      "source_location": "L2",
+      "id": "sostenibilidad_paramos_postcss_config_config",
+      "community": 17,
+      "norm_label": "config"
+    },
+    {
+      "label": "tailwind.config.js",
+      "file_type": "code",
+      "source_file": "tailwind.config.js",
+      "source_location": "L1",
+      "id": "tailwind_config_js",
+      "community": 40,
+      "norm_label": "tailwind.config.js"
+    },
+    {
+      "label": "layout.js",
+      "file_type": "code",
+      "source_file": "app/layout.js",
+      "source_location": "L1",
+      "id": "app_layout_js",
+      "community": 10,
+      "norm_label": "layout.js"
+    },
+    {
+      "label": "nunito",
+      "file_type": "code",
+      "source_file": "app/layout.js",
+      "source_location": "L4",
+      "id": "app_layout_nunito",
+      "community": 10,
+      "norm_label": "nunito"
+    },
+    {
+      "label": "metadata",
+      "file_type": "code",
+      "source_file": "app/layout.js",
+      "source_location": "L11",
+      "id": "app_layout_metadata",
+      "community": 10,
+      "norm_label": "metadata"
+    },
+    {
+      "label": "viewport",
+      "file_type": "code",
+      "source_file": "app/layout.js",
+      "source_location": "L17",
+      "id": "app_layout_viewport",
+      "community": 10,
+      "norm_label": "viewport"
+    },
+    {
+      "label": "RootLayout()",
+      "file_type": "code",
+      "source_file": "app/layout.js",
+      "source_location": "L25",
+      "id": "app_layout_rootlayout",
+      "community": 10,
+      "norm_label": "rootlayout()"
+    },
+    {
+      "label": "layout.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/layout.jsx",
+      "source_location": "L1",
+      "id": "app_app_layout_jsx",
+      "community": 3,
+      "norm_label": "layout.jsx"
+    },
+    {
+      "label": "AppLayout()",
+      "file_type": "code",
+      "source_file": "app/(app)/layout.jsx",
+      "source_location": "L9",
+      "id": "app_layout_applayout",
+      "community": 3,
+      "norm_label": "applayout()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_page_jsx",
+      "community": 3,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "SignalIcon()",
+      "file_type": "code",
+      "source_file": "app/(app)/page.jsx",
+      "source_location": "L9",
+      "id": "app_page_signalicon",
+      "community": 3,
+      "norm_label": "signalicon()"
+    },
+    {
+      "label": "Dashboard()",
+      "file_type": "code",
+      "source_file": "app/(app)/page.jsx",
+      "source_location": "L21",
+      "id": "app_page_dashboard",
+      "community": 3,
+      "norm_label": "dashboard()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/base-datos/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_base_datos_page_jsx",
+      "community": 18,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "BaseDatosPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/base-datos/page.jsx",
+      "source_location": "L6",
+      "id": "base_datos_page_basedatospage",
+      "community": 18,
+      "norm_label": "basedatospage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/buscar/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_buscar_page_jsx",
+      "community": 19,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "BuscarPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/buscar/page.jsx",
+      "source_location": "L9",
+      "id": "buscar_page_buscarpage",
+      "community": 19,
+      "norm_label": "buscarpage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/calificacion/nueva/[productorId]/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_calificacion_nueva_productorid_page_jsx",
+      "community": 3,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "PerfilProductorPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/calificacion/nueva/[productorId]/page.jsx",
+      "source_location": "L13",
+      "id": "productorid_page_perfilproductorpage",
+      "community": 3,
+      "norm_label": "perfilproductorpage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/calificacion/[id]/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_calificacion_id_page_jsx",
+      "community": 1,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "EvaluacionPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/calificacion/[id]/page.jsx",
+      "source_location": "L15",
+      "id": "id_page_evaluacionpage",
+      "community": 1,
+      "norm_label": "evaluacionpage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/en-proceso/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_en_proceso_page_jsx",
+      "community": 20,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "EnProcesoPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/en-proceso/page.jsx",
+      "source_location": "L6",
+      "id": "en_proceso_page_enprocesopage",
+      "community": 20,
+      "norm_label": "enprocesopage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/mapa/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_mapa_page_jsx",
+      "community": 15,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "MultiMap",
+      "file_type": "code",
+      "source_file": "app/(app)/mapa/page.jsx",
+      "source_location": "L8",
+      "id": "mapa_page_multimap",
+      "community": 15,
+      "norm_label": "multimap"
+    },
+    {
+      "label": "MapaGlobalPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/mapa/page.jsx",
+      "source_location": "L18",
+      "id": "mapa_page_mapaglobalpage",
+      "community": 15,
+      "norm_label": "mapaglobalpage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/mapa/[id]/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_mapa_id_page_jsx",
+      "community": 16,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "Map",
+      "file_type": "code",
+      "source_file": "app/(app)/mapa/[id]/page.jsx",
+      "source_location": "L8",
+      "id": "id_page_map",
+      "community": 16,
+      "norm_label": "map"
+    },
+    {
+      "label": "MapaPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/mapa/[id]/page.jsx",
+      "source_location": "L13",
+      "id": "id_page_mapapage",
+      "community": 16,
+      "norm_label": "mapapage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(app)/nuevo-productor/page.jsx",
+      "source_location": "L1",
+      "id": "app_app_nuevo_productor_page_jsx",
+      "community": 3,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "NuevoProductorPage()",
+      "file_type": "code",
+      "source_file": "app/(app)/nuevo-productor/page.jsx",
+      "source_location": "L8",
+      "id": "nuevo_productor_page_nuevoproductorpage",
+      "community": 3,
+      "norm_label": "nuevoproductorpage()"
+    },
+    {
+      "label": "page.jsx",
+      "file_type": "code",
+      "source_file": "app/(auth)/login/page.jsx",
+      "source_location": "L1",
+      "id": "app_auth_login_page_jsx",
+      "community": 3,
+      "norm_label": "page.jsx"
+    },
+    {
+      "label": "LoginPage()",
+      "file_type": "code",
+      "source_file": "app/(auth)/login/page.jsx",
+      "source_location": "L6",
+      "id": "login_page_loginpage",
+      "community": 3,
+      "norm_label": "loginpage()"
+    },
+    {
+      "label": "AppHeader.jsx",
+      "file_type": "code",
+      "source_file": "components/AppHeader.jsx",
+      "source_location": "L1",
+      "id": "components_appheader_jsx",
+      "community": 21,
+      "norm_label": "appheader.jsx"
+    },
+    {
+      "label": "AppHeader()",
+      "file_type": "code",
+      "source_file": "components/AppHeader.jsx",
+      "source_location": "L11",
+      "id": "components_appheader_appheader",
+      "community": 21,
+      "norm_label": "appheader()"
+    },
+    {
+      "label": "EvaluacionFooter.jsx",
+      "file_type": "code",
+      "source_file": "components/EvaluacionFooter.jsx",
+      "source_location": "L1",
+      "id": "components_evaluacionfooter_jsx",
+      "community": 22,
+      "norm_label": "evaluacionfooter.jsx"
+    },
+    {
+      "label": "EvaluacionFooter()",
+      "file_type": "code",
+      "source_file": "components/EvaluacionFooter.jsx",
+      "source_location": "L6",
+      "id": "components_evaluacionfooter_evaluacionfooter",
+      "community": 22,
+      "norm_label": "evaluacionfooter()"
+    },
+    {
+      "label": "EvaluacionHeader.jsx",
+      "file_type": "code",
+      "source_file": "components/EvaluacionHeader.jsx",
+      "source_location": "L1",
+      "id": "components_evaluacionheader_jsx",
+      "community": 23,
+      "norm_label": "evaluacionheader.jsx"
+    },
+    {
+      "label": "EvaluacionHeader()",
+      "file_type": "code",
+      "source_file": "components/EvaluacionHeader.jsx",
+      "source_location": "L6",
+      "id": "components_evaluacionheader_evaluacionheader",
+      "community": 23,
+      "norm_label": "evaluacionheader()"
+    },
+    {
+      "label": "HistorialEvals.jsx",
+      "file_type": "code",
+      "source_file": "components/HistorialEvals.jsx",
+      "source_location": "L1",
+      "id": "components_historialevals_jsx",
+      "community": 24,
+      "norm_label": "historialevals.jsx"
+    },
+    {
+      "label": "HistorialEvals()",
+      "file_type": "code",
+      "source_file": "components/HistorialEvals.jsx",
+      "source_location": "L7",
+      "id": "components_historialevals_historialevals",
+      "community": 24,
+      "norm_label": "historialevals()"
+    },
+    {
+      "label": "IndicadorCard.jsx",
+      "file_type": "code",
+      "source_file": "components/IndicadorCard.jsx",
+      "source_location": "L1",
+      "id": "components_indicadorcard_jsx",
+      "community": 25,
+      "norm_label": "indicadorcard.jsx"
+    },
+    {
+      "label": "IndicadorCard()",
+      "file_type": "code",
+      "source_file": "components/IndicadorCard.jsx",
+      "source_location": "L13",
+      "id": "components_indicadorcard_indicadorcard",
+      "community": 25,
+      "norm_label": "indicadorcard()"
+    },
+    {
+      "label": "Map.jsx",
+      "file_type": "code",
+      "source_file": "components/Map.jsx",
+      "source_location": "L1",
+      "id": "components_map_jsx",
+      "community": 8,
+      "norm_label": "map.jsx"
+    },
+    {
+      "label": "farmIcon",
+      "file_type": "code",
+      "source_file": "components/Map.jsx",
+      "source_location": "L8",
+      "id": "components_map_farmicon",
+      "community": 8,
+      "norm_label": "farmicon"
+    },
+    {
+      "label": "userIcon",
+      "file_type": "code",
+      "source_file": "components/Map.jsx",
+      "source_location": "L18",
+      "id": "components_map_usericon",
+      "community": 8,
+      "norm_label": "usericon"
+    },
+    {
+      "label": "RecenterMap()",
+      "file_type": "code",
+      "source_file": "components/Map.jsx",
+      "source_location": "L26",
+      "id": "components_map_recentermap",
+      "community": 8,
+      "norm_label": "recentermap()"
+    },
+    {
+      "label": "FixSize()",
+      "file_type": "code",
+      "source_file": "components/Map.jsx",
+      "source_location": "L37",
+      "id": "components_map_fixsize",
+      "community": 8,
+      "norm_label": "fixsize()"
+    },
+    {
+      "label": "Map()",
+      "file_type": "code",
+      "source_file": "components/Map.jsx",
+      "source_location": "L48",
+      "id": "components_map_map",
+      "community": 8,
+      "norm_label": "map()"
+    },
+    {
+      "label": "MultiMap.jsx",
+      "file_type": "code",
+      "source_file": "components/MultiMap.jsx",
+      "source_location": "L1",
+      "id": "components_multimap_jsx",
+      "community": 12,
+      "norm_label": "multimap.jsx"
+    },
+    {
+      "label": "SetBounds()",
+      "file_type": "code",
+      "source_file": "components/MultiMap.jsx",
+      "source_location": "L9",
+      "id": "components_multimap_setbounds",
+      "community": 12,
+      "norm_label": "setbounds()"
+    },
+    {
+      "label": "FixSize()",
+      "file_type": "code",
+      "source_file": "components/MultiMap.jsx",
+      "source_location": "L23",
+      "id": "components_multimap_fixsize",
+      "community": 12,
+      "norm_label": "fixsize()"
+    },
+    {
+      "label": "MultiMap()",
+      "file_type": "code",
+      "source_file": "components/MultiMap.jsx",
+      "source_location": "L34",
+      "id": "components_multimap_multimap",
+      "community": 12,
+      "norm_label": "multimap()"
+    },
+    {
+      "label": "NavBar.jsx",
+      "file_type": "code",
+      "source_file": "components/NavBar.jsx",
+      "source_location": "L1",
+      "id": "components_navbar_jsx",
+      "community": 26,
+      "norm_label": "navbar.jsx"
+    },
+    {
+      "label": "NavBar()",
+      "file_type": "code",
+      "source_file": "components/NavBar.jsx",
+      "source_location": "L10",
+      "id": "components_navbar_navbar",
+      "community": 26,
+      "norm_label": "navbar()"
+    },
+    {
+      "label": "NuevaEvalForm.jsx",
+      "file_type": "code",
+      "source_file": "components/NuevaEvalForm.jsx",
+      "source_location": "L1",
+      "id": "components_nuevaevalform_jsx",
+      "community": 27,
+      "norm_label": "nuevaevalform.jsx"
+    },
+    {
+      "label": "NuevaEvalForm()",
+      "file_type": "code",
+      "source_file": "components/NuevaEvalForm.jsx",
+      "source_location": "L6",
+      "id": "components_nuevaevalform_nuevaevalform",
+      "community": 27,
+      "norm_label": "nuevaevalform()"
+    },
+    {
+      "label": "OfflineBanner.jsx",
+      "file_type": "code",
+      "source_file": "components/OfflineBanner.jsx",
+      "source_location": "L1",
+      "id": "components_offlinebanner_jsx",
+      "community": 1,
+      "norm_label": "offlinebanner.jsx"
+    },
+    {
+      "label": "OfflineBanner()",
+      "file_type": "code",
+      "source_file": "components/OfflineBanner.jsx",
+      "source_location": "L5",
+      "id": "components_offlinebanner_offlinebanner",
+      "community": 1,
+      "norm_label": "offlinebanner()"
+    },
+    {
+      "label": "ProductorInfoCard.jsx",
+      "file_type": "code",
+      "source_file": "components/ProductorInfoCard.jsx",
+      "source_location": "L1",
+      "id": "components_productorinfocard_jsx",
+      "community": 28,
+      "norm_label": "productorinfocard.jsx"
+    },
+    {
+      "label": "ProductorInfoCard()",
+      "file_type": "code",
+      "source_file": "components/ProductorInfoCard.jsx",
+      "source_location": "L6",
+      "id": "components_productorinfocard_productorinfocard",
+      "community": 28,
+      "norm_label": "productorinfocard()"
+    },
+    {
+      "label": "RadarChart.jsx",
+      "file_type": "code",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L1",
+      "id": "components_radarchart_jsx",
+      "community": 11,
+      "norm_label": "radarchart.jsx"
+    },
+    {
+      "label": "Chart",
+      "file_type": "code",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L6",
+      "id": "components_radarchart_chart",
+      "community": 11,
+      "norm_label": "chart"
+    },
+    {
+      "label": "BASE_OPTIONS",
+      "file_type": "code",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L8",
+      "id": "components_radarchart_base_options",
+      "community": 11,
+      "norm_label": "base_options"
+    },
+    {
+      "label": "RadarChartComponent()",
+      "file_type": "code",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L57",
+      "id": "components_radarchart_radarchartcomponent",
+      "community": 11,
+      "norm_label": "radarchartcomponent()"
+    },
+    {
+      "label": "RadarChart",
+      "file_type": "code",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L208",
+      "id": "components_radarchart_radarchart",
+      "community": 11,
+      "norm_label": "radarchart"
+    },
+    {
+      "label": "ResultadosEvaluacion.jsx",
+      "file_type": "code",
+      "source_file": "components/ResultadosEvaluacion.jsx",
+      "source_location": "L1",
+      "id": "components_resultadosevaluacion_jsx",
+      "community": 3,
+      "norm_label": "resultadosevaluacion.jsx"
+    },
+    {
+      "label": "ResultadosEvaluacion()",
+      "file_type": "code",
+      "source_file": "components/ResultadosEvaluacion.jsx",
+      "source_location": "L9",
+      "id": "components_resultadosevaluacion_resultadosevaluacion",
+      "community": 3,
+      "norm_label": "resultadosevaluacion()"
+    },
+    {
+      "label": "SostenibilidadPanel.jsx",
+      "file_type": "code",
+      "source_file": "components/SostenibilidadPanel.jsx",
+      "source_location": "L1",
+      "id": "components_sostenibilidadpanel_jsx",
+      "community": 29,
+      "norm_label": "sostenibilidadpanel.jsx"
+    },
+    {
+      "label": "SostenibilidadPanel()",
+      "file_type": "code",
+      "source_file": "components/SostenibilidadPanel.jsx",
+      "source_location": "L8",
+      "id": "components_sostenibilidadpanel_sostenibilidadpanel",
+      "community": 29,
+      "norm_label": "sostenibilidadpanel()"
+    },
+    {
+      "label": "TopographicBg.jsx",
+      "file_type": "code",
+      "source_file": "components/TopographicBg.jsx",
+      "source_location": "L1",
+      "id": "components_topographicbg_jsx",
+      "community": 30,
+      "norm_label": "topographicbg.jsx"
+    },
+    {
+      "label": "TopographicBg()",
+      "file_type": "code",
+      "source_file": "components/TopographicBg.jsx",
+      "source_location": "L9",
+      "id": "components_topographicbg_topographicbg",
+      "community": 30,
+      "norm_label": "topographicbg()"
+    },
+    {
+      "label": "ValidationBanner.jsx",
+      "file_type": "code",
+      "source_file": "components/ValidationBanner.jsx",
+      "source_location": "L1",
+      "id": "components_validationbanner_jsx",
+      "community": 31,
+      "norm_label": "validationbanner.jsx"
+    },
+    {
+      "label": "ValidationBanner()",
+      "file_type": "code",
+      "source_file": "components/ValidationBanner.jsx",
+      "source_location": "L6",
+      "id": "components_validationbanner_validationbanner",
+      "community": 31,
+      "norm_label": "validationbanner()"
+    },
+    {
+      "label": "Watermark.jsx",
+      "file_type": "code",
+      "source_file": "components/Watermark.jsx",
+      "source_location": "L1",
+      "id": "components_watermark_jsx",
+      "community": 32,
+      "norm_label": "watermark.jsx"
+    },
+    {
+      "label": "Watermark()",
+      "file_type": "code",
+      "source_file": "components/Watermark.jsx",
+      "source_location": "L10",
+      "id": "components_watermark_watermark",
+      "community": 32,
+      "norm_label": "watermark()"
+    },
+    {
+      "label": "IconBuscar.jsx",
+      "file_type": "code",
+      "source_file": "components/icons/IconBuscar.jsx",
+      "source_location": "L1",
+      "id": "components_icons_iconbuscar_jsx",
+      "community": 33,
+      "norm_label": "iconbuscar.jsx"
+    },
+    {
+      "label": "IconBuscar()",
+      "file_type": "code",
+      "source_file": "components/icons/IconBuscar.jsx",
+      "source_location": "L5",
+      "id": "icons_iconbuscar_iconbuscar",
+      "community": 33,
+      "norm_label": "iconbuscar()"
+    },
+    {
+      "label": "IconCalificar.jsx",
+      "file_type": "code",
+      "source_file": "components/icons/IconCalificar.jsx",
+      "source_location": "L1",
+      "id": "components_icons_iconcalificar_jsx",
+      "community": 34,
+      "norm_label": "iconcalificar.jsx"
+    },
+    {
+      "label": "IconCalificar()",
+      "file_type": "code",
+      "source_file": "components/icons/IconCalificar.jsx",
+      "source_location": "L3",
+      "id": "icons_iconcalificar_iconcalificar",
+      "community": 34,
+      "norm_label": "iconcalificar()"
+    },
+    {
+      "label": "IconInicio.jsx",
+      "file_type": "code",
+      "source_file": "components/icons/IconInicio.jsx",
+      "source_location": "L1",
+      "id": "components_icons_iconinicio_jsx",
+      "community": 35,
+      "norm_label": "iconinicio.jsx"
+    },
+    {
+      "label": "IconInicio()",
+      "file_type": "code",
+      "source_file": "components/icons/IconInicio.jsx",
+      "source_location": "L5",
+      "id": "icons_iconinicio_iconinicio",
+      "community": 35,
+      "norm_label": "iconinicio()"
+    },
+    {
+      "label": "IconMapa.jsx",
+      "file_type": "code",
+      "source_file": "components/icons/IconMapa.jsx",
+      "source_location": "L1",
+      "id": "components_icons_iconmapa_jsx",
+      "community": 36,
+      "norm_label": "iconmapa.jsx"
+    },
+    {
+      "label": "IconMapa()",
+      "file_type": "code",
+      "source_file": "components/icons/IconMapa.jsx",
+      "source_location": "L5",
+      "id": "icons_iconmapa_iconmapa",
+      "community": 36,
+      "norm_label": "iconmapa()"
+    },
+    {
+      "label": "IconNuevo.jsx",
+      "file_type": "code",
+      "source_file": "components/icons/IconNuevo.jsx",
+      "source_location": "L1",
+      "id": "components_icons_iconnuevo_jsx",
+      "community": 37,
+      "norm_label": "iconnuevo.jsx"
+    },
+    {
+      "label": "IconNuevo()",
+      "file_type": "code",
+      "source_file": "components/icons/IconNuevo.jsx",
+      "source_location": "L5",
+      "id": "icons_iconnuevo_iconnuevo",
+      "community": 37,
+      "norm_label": "iconnuevo()"
+    },
+    {
+      "label": "IconProceso.jsx",
+      "file_type": "code",
+      "source_file": "components/icons/IconProceso.jsx",
+      "source_location": "L1",
+      "id": "components_icons_iconproceso_jsx",
+      "community": 38,
+      "norm_label": "iconproceso.jsx"
+    },
+    {
+      "label": "IconProceso()",
+      "file_type": "code",
+      "source_file": "components/icons/IconProceso.jsx",
+      "source_location": "L5",
+      "id": "icons_iconproceso_iconproceso",
+      "community": 38,
+      "norm_label": "iconproceso()"
+    },
+    {
+      "label": "database.types.ts",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L1",
+      "id": "lib_database_types_ts",
+      "community": 7,
+      "norm_label": "database.types.ts"
+    },
+    {
+      "label": "Json",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L1",
+      "id": "lib_database_types_json",
+      "community": 7,
+      "norm_label": "json"
+    },
+    {
+      "label": "Database",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L9",
+      "id": "lib_database_types_database",
+      "community": 7,
+      "norm_label": "database"
+    },
+    {
+      "label": "DatabaseWithoutInternals",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L383",
+      "id": "lib_database_types_databasewithoutinternals",
+      "community": 7,
+      "norm_label": "databasewithoutinternals"
+    },
+    {
+      "label": "DefaultSchema",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L385",
+      "id": "lib_database_types_defaultschema",
+      "community": 7,
+      "norm_label": "defaultschema"
+    },
+    {
+      "label": "Tables",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L387",
+      "id": "lib_database_types_tables",
+      "community": 7,
+      "norm_label": "tables"
+    },
+    {
+      "label": "TablesInsert",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L416",
+      "id": "lib_database_types_tablesinsert",
+      "community": 7,
+      "norm_label": "tablesinsert"
+    },
+    {
+      "label": "TablesUpdate",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L441",
+      "id": "lib_database_types_tablesupdate",
+      "community": 7,
+      "norm_label": "tablesupdate"
+    },
+    {
+      "label": "Enums",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L466",
+      "id": "lib_database_types_enums",
+      "community": 7,
+      "norm_label": "enums"
+    },
+    {
+      "label": "CompositeTypes",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L483",
+      "id": "lib_database_types_compositetypes",
+      "community": 7,
+      "norm_label": "compositetypes"
+    },
+    {
+      "label": "Constants",
+      "file_type": "code",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L500",
+      "id": "lib_database_types_constants",
+      "community": 7,
+      "norm_label": "constants"
+    },
+    {
+      "label": "db-offline.js",
+      "file_type": "code",
+      "source_file": "lib/db-offline.js",
+      "source_location": "L1",
+      "id": "lib_db_offline_js",
+      "community": 1,
+      "norm_label": "db-offline.js"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "lib/db-offline.js",
+      "source_location": "L3",
+      "id": "lib_db_offline_db",
+      "community": 1,
+      "norm_label": "db"
+    },
+    {
+      "label": "DIMENSION_COLORS",
+      "file_type": "code",
+      "source_file": "lib/db-offline.js",
+      "source_location": "L39",
+      "id": "lib_db_offline_dimension_colors",
+      "community": 1,
+      "norm_label": "dimension_colors"
+    },
+    {
+      "label": "supabase.js",
+      "file_type": "code",
+      "source_file": "lib/supabase.js",
+      "source_location": "L1",
+      "id": "lib_supabase_js",
+      "community": 3,
+      "norm_label": "supabase.js"
+    },
+    {
+      "label": "createClient()",
+      "file_type": "code",
+      "source_file": "lib/supabase.js",
+      "source_location": "L3",
+      "id": "lib_supabase_createclient",
+      "community": 3,
+      "norm_label": "createclient()"
+    },
+    {
+      "label": "sync-engine.js",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L1",
+      "id": "lib_sync_engine_js",
+      "community": 1,
+      "norm_label": "sync-engine.js"
+    },
+    {
+      "label": "_listeners",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L15",
+      "id": "lib_sync_engine_listeners",
+      "community": 1,
+      "norm_label": "_listeners"
+    },
+    {
+      "label": "notify()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L18",
+      "id": "lib_sync_engine_notify",
+      "community": 1,
+      "norm_label": "notify()"
+    },
+    {
+      "label": "subscribe()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L23",
+      "id": "lib_sync_engine_subscribe",
+      "community": 1,
+      "norm_label": "subscribe()"
+    },
+    {
+      "label": "getState()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L28",
+      "id": "lib_sync_engine_getstate",
+      "community": 1,
+      "norm_label": "getstate()"
+    },
+    {
+      "label": "waitForSync()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L32",
+      "id": "lib_sync_engine_waitforsync",
+      "community": 1,
+      "norm_label": "waitforsync()"
+    },
+    {
+      "label": "initSyncEngine()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L39",
+      "id": "lib_sync_engine_initsyncengine",
+      "community": 1,
+      "norm_label": "initsyncengine()"
+    },
+    {
+      "label": "saveRecord()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L61",
+      "id": "lib_sync_engine_saverecord",
+      "community": 1,
+      "norm_label": "saverecord()"
+    },
+    {
+      "label": "deleteRecord()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L93",
+      "id": "lib_sync_engine_deleterecord",
+      "community": 1,
+      "norm_label": "deleterecord()"
+    },
+    {
+      "label": "deleteRecordBulk()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L118",
+      "id": "lib_sync_engine_deleterecordbulk",
+      "community": 1,
+      "norm_label": "deleterecordbulk()"
+    },
+    {
+      "label": "updatePendingCount()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L142",
+      "id": "lib_sync_engine_updatependingcount",
+      "community": 1,
+      "norm_label": "updatependingcount()"
+    },
+    {
+      "label": "syncQueue()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L160",
+      "id": "lib_sync_engine_syncqueue",
+      "community": 1,
+      "norm_label": "syncqueue()"
+    },
+    {
+      "label": "syncInitialData()",
+      "file_type": "code",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L263",
+      "id": "lib_sync_engine_syncinitialdata",
+      "community": 1,
+      "norm_label": "syncinitialdata()"
+    },
+    {
+      "label": "validation.js",
+      "file_type": "code",
+      "source_file": "lib/validation.js",
+      "source_location": "L1",
+      "id": "lib_validation_js",
+      "community": 39,
+      "norm_label": "validation.js"
+    },
+    {
+      "label": "crearSchemaEvaluacion()",
+      "file_type": "code",
+      "source_file": "lib/validation.js",
+      "source_location": "L10",
+      "id": "lib_validation_crearschemaevaluacion",
+      "community": 39,
+      "norm_label": "crearschemaevaluacion()"
+    },
+    {
+      "label": "useDiagnostico.js",
+      "file_type": "code",
+      "source_file": "lib/hooks/useDiagnostico.js",
+      "source_location": "L1",
+      "id": "lib_hooks_usediagnostico_js",
+      "community": 3,
+      "norm_label": "usediagnostico.js"
+    },
+    {
+      "label": "useDiagnostico()",
+      "file_type": "code",
+      "source_file": "lib/hooks/useDiagnostico.js",
+      "source_location": "L7",
+      "id": "hooks_usediagnostico_usediagnostico",
+      "community": 3,
+      "norm_label": "usediagnostico()"
+    },
+    {
+      "label": "useOfflineSync.js",
+      "file_type": "code",
+      "source_file": "lib/hooks/useOfflineSync.js",
+      "source_location": "L1",
+      "id": "lib_hooks_useofflinesync_js",
+      "community": 1,
+      "norm_label": "useofflinesync.js"
+    },
+    {
+      "label": "useOfflineSync()",
+      "file_type": "code",
+      "source_file": "lib/hooks/useOfflineSync.js",
+      "source_location": "L11",
+      "id": "hooks_useofflinesync_useofflinesync",
+      "community": 1,
+      "norm_label": "useofflinesync()"
+    },
+    {
+      "label": "sw.js",
+      "file_type": "code",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "id": "public_sw_js",
+      "community": 9,
+      "norm_label": "sw.js"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "id": "public_sw_s",
+      "community": 9,
+      "norm_label": "s"
+    },
+    {
+      "label": "a()",
+      "file_type": "code",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "id": "public_sw_a",
+      "community": 9,
+      "norm_label": "a()"
+    },
+    {
+      "label": "c",
+      "file_type": "code",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "id": "public_sw_c",
+      "community": 9,
+      "norm_label": "c"
+    },
+    {
+      "label": "r()",
+      "file_type": "code",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "id": "public_sw_r",
+      "community": 9,
+      "norm_label": "r()"
+    },
+    {
+      "label": "d",
+      "file_type": "code",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "id": "public_sw_d",
+      "community": 9,
+      "norm_label": "d"
+    },
+    {
+      "label": "workbox-4754cb34.js",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_js",
+      "community": 0,
+      "norm_label": "workbox-4754cb34.js"
+    },
+    {
+      "label": "e()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_e",
+      "community": 0,
+      "norm_label": "e()"
+    },
+    {
+      "label": "s",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_s",
+      "community": 0,
+      "norm_label": "s"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_s_constructor",
+      "community": 0,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": "n()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_n",
+      "community": 0,
+      "norm_label": "n()"
+    },
+    {
+      "label": "r",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_r",
+      "community": 6,
+      "norm_label": "r"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_r_constructor",
+      "community": 6,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".setCatchHandler()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_r_setcatchhandler",
+      "community": 6,
+      "norm_label": ".setcatchhandler()"
+    },
+    {
+      "label": "i",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_i",
+      "community": 0,
+      "norm_label": "i"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_i_constructor",
+      "community": 0,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": "a",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a",
+      "community": 2,
+      "norm_label": "a"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_constructor",
+      "community": 2,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".routes()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_routes",
+      "community": 2,
+      "norm_label": ".routes()"
+    },
+    {
+      "label": ".addFetchListener()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_addfetchlistener",
+      "community": 2,
+      "norm_label": ".addfetchlistener()"
+    },
+    {
+      "label": ".addCacheListener()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_addcachelistener",
+      "community": 2,
+      "norm_label": ".addcachelistener()"
+    },
+    {
+      "label": ".handleRequest()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_handlerequest",
+      "community": 6,
+      "norm_label": ".handlerequest()"
+    },
+    {
+      "label": ".findMatchingRoute()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_findmatchingroute",
+      "community": 6,
+      "norm_label": ".findmatchingroute()"
+    },
+    {
+      "label": ".setDefaultHandler()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_setdefaulthandler",
+      "community": 2,
+      "norm_label": ".setdefaulthandler()"
+    },
+    {
+      "label": ".setCatchHandler()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_setcatchhandler",
+      "community": 2,
+      "norm_label": ".setcatchhandler()"
+    },
+    {
+      "label": ".registerRoute()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_registerroute",
+      "community": 2,
+      "norm_label": ".registerroute()"
+    },
+    {
+      "label": ".unregisterRoute()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_unregisterroute",
+      "community": 2,
+      "norm_label": ".unregisterroute()"
+    },
+    {
+      "label": "c()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_c",
+      "community": 2,
+      "norm_label": "c()"
+    },
+    {
+      "label": "h()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_h",
+      "community": 2,
+      "norm_label": "h()"
+    },
+    {
+      "label": "u",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_u",
+      "community": 0,
+      "norm_label": "u"
+    },
+    {
+      "label": "l",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_l",
+      "community": 0,
+      "norm_label": "l"
+    },
+    {
+      "label": "f()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_f",
+      "community": 0,
+      "norm_label": "f()"
+    },
+    {
+      "label": "w()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_w",
+      "community": 0,
+      "norm_label": "w()"
+    },
+    {
+      "label": "d()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_d",
+      "community": 0,
+      "norm_label": "d()"
+    },
+    {
+      "label": "p()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_p",
+      "community": 0,
+      "norm_label": "p()"
+    },
+    {
+      "label": "y",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_y",
+      "community": 4,
+      "norm_label": "y"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_y_constructor",
+      "community": 0,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": "g",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_g",
+      "community": 0,
+      "norm_label": "g"
+    },
+    {
+      "label": "m()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_m",
+      "community": 0,
+      "norm_label": "m()"
+    },
+    {
+      "label": "v",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v",
+      "community": 4,
+      "norm_label": "v"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_constructor",
+      "community": 4,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".fetch()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_fetch",
+      "community": 4,
+      "norm_label": ".fetch()"
+    },
+    {
+      "label": ".fetchAndCachePut()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_fetchandcacheput",
+      "community": 4,
+      "norm_label": ".fetchandcacheput()"
+    },
+    {
+      "label": ".cacheMatch()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_cachematch",
+      "community": 0,
+      "norm_label": ".cachematch()"
+    },
+    {
+      "label": ".cachePut()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_cacheput",
+      "community": 4,
+      "norm_label": ".cacheput()"
+    },
+    {
+      "label": ".getCacheKey()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_getcachekey",
+      "community": 0,
+      "norm_label": ".getcachekey()"
+    },
+    {
+      "label": ".hasCallback()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_hascallback",
+      "community": 4,
+      "norm_label": ".hascallback()"
+    },
+    {
+      "label": ".runCallbacks()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_runcallbacks",
+      "community": 4,
+      "norm_label": ".runcallbacks()"
+    },
+    {
+      "label": ".iterateCallbacks()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_iteratecallbacks",
+      "community": 4,
+      "norm_label": ".iteratecallbacks()"
+    },
+    {
+      "label": ".waitUntil()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_waituntil",
+      "community": 4,
+      "norm_label": ".waituntil()"
+    },
+    {
+      "label": ".doneWaiting()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_donewaiting",
+      "community": 6,
+      "norm_label": ".donewaiting()"
+    },
+    {
+      "label": ".destroy()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_destroy",
+      "community": 6,
+      "norm_label": ".destroy()"
+    },
+    {
+      "label": ".R()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_v_r",
+      "community": 4,
+      "norm_label": ".r()"
+    },
+    {
+      "label": ".handle()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_r_handle",
+      "community": 6,
+      "norm_label": ".handle()"
+    },
+    {
+      "label": ".handleAll()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_r_handleall",
+      "community": 6,
+      "norm_label": ".handleall()"
+    },
+    {
+      "label": ".q()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_r_q",
+      "community": 4,
+      "norm_label": ".q()"
+    },
+    {
+      "label": ".D()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_r_d",
+      "community": 6,
+      "norm_label": ".d()"
+    },
+    {
+      "label": "b()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_b",
+      "community": 0,
+      "norm_label": "b()"
+    },
+    {
+      "label": "q()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_q",
+      "community": 6,
+      "norm_label": "q()"
+    },
+    {
+      "label": "x",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_x",
+      "community": 0,
+      "norm_label": "x"
+    },
+    {
+      "label": "O()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_o",
+      "community": 0,
+      "norm_label": "o()"
+    },
+    {
+      "label": "T()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_t",
+      "community": 0,
+      "norm_label": "t()"
+    },
+    {
+      "label": "k()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_k",
+      "community": 0,
+      "norm_label": "k()"
+    },
+    {
+      "label": "j()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_j",
+      "community": 6,
+      "norm_label": "j()"
+    },
+    {
+      "label": ".I()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_i",
+      "community": 2,
+      "norm_label": ".i()"
+    },
+    {
+      "label": ".C()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_c",
+      "community": 2,
+      "norm_label": ".c()"
+    },
+    {
+      "label": ".setTimestamp()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_settimestamp",
+      "community": 2,
+      "norm_label": ".settimestamp()"
+    },
+    {
+      "label": ".getTimestamp()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_gettimestamp",
+      "community": 2,
+      "norm_label": ".gettimestamp()"
+    },
+    {
+      "label": ".expireEntries()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_expireentries",
+      "community": 2,
+      "norm_label": ".expireentries()"
+    },
+    {
+      "label": ".N()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_n",
+      "community": 2,
+      "norm_label": ".n()"
+    },
+    {
+      "label": ".getDb()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_a_getdb",
+      "community": 2,
+      "norm_label": ".getdb()"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_f_constructor",
+      "community": 0,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".expireEntries()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_f_expireentries",
+      "community": 0,
+      "norm_label": ".expireentries()"
+    },
+    {
+      "label": ".updateTimestamp()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_f_updatetimestamp",
+      "community": 2,
+      "norm_label": ".updatetimestamp()"
+    },
+    {
+      "label": ".isURLExpired()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_f_isurlexpired",
+      "community": 2,
+      "norm_label": ".isurlexpired()"
+    },
+    {
+      "label": ".delete()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_f_delete",
+      "community": 0,
+      "norm_label": ".delete()"
+    },
+    {
+      "label": "$()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34",
+      "community": 5,
+      "norm_label": "$()"
+    },
+    {
+      "label": "z()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z",
+      "community": 5,
+      "norm_label": "z()"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_g_constructor",
+      "community": 0,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".U()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_y_u",
+      "community": 4,
+      "norm_label": ".u()"
+    },
+    {
+      "label": ".K()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_y_k",
+      "community": 4,
+      "norm_label": ".k()"
+    },
+    {
+      "label": ".S()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_y_s",
+      "community": 4,
+      "norm_label": ".s()"
+    },
+    {
+      "label": ".A()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_y_a",
+      "community": 4,
+      "norm_label": ".a()"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_constructor",
+      "community": 0,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".strategy()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_strategy",
+      "community": 5,
+      "norm_label": ".strategy()"
+    },
+    {
+      "label": ".precache()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_precache",
+      "community": 5,
+      "norm_label": ".precache()"
+    },
+    {
+      "label": ".addToCacheList()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_addtocachelist",
+      "community": 5,
+      "norm_label": ".addtocachelist()"
+    },
+    {
+      "label": ".install()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_install",
+      "community": 5,
+      "norm_label": ".install()"
+    },
+    {
+      "label": ".activate()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_activate",
+      "community": 5,
+      "norm_label": ".activate()"
+    },
+    {
+      "label": ".getURLsToCacheKeys()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_geturlstocachekeys",
+      "community": 5,
+      "norm_label": ".geturlstocachekeys()"
+    },
+    {
+      "label": ".getCachedURLs()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_getcachedurls",
+      "community": 5,
+      "norm_label": ".getcachedurls()"
+    },
+    {
+      "label": ".getCacheKeyForURL()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_getcachekeyforurl",
+      "community": 5,
+      "norm_label": ".getcachekeyforurl()"
+    },
+    {
+      "label": ".getIntegrityForCacheKey()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_getintegrityforcachekey",
+      "community": 5,
+      "norm_label": ".getintegrityforcachekey()"
+    },
+    {
+      "label": ".matchPrecache()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_matchprecache",
+      "community": 5,
+      "norm_label": ".matchprecache()"
+    },
+    {
+      "label": ".createHandlerBoundToURL()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_z_createhandlerboundtourl",
+      "community": 5,
+      "norm_label": ".createhandlerboundtourl()"
+    },
+    {
+      "label": "tt()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_tt",
+      "community": 0,
+      "norm_label": "tt()"
+    },
+    {
+      "label": "et",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_et",
+      "community": 0,
+      "norm_label": "et"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_et_constructor",
+      "community": 0,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": "constructor()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_constructor",
+      "community": 0,
+      "norm_label": "constructor()"
+    },
+    {
+      "label": "deleteCacheAndMetadata()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_deletecacheandmetadata",
+      "community": 0,
+      "norm_label": "deletecacheandmetadata()"
+    },
+    {
+      "label": "st()",
+      "file_type": "code",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "id": "public_workbox_4754cb34_st",
+      "community": 0,
+      "norm_label": "st()"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "middleware.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "middleware_js",
+      "target": "sostenibilidad_paramos_middleware_middleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "middleware.js",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "middleware_js",
+      "target": "sostenibilidad_paramos_middleware_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "next_config_js",
+      "target": "sostenibilidad_paramos_next_config_withpwa",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "next_config_js",
+      "target": "sostenibilidad_paramos_next_config_nextconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "postcss.config.mjs",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "postcss_config_mjs",
+      "target": "sostenibilidad_paramos_postcss_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "app_layout_js",
+      "target": "app_layout_nunito",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_layout_js",
+      "target": "app_layout_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "app_layout_js",
+      "target": "app_layout_viewport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_layout_js",
+      "target": "app_layout_rootlayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/layout.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "app_app_layout_jsx",
+      "target": "app_layout_applayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app/(app)/layout.jsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "app_layout_applayout",
+      "target": "lib_supabase_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/page.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "app_app_page_jsx",
+      "target": "app_page_signalicon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/page.jsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "app_app_page_jsx",
+      "target": "app_page_dashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app/(app)/page.jsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "app_page_dashboard",
+      "target": "lib_supabase_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/base-datos/page.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "app_app_base_datos_page_jsx",
+      "target": "base_datos_page_basedatospage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/buscar/page.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "app_app_buscar_page_jsx",
+      "target": "buscar_page_buscarpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/calificacion/nueva/[productorId]/page.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_app_calificacion_nueva_productorid_page_jsx",
+      "target": "productorid_page_perfilproductorpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app/(app)/calificacion/nueva/[productorId]/page.jsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "productorid_page_perfilproductorpage",
+      "target": "lib_supabase_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/calificacion/[id]/page.jsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "app_app_calificacion_id_page_jsx",
+      "target": "id_page_evaluacionpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app/(app)/calificacion/[id]/page.jsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "id_page_evaluacionpage",
+      "target": "hooks_useofflinesync_useofflinesync"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/en-proceso/page.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "app_app_en_proceso_page_jsx",
+      "target": "en_proceso_page_enprocesopage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/mapa/page.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_app_mapa_page_jsx",
+      "target": "mapa_page_multimap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/mapa/page.jsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "app_app_mapa_page_jsx",
+      "target": "mapa_page_mapaglobalpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/mapa/[id]/page.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_app_mapa_id_page_jsx",
+      "target": "id_page_map",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/mapa/[id]/page.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_app_mapa_id_page_jsx",
+      "target": "id_page_mapapage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(app)/nuevo-productor/page.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_app_nuevo_productor_page_jsx",
+      "target": "nuevo_productor_page_nuevoproductorpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app/(app)/nuevo-productor/page.jsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "nuevo_productor_page_nuevoproductorpage",
+      "target": "lib_supabase_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/(auth)/login/page.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "app_auth_login_page_jsx",
+      "target": "login_page_loginpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "app/(auth)/login/page.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "login_page_loginpage",
+      "target": "lib_supabase_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/AppHeader.jsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_appheader_jsx",
+      "target": "components_appheader_appheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EvaluacionFooter.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_evaluacionfooter_jsx",
+      "target": "components_evaluacionfooter_evaluacionfooter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EvaluacionHeader.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_evaluacionheader_jsx",
+      "target": "components_evaluacionheader_evaluacionheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/HistorialEvals.jsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_historialevals_jsx",
+      "target": "components_historialevals_historialevals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/IndicadorCard.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_indicadorcard_jsx",
+      "target": "components_indicadorcard_indicadorcard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Map.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_map_jsx",
+      "target": "components_map_farmicon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Map.jsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "components_map_jsx",
+      "target": "components_map_usericon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Map.jsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "components_map_jsx",
+      "target": "components_map_recentermap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Map.jsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "components_map_jsx",
+      "target": "components_map_fixsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Map.jsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "components_map_jsx",
+      "target": "components_map_map",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/MultiMap.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_multimap_jsx",
+      "target": "components_multimap_setbounds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/MultiMap.jsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "components_multimap_jsx",
+      "target": "components_multimap_fixsize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/MultiMap.jsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "components_multimap_jsx",
+      "target": "components_multimap_multimap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/NavBar.jsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_navbar_jsx",
+      "target": "components_navbar_navbar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/NuevaEvalForm.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_nuevaevalform_jsx",
+      "target": "components_nuevaevalform_nuevaevalform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/OfflineBanner.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_offlinebanner_jsx",
+      "target": "components_offlinebanner_offlinebanner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "components/OfflineBanner.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_offlinebanner_offlinebanner",
+      "target": "lib_sync_engine_getstate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ProductorInfoCard.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_productorinfocard_jsx",
+      "target": "components_productorinfocard_productorinfocard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_radarchart_jsx",
+      "target": "components_radarchart_chart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_radarchart_jsx",
+      "target": "components_radarchart_base_options",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "components_radarchart_jsx",
+      "target": "components_radarchart_radarchartcomponent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/RadarChart.jsx",
+      "source_location": "L208",
+      "weight": 1.0,
+      "source": "components_radarchart_jsx",
+      "target": "components_radarchart_radarchart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ResultadosEvaluacion.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_resultadosevaluacion_jsx",
+      "target": "components_resultadosevaluacion_resultadosevaluacion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "components/ResultadosEvaluacion.jsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "components_resultadosevaluacion_resultadosevaluacion",
+      "target": "hooks_usediagnostico_usediagnostico"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SostenibilidadPanel.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_sostenibilidadpanel_jsx",
+      "target": "components_sostenibilidadpanel_sostenibilidadpanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/TopographicBg.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_topographicbg_jsx",
+      "target": "components_topographicbg_topographicbg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ValidationBanner.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_validationbanner_jsx",
+      "target": "components_validationbanner_validationbanner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Watermark.jsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_watermark_jsx",
+      "target": "components_watermark_watermark",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons/IconBuscar.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_icons_iconbuscar_jsx",
+      "target": "icons_iconbuscar_iconbuscar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons/IconCalificar.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_icons_iconcalificar_jsx",
+      "target": "icons_iconcalificar_iconcalificar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons/IconInicio.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_icons_iconinicio_jsx",
+      "target": "icons_iconinicio_iconinicio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons/IconMapa.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_icons_iconmapa_jsx",
+      "target": "icons_iconmapa_iconmapa",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons/IconNuevo.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_icons_iconnuevo_jsx",
+      "target": "icons_iconnuevo_iconnuevo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons/IconProceso.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_icons_iconproceso_jsx",
+      "target": "icons_iconproceso_iconproceso",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_database",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L383",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_databasewithoutinternals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L385",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_defaultschema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L387",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_tables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L416",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_tablesinsert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L441",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_tablesupdate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L466",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_enums",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L483",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_compositetypes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/database.types.ts",
+      "source_location": "L500",
+      "weight": 1.0,
+      "source": "lib_database_types_ts",
+      "target": "lib_database_types_constants",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/db-offline.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_db_offline_js",
+      "target": "lib_db_offline_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/db-offline.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "lib_db_offline_js",
+      "target": "lib_db_offline_dimension_colors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_db_offline_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_db_offline_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/supabase.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_supabase_js",
+      "target": "lib_supabase_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "lib/hooks/useDiagnostico.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "hooks_usediagnostico_usediagnostico",
+      "target": "lib_supabase_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_listeners",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_notify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_subscribe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_getstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_waitforsync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_initsyncengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_saverecord",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_deleterecord",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_deleterecordbulk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_updatependingcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_syncqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L263",
+      "weight": 1.0,
+      "source": "lib_sync_engine_js",
+      "target": "lib_sync_engine_syncinitialdata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/hooks/useOfflineSync.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_hooks_useofflinesync_js",
+      "target": "lib_sync_engine_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "lib_sync_engine_updatependingcount",
+      "target": "lib_sync_engine_notify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "lib_sync_engine_syncqueue",
+      "target": "lib_sync_engine_notify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "lib_sync_engine_syncinitialdata",
+      "target": "lib_sync_engine_notify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/hooks/useOfflineSync.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_hooks_useofflinesync_js",
+      "target": "lib_sync_engine_subscribe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/hooks/useOfflineSync.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_hooks_useofflinesync_js",
+      "target": "lib_sync_engine_getstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "lib_sync_engine_initsyncengine",
+      "target": "lib_sync_engine_syncinitialdata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "lib_sync_engine_initsyncengine",
+      "target": "lib_sync_engine_updatependingcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "lib_sync_engine_saverecord",
+      "target": "lib_sync_engine_updatependingcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "lib_sync_engine_saverecord",
+      "target": "lib_sync_engine_syncqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "lib_sync_engine_deleterecord",
+      "target": "lib_sync_engine_updatependingcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "lib_sync_engine_deleterecord",
+      "target": "lib_sync_engine_syncqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "lib_sync_engine_deleterecordbulk",
+      "target": "lib_sync_engine_updatependingcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "lib_sync_engine_deleterecordbulk",
+      "target": "lib_sync_engine_syncqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/sync-engine.js",
+      "source_location": "L257",
+      "weight": 1.0,
+      "source": "lib_sync_engine_syncqueue",
+      "target": "lib_sync_engine_updatependingcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/validation.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "lib_validation_js",
+      "target": "lib_validation_crearschemaevaluacion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/hooks/useDiagnostico.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "lib_hooks_usediagnostico_js",
+      "target": "hooks_usediagnostico_usediagnostico",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/hooks/useOfflineSync.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "lib_hooks_useofflinesync_js",
+      "target": "hooks_useofflinesync_useofflinesync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_sw_js",
+      "target": "public_sw_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_sw_js",
+      "target": "public_sw_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_sw_js",
+      "target": "public_sw_c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_sw_js",
+      "target": "public_sw_r",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_sw_js",
+      "target": "public_sw_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/sw.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_sw_r",
+      "target": "public_sw_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_e",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_r",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_i",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_h",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_u",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_l",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_f",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_w",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_p",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_y",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_g",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_m",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_v",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_b",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_q",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_x",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_o",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_j",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_z",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_tt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_et",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_deletecacheandmetadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_js",
+      "target": "public_workbox_4754cb34_st",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_s_constructor",
+      "target": "public_workbox_4754cb34_e",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34",
+      "target": "public_workbox_4754cb34_e",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_x",
+      "target": "public_workbox_4754cb34_e",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_s",
+      "target": "public_workbox_4754cb34_s_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r",
+      "target": "public_workbox_4754cb34_r_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r",
+      "target": "public_workbox_4754cb34_r_setcatchhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r",
+      "target": "public_workbox_4754cb34_r_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r",
+      "target": "public_workbox_4754cb34_r_handleall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r",
+      "target": "public_workbox_4754cb34_r_q",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r",
+      "target": "public_workbox_4754cb34_r_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_constructor",
+      "target": "public_workbox_4754cb34_a_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_constructor",
+      "target": "public_workbox_4754cb34_r_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_setcatchhandler",
+      "target": "public_workbox_4754cb34_a_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_i",
+      "target": "public_workbox_4754cb34_i_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_routes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_addfetchlistener",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_addcachelistener",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_handlerequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_findmatchingroute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_setdefaulthandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_setcatchhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_registerroute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_unregisterroute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_i",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_settimestamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_gettimestamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_expireentries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a",
+      "target": "public_workbox_4754cb34_a_getdb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_c",
+      "target": "public_workbox_4754cb34_a_addfetchlistener",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_c",
+      "target": "public_workbox_4754cb34_a_addcachelistener",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_handlerequest",
+      "target": "public_workbox_4754cb34_a_findmatchingroute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_handlerequest",
+      "target": "public_workbox_4754cb34_r_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_setdefaulthandler",
+      "target": "public_workbox_4754cb34_a_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_setcatchhandler",
+      "target": "public_workbox_4754cb34_a_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_h",
+      "target": "public_workbox_4754cb34_a_registerroute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_h",
+      "target": "public_workbox_4754cb34_a_c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_u",
+      "target": "public_workbox_4754cb34_v_cachematch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_u",
+      "target": "public_workbox_4754cb34_v_fetchandcacheput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_u",
+      "target": "public_workbox_4754cb34_et",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_u",
+      "target": "public_workbox_4754cb34_st",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_u",
+      "target": "public_workbox_4754cb34_v_waituntil",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f",
+      "target": "public_workbox_4754cb34_f_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f",
+      "target": "public_workbox_4754cb34_f_expireentries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f",
+      "target": "public_workbox_4754cb34_f_updatetimestamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f",
+      "target": "public_workbox_4754cb34_f_isurlexpired",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f",
+      "target": "public_workbox_4754cb34_f_delete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_w",
+      "target": "public_workbox_4754cb34_f",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_d",
+      "target": "public_workbox_4754cb34_f",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_constructor",
+      "target": "public_workbox_4754cb34_w",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z_constructor",
+      "target": "public_workbox_4754cb34_w",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_p",
+      "target": "public_workbox_4754cb34_f_delete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cacheput",
+      "target": "public_workbox_4754cb34_p",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y",
+      "target": "public_workbox_4754cb34_y_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y",
+      "target": "public_workbox_4754cb34_y_u",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y",
+      "target": "public_workbox_4754cb34_y_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y",
+      "target": "public_workbox_4754cb34_y_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y",
+      "target": "public_workbox_4754cb34_y_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_g",
+      "target": "public_workbox_4754cb34_g_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetch",
+      "target": "public_workbox_4754cb34_m",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cachematch",
+      "target": "public_workbox_4754cb34_m",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cacheput",
+      "target": "public_workbox_4754cb34_m",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_getcachekey",
+      "target": "public_workbox_4754cb34_m",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_fetch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_fetchandcacheput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_cachematch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_cacheput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_getcachekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_hascallback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_runcallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_waituntil",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_donewaiting",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_destroy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_v_r",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v",
+      "target": "public_workbox_4754cb34_z",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_constructor",
+      "target": "public_workbox_4754cb34_v_waituntil",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetch",
+      "target": "public_workbox_4754cb34_v_hascallback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetch",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetch",
+      "target": "public_workbox_4754cb34_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_s",
+      "target": "public_workbox_4754cb34_v_fetch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetch",
+      "target": "public_workbox_4754cb34_v_runcallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetchandcacheput",
+      "target": "public_workbox_4754cb34_v_fetch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_k",
+      "target": "public_workbox_4754cb34_v_fetch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetchandcacheput",
+      "target": "public_workbox_4754cb34_v_waituntil",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_fetchandcacheput",
+      "target": "public_workbox_4754cb34_v_cacheput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_st",
+      "target": "public_workbox_4754cb34_v_fetchandcacheput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cachematch",
+      "target": "public_workbox_4754cb34_v_getcachekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cachematch",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cachematch",
+      "target": "public_workbox_4754cb34_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_u",
+      "target": "public_workbox_4754cb34_v_cachematch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_st",
+      "target": "public_workbox_4754cb34_v_cachematch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cacheput",
+      "target": "public_workbox_4754cb34_v_getcachekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cacheput",
+      "target": "public_workbox_4754cb34_v_r",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cacheput",
+      "target": "public_workbox_4754cb34_v_hascallback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cacheput",
+      "target": "public_workbox_4754cb34_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_cacheput",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_k",
+      "target": "public_workbox_4754cb34_v_cacheput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_s",
+      "target": "public_workbox_4754cb34_v_cacheput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_getcachekey",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_getcachekey",
+      "target": "public_workbox_4754cb34_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_runcallbacks",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_runcallbacks",
+      "target": "public_workbox_4754cb34_y_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_q",
+      "target": "public_workbox_4754cb34_v_runcallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_d",
+      "target": "public_workbox_4754cb34_v_runcallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_r",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_q",
+      "target": "public_workbox_4754cb34_v_iteratecallbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34",
+      "target": "public_workbox_4754cb34_v_waituntil",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_d",
+      "target": "public_workbox_4754cb34_v_donewaiting",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_d",
+      "target": "public_workbox_4754cb34_v_destroy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_v_r",
+      "target": "public_workbox_4754cb34_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_handle",
+      "target": "public_workbox_4754cb34_r_handleall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_handleall",
+      "target": "public_workbox_4754cb34_q",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_handleall",
+      "target": "public_workbox_4754cb34_r_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_q",
+      "target": "public_workbox_4754cb34_y_u",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_q",
+      "target": "public_workbox_4754cb34_a_i",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_r_q",
+      "target": "public_workbox_4754cb34_y_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_j",
+      "target": "public_workbox_4754cb34_r_d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_o",
+      "target": "public_workbox_4754cb34_b",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f_expireentries",
+      "target": "public_workbox_4754cb34_b",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_o",
+      "target": "public_workbox_4754cb34_y_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_t",
+      "target": "public_workbox_4754cb34_o",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_k",
+      "target": "public_workbox_4754cb34_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_c",
+      "target": "public_workbox_4754cb34_a_i",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_c",
+      "target": "public_workbox_4754cb34_y_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_settimestamp",
+      "target": "public_workbox_4754cb34_y_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_settimestamp",
+      "target": "public_workbox_4754cb34_a_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_settimestamp",
+      "target": "public_workbox_4754cb34_a_getdb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f_updatetimestamp",
+      "target": "public_workbox_4754cb34_a_settimestamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_gettimestamp",
+      "target": "public_workbox_4754cb34_a_getdb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_gettimestamp",
+      "target": "public_workbox_4754cb34_a_n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f_isurlexpired",
+      "target": "public_workbox_4754cb34_a_gettimestamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_expireentries",
+      "target": "public_workbox_4754cb34_a_getdb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_expireentries",
+      "target": "public_workbox_4754cb34_f_delete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_n",
+      "target": "public_workbox_4754cb34_y_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_a_getdb",
+      "target": "public_workbox_4754cb34_y_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_f_delete",
+      "target": "public_workbox_4754cb34_f_expireentries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_deletecacheandmetadata",
+      "target": "public_workbox_4754cb34_f_delete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z_install",
+      "target": "public_workbox_4754cb34",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z_activate",
+      "target": "public_workbox_4754cb34",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_strategy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_precache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "context": "call",
+      "source": "public_workbox_4754cb34_z_addtocachelist",
+      "target": "public_workbox_4754cb34_z",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_install",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_activate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_geturlstocachekeys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_getcachedurls",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_getcachekeyforurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_getintegrityforcachekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_matchprecache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z",
+      "target": "public_workbox_4754cb34_z_createhandlerboundtourl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_u",
+      "target": "public_workbox_4754cb34_y_s",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_u",
+      "target": "public_workbox_4754cb34_y_k",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_k",
+      "target": "public_workbox_4754cb34_y_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_y_s",
+      "target": "public_workbox_4754cb34_y_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z_precache",
+      "target": "public_workbox_4754cb34_z_addtocachelist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z_matchprecache",
+      "target": "public_workbox_4754cb34_z_getcachekeyforurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_z_createhandlerboundtourl",
+      "target": "public_workbox_4754cb34_z_getcachekeyforurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "public/workbox-4754cb34.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "public_workbox_4754cb34_et",
+      "target": "public_workbox_4754cb34_et_constructor",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": []
+}
