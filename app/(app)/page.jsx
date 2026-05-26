@@ -25,27 +25,28 @@ export default function Dashboard() {
   const supabase = createClient();
 
   useEffect(() => {
-    cargarDatos();
-  }, []);
-
-  async function cargarDatos() {
-    const { data: { user: authUser } } = await supabase.auth.getUser();
-    if (authUser) {
-      try {
-        const { data: userData } = await supabase.from('usuarios').select('nombre').eq('id', authUser.id).single();
-        setUser(userData || { nombre: authUser.email.split('@')[0] });
-      } catch {
-        setUser({ nombre: authUser.email.split('@')[0] });
+    async function cargarDatos() {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        try {
+          const { data: userData } = await supabase.from('usuarios').select('nombre').eq('id', authUser.id).single();
+          setUser(userData || { nombre: authUser.email.split('@')[0] });
+        } catch {
+          setUser({ nombre: authUser.email.split('@')[0] });
+        }
       }
+
+      const [total, pendientes, completadas] = await Promise.all([
+        db.productores.count(),
+        db.evaluaciones.where('estado').equals('borrador').count(),
+        db.evaluaciones.where('estado').equals('enviada').count(),
+      ]);
+
+      setStats({ total, pendientes, completadas });
     }
 
-    const [total, pendientes] = await Promise.all([
-      db.productores.count(),
-      db.evaluaciones.where('estado').equals('borrador').count(),
-    ]);
-
-    setStats({ total, pendientes, completadas: 0 });
-  }
+    cargarDatos();
+  }, [supabase]);
 
   return (
     <div className="flex flex-col gap-5 pb-10">

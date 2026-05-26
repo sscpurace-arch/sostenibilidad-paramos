@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import { useState } from 'react';
 import { db } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
@@ -58,17 +58,10 @@ export default function NuevoProductorPage() {
         created_at: new Date().toISOString()
       };
 
-      // 3. Guardar local
-      await db.productores.add(newProductor);
+      // 3. Guardar local y cola de sincronización (e intentar sync inmediato si hay red)
+      await saveRecord('productores', newProductor);
 
-      // 4. Cola de sincronización
-      await agregarACola('productores', 'INSERT', newProductor);
-
-      // 5. Intentar sync si hay red
-      if (navigator.onLine) {
-        await procesarCola(supabase);
-      }
-
+      setForm({ ...form, id: newId });
       setSuccess(true);
     } catch (e) {
       setError(e.message);
@@ -90,7 +83,7 @@ export default function NuevoProductorPage() {
             Evaluar ahora
           </button>
           <button 
-            onClick={() => { setSuccess(false); setForm({ ...form, cedula: '', nombre_completo: '' }); }}
+            onClick={() => { setSuccess(false); setForm({ ...form, id: undefined, cedula: '', nombre_completo: '' }); }}
             className="text-gray-500 py-2"
           >
             Registrar otro

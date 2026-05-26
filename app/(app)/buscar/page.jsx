@@ -8,6 +8,7 @@ import IconNuevo from '@/components/icons/IconNuevo';
 
 export default function BuscarPage() {
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [productores, setProductores] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -15,6 +16,13 @@ export default function BuscarPage() {
   useEffect(() => {
     cargarProductores();
   }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [query]);
 
   async function cargarProductores() {
     setLoading(true);
@@ -29,8 +37,8 @@ export default function BuscarPage() {
   }
 
   const filtered = productores.filter(p => 
-    p.nombre_completo?.toLowerCase().includes(query.toLowerCase()) ||
-    p.cedula?.includes(query)
+    p.nombre_completo?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+    p.cedula?.includes(debouncedQuery)
   );
 
   return (

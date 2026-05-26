@@ -7,9 +7,8 @@ import NavBar from '@/components/NavBar';
 import TopographicBg from '@/components/TopographicBg';
 
 export default function AppLayout({ children }) {
-  const supabase = createClient();
-
   useEffect(() => {
+    const supabase = createClient();
     initSyncEngine(supabase);
   }, []);
 

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import RadarChart from '@/components/RadarChart';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
 
@@ -94,7 +94,7 @@ export default function ResultadosEvaluacion({
             </div>
             
             <p className="text-sm text-blue-800 leading-relaxed mb-6 italic">
-              "{diagnostico.texto}"
+              &ldquo;{diagnostico.texto}&rdquo;
             </p>
 
             <div className="space-y-4">

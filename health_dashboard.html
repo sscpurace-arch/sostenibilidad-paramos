@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Salud del Proyecto — Sostenibilidad Páramos</title>
+  <!-- Google Fonts: Outfit & Nunito Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ══════════════════════════════════════════════
+       DESIGN SYSTEM & VARIABLES (Páramo Glow Dark)
+       ══════════════════════════════════════════════ */
+    :root {
+      --bg-deep: #05140b;
+      --bg-dark: #0a2012;
+      --bg-surface: #0e2d1a;
+      --bg-card: rgba(14, 45, 26, 0.45);
+      --bg-card-hover: rgba(20, 62, 36, 0.65);
+      --border-glow: rgba(3, 166, 74, 0.25);
+      --border-glow-hover: rgba(3, 166, 74, 0.45);
+      
+      --pnn-green: #03A64A;
+      --pnn-green-glow: rgba(3, 166, 74, 0.35);
+      --pnn-blue: #049DD9;
+      --pnn-blue-glow: rgba(4, 157, 217, 0.35);
+      --pnn-teal: #05C7F2;
+      --pnn-apple: #96BE52;
+      
+      --severity-critical: #ff3355;
+      --severity-critical-glow: rgba(255, 51, 85, 0.25);
+      --severity-high: #ff8800;
+      --severity-high-glow: rgba(255, 136, 0, 0.25);
+      --severity-medium: #ffcc00;
+      --severity-medium-glow: rgba(255, 204, 0, 0.25);
+      --severity-low: #00bfff;
+      --severity-low-glow: rgba(0, 191, 255, 0.25);
+      --severity-passed: #00e676;
+      --severity-passed-glow: rgba(0, 230, 118, 0.25);
+      
+      --text-main: #f0f7f3;
+      --text-muted: #a3c4b2;
+      --text-dark: #071f11;
+      
+      --font-outfit: 'Outfit', sans-serif;
+      --font-sans: 'Nunito Sans', sans-serif;
+      
+      --shadow-premium: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ══════════════════════════════════════════════
+       BASE & LAYOUT
+       ══════════════════════════════════════════════ */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: var(--bg-deep);
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(3, 166, 74, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(4, 157, 217, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 2rem 1.5rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ══════════════════════════════════════════════
+       TYPOGRAPHY & HERO
+       ══════════════════════════════════════════════ */
+    h1, h2, h3, h4 {
+      font-family: var(--font-outfit);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .hero-pretitle {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--pnn-teal);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+      text-shadow: 0 0 10px rgba(5, 199, 242, 0.3);
+    }
+
+    .hero-title {
+      font-size: 2.75rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--text-main) 30%, var(--pnn-apple) 70%, var(--pnn-teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ══════════════════════════════════════════════
+       SUMMARY BOARD (GRID)
+       ══════════════════════════════════════════════ */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1.6fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card Base */
+    .card-glass {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-premium);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-glass:hover {
+      border-color: var(--border-glow-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(3, 166, 74, 0.12);
+    }
+
+    /* Circular Score Card */
+    .score-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 500px) {
+      .score-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    .gauge-wrapper {
+      position: relative;
+      width: 170px;
+      height: 170px;
+    }
+
+    .gauge-svg {
+      transform: rotate(-90deg);
+      width: 170px;
+      height: 170px;
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 14;
+    }
+
+    .gauge-progress {
+      fill: none;
+      stroke: url(#gauge-gradient);
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 440; /* Will animate via JS */
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gauge-text-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .gauge-percentage {
+      font-family: var(--font-outfit);
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1;
+      text-shadow: 0 0 15px rgba(3, 166, 74, 0.4);
+    }
+
+    .gauge-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--pnn-apple);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+
+    .score-info {
+      flex: 1;
+    }
+
+    .score-badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      background: var(--severity-medium-glow);
+      color: var(--severity-medium);
+      border: 1px solid var(--severity-medium);
+      box-shadow: 0 0 10px rgba(255, 204, 0, 0.15);
+      animation: pulse-border 2s infinite;
+    }
+
+    .score-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .score-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Quick stats grid */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+      transition: var(--transition-smooth);
+    }
+
+    .stat-box:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(3, 166, 74, 0.15);
+    }
+
+    .stat-value {
+      font-family: var(--font-outfit);
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Severity Indicators horizontal list */
+    .severity-bar {
+      grid-column: span 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 0.75rem 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .severity-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    /* ══════════════════════════════════════════════
+       INTERACTIVE TABS
+       ══════════════════════════════════════════════ */
+    .tabs-wrapper {
+      margin-bottom: 2rem;
+      animation: fadeInUp 1.2s ease-out forwards;
+    }
+
+    .tabs-header {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .tabs-header::-webkit-scrollbar {
+      display: none; /* Safari/Chrome */
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-outfit);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active {
+      color: var(--text-main);
+      background: var(--bg-surface);
+      box-shadow: inset 0 0 0 1px var(--pnn-green);
+    }
+
+    .tab-btn .badge {
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 0.7rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+      font-weight: 800;
+    }
+
+    .tab-btn.active .badge {
+      background: var(--pnn-green);
+      color: var(--text-dark);
+    }
+
+    /* ══════════════════════════════════════════════
+       FILTER & SEARCH BAR
+       ══════════════════════════════════════════════ */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      max-width: 350px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.7rem 1rem 0.7rem 2.5rem;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      border-color: var(--pnn-green);
+      box-shadow: 0 0 15px rgba(3, 166, 74, 0.2);
+      outline: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 0.4rem 0.8rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-pill:hover, .filter-pill.active {
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .filter-pill.active.crit { background: var(--severity-critical-glow); color: var(--severity-critical); border-color: var(--severity-critical); }
+    .filter-pill.active.high { background: var(--severity-high-glow); color: var(--severity-high); border-color: var(--severity-high); }
+    .filter-pill.active.med { background: var(--severity-medium-glow); color: var(--severity-medium); border-color: var(--severity-medium); }
+    .filter-pill.active.low { background: var(--severity-low-glow); color: var(--severity-low); border-color: var(--severity-low); }
+    .filter-pill.active.pass { background: var(--severity-passed-glow); color: var(--severity-passed); border-color: var(--severity-passed); }
+
+    /* ══════════════════════════════════════════════
+       ISSUES ACCORDION LIST
+       ══════════════════════════════════════════════ */
+    .issues-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .issue-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .issue-item:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(14, 45, 26, 0.55);
+    }
+
+    .issue-header {
+      padding: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      user-select: none;
+    }
+
+    .issue-title-area {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .severity-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.25rem 0.6rem;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      border: 1px solid currentColor;
+    }
+
+    .severity-badge.critical { background: var(--severity-critical-glow); color: var(--severity-critical); }
+    .severity-badge.high { background: var(--severity-high-glow); color: var(--severity-high); }
+    .severity-badge.medium { background: var(--severity-medium-glow); color: var(--severity-medium); }
+    .severity-badge.low { background: var(--severity-low-glow); color: var(--severity-low); }
+    .severity-badge.passed { background: var(--severity-passed-glow); color: var(--severity-passed); }
+
+    .issue-code-id {
+      font-family: var(--font-outfit);
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .issue-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .issue-chevron {
+      color: var(--text-muted);
+      transition: transform 0.3s ease;
+      width: 18px;
+      height: 18px;
+    }
+
+    .issue-item.open .issue-chevron {
+      transform: rotate(180deg);
+    }
+
+    .issue-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(0, 0, 0, 0.15);
+      border-top: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .issue-item.open .issue-content {
+      max-height: 1000px; /* high enough limit */
+    }
+
+    .issue-body-inner {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      font-size: 0.9rem;
+    }
+
+    .meta-table {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.4rem 1.5rem;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      width: fit-content;
+    }
+
+    .meta-label {
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .meta-value {
+      font-family: monospace;
+      color: var(--pnn-teal);
+    }
+
+    .meta-value.link {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .issue-desc {
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .code-block-wrapper {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      color: #92e0b3;
+      overflow-x: auto;
+    }
+
+    .recommendation-box {
+      background: rgba(3, 166, 74, 0.05);
+      border-left: 4px solid var(--pnn-green);
+      border-radius: 0 10px 10px 0;
+      padding: 1rem;
+    }
+
+    .recommendation-title {
+      font-family: var(--font-outfit);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--pnn-apple);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+
+    /* ══════════════════════════════════════════════
+       PLAYGROUND ACTION PLAN CHECKLIST
+       ══════════════════════════════════════════════ */
+    .action-playground {
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .playground-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .playground-title {
+      font-size: 1.35rem;
+      color: var(--text-main);
+    }
+
+    .playground-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .playground-actions-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .playground-actions-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .checklist-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 1rem;
+      border-radius: 12px;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checklist-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(3, 166, 74, 0.15);
+    }
+
+    .checklist-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      margin-top: 0.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+      color: var(--text-dark);
+      background: transparent;
+      shrink-0: 0;
+    }
+
+    .checklist-item.checked .checklist-checkbox {
+      background: var(--pnn-green);
+      border-color: var(--pnn-green);
+      box-shadow: 0 0 10px rgba(3, 166, 74, 0.4);
+    }
+
+    .checklist-checkbox svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 4px;
+      display: none;
+    }
+
+    .checklist-item.checked .checklist-checkbox svg {
+      display: block;
+    }
+
+    .checklist-content {
+      flex: 1;
+    }
+
+    .checklist-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .checklist-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      transition: var(--transition-smooth);
+    }
+
+    .checklist-item.checked .checklist-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .checklist-tag-group {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .checklist-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .checklist-tag.crit { background: var(--severity-critical-glow); color: var(--severity-critical); }
+    .checklist-tag.high { background: var(--severity-high-glow); color: var(--severity-high); }
+    .checklist-tag.med { background: var(--severity-medium-glow); color: var(--severity-medium); }
+    .checklist-tag.low { background: var(--severity-low-glow); color: var(--severity-low); }
+
+    .checklist-time {
+      font-size: 0.7rem;
+      font-family: var(--font-outfit);
+      font-weight: 700;
+      color: var(--pnn-apple);
+    }
+
+    .checklist-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ══════════════════════════════════════════════
+       ANIMATIONS
+       ══════════════════════════════════════════════ */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse-border {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 204, 0, 0.15);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.35);
+      }
+    }
+
+    /* Success Message Animation */
+    .success-celebration {
+      display: none;
+      background: linear-gradient(135deg, rgba(3, 166, 74, 0.2) 0%, rgba(4, 157, 217, 0.2) 100%);
+      border: 2px dashed var(--pnn-green);
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: breathe 3s ease-in-out infinite;
+    }
+
+    .success-celebration-title {
+      font-size: 1.75rem;
+      color: var(--pnn-apple);
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- ═══ HERO SECTION ═══ -->
+  <header class="hero">
+    <span class="hero-pretitle">Páramo Digital · Auditoría Técnica</span>
+    <h1 class="hero-title">Dashboard de Salud del Proyecto</h1>
+    <p class="hero-subtitle">Visualización interactiva y plan de acción de la auditoría de preparación para producción de <strong>Sostenibilidad Páramos (PNN Puracé)</strong>.</p>
+  </header>
+
+  <!-- ═══ SUCCESS CELEBRATION (HIDDEN BY DEFAULT) ═══ -->
+  <div class="success-celebration" id="celebration-box">
+    <h2 class="success-celebration-title">🎉 ¡PROYECTO 100% LISTO PARA PRODUCCIÓN! 🎉</h2>
+    <p>Has resuelto todas las tareas críticas, altas, medias y bajas. La aplicación de Sostenibilidad Páramos está en condiciones perfectas y seguras para su despliegue funcional en el territorio.</p>
+  </div>
+
+  <!-- ═══ SUMMARY BOARD ═══ -->
+  <section class="summary-grid">
+    
+    <!-- circular score gauge card -->
+    <div class="card-glass score-card">
+      <div class="gauge-wrapper">
+        <svg class="gauge-svg" viewBox="0 0 160 160">
+          <defs>
+            <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#049DD9" />
+              <stop offset="60%" stop-color="#03A64A" />
+              <stop offset="100%" stop-color="#96BE52" />
+            </linearGradient>
+          </defs>
+          <circle class="gauge-bg" cx="80" cy="80" r="70"></circle>
+          <circle class="gauge-progress" id="score-circle" cx="80" cy="80" r="70"></circle>
+        </svg>
+        <div class="gauge-text-container">
+          <div class="gauge-percentage" id="score-percent">68%</div>
+          <div class="gauge-label" id="score-grade">Media</div>
+        </div>
+      </div>
+      <div class="score-info">
+        <span class="score-badge" id="score-status-badge">Preparación Media</span>
+        <h2 class="score-title">Salud del Código</h2>
+        <p class="score-desc">La aplicación cuenta con una arquitectura offline-first sobresaliente. Sin embargo, contiene <strong>3 hallazgos críticos</strong> que bloquean el lanzamiento comercial, principalmente el flujo de registro roto y la PWA rota por falta de iconos.</p>
+      </div>
+    </div>
+
+    <!-- quick statistics grid card -->
+    <div class="card-glass quick-stats">
+      
+      <div class="stat-box">
+        <div class="stat-value" style="color: var(--severity-critical);" id="stat-crit-count">3</div>
+        <div class="stat-label">Críticos</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" style="color: var(--severity-high);" id="stat-high-count">6</div>
+        <div class="stat-label">Prioridad Alta</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" style="color: var(--severity-medium);" id="stat-med-count">6</div>
+        <div class="stat-label">Media / Baja</div>
+      </div>
+
+      <div class="severity-bar">
+        <div class="severity-pill" style="color: var(--severity-critical);">
+          <span class="dot"></span> 3 Críticos
+        </div>
+        <div class="severity-pill" style="color: var(--severity-high);">
+          <span class="dot"></span> 6 Altas
+        </div>
+        <div class="severity-pill" style="color: var(--severity-medium);">
+          <span class="dot"></span> 6 Medias
+        </div>
+        <div class="severity-pill" style="color: var(--severity-low);">
+          <span class="dot"></span> 9 Bajas
+        </div>
+        <div class="severity-pill" style="color: var(--severity-passed);">
+          <span class="dot"></span> 5 Aprobados
+        </div>
+      </div>
+      
+    </div>
+
+  </section>
+
+  <!-- ═══ INTERACTIVE TABS ═══ -->
+  <section class="tabs-wrapper">
+    <div class="tabs-header">
+      <button class="tab-btn active" onclick="switchTab('all')">Todos <span class="badge">29</span></button>
+      <button class="tab-btn" onclick="switchTab('security')">Seguridad <span class="badge">8</span></button>
+      <button class="tab-btn" onclick="switchTab('architecture')">Arquitectura & Perf <span class="badge">11</span></button>
+      <button class="tab-btn" onclick="switchTab('qa')">QA & UX <span class="badge">13</span></button>
+      <button class="tab-btn" onclick="switchTab('action')" style="color: var(--pnn-apple); border: 1px dashed rgba(150, 190, 82, 0.3)">
+        Plan de Acción Interactivo <span class="badge" style="background: var(--pnn-apple); color: #000;">24</span>
+      </button>
+    </div>
+
+    <!-- FILTER BAR FOR AUDIT FINDINGS -->
+    <div class="filter-bar" id="audit-filters-row">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Buscar por archivo, código o palabra clave..." onkeyup="filterIssues()">
+      </div>
+      <div class="filter-pills">
+        <button class="filter-pill active" onclick="toggleFilter('all', this)">Ver Todo</button>
+        <button class="filter-pill crit" onclick="toggleFilter('critical', this)">Crítico (3)</button>
+        <button class="filter-pill high" onclick="toggleFilter('high', this)">Alta (6)</button>
+        <button class="filter-pill med" onclick="toggleFilter('medium', this)">Media (6)</button>
+        <button class="filter-pill low" onclick="toggleFilter('low', this)">Baja (9)</button>
+        <button class="filter-pill pass" onclick="toggleFilter('passed', this)">Aprobado (5)</button>
+      </div>
+    </div>
+
+    <!-- AUDIT FINDINGS TABS -->
+    <div class="issues-list" id="issues-container">
+      <!-- Issues will be dynamically listed here -->
+    </div>
+
+    <!-- INTERACTIVE CHECKLIST PLAYGROUND (TAB CONTENT) -->
+    <div class="action-playground" id="playground-container" style="display: none;">
+      <div class="card-glass" style="margin-bottom: 2rem;">
+        <div class="playground-header">
+          <div>
+            <h2 class="playground-title">Simulador Interactivo de Mitigación</h2>
+            <p class="playground-subtitle">Marca los hallazgos a medida que los soluciones para observar cómo mejora dinámicamente la calificación de salud en tiempo real.</p>
+          </div>
+          <div style="display:flex; gap: 0.5rem;">
+            <button class="playground-actions-btn" onclick="checkAllPlayground(true)">Marcar Todo</button>
+            <button class="playground-actions-btn" onclick="checkAllPlayground(false)">Limpiar Todo</button>
+          </div>
+        </div>
+
+        <div class="checklist-list" id="checklist-container">
+          <!-- Action steps with checkboxes here -->
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+  /* ══════════════════════════════════════════════
+     DATA MODEL — 24 FINDINGS + 5 PASSED
+     ══════════════════════════════════════════════ */
+  const issuesData = [
+    // CRITICALS
+    {
+      id: "ARQ-01",
+      category: "architecture",
+      severity: "critical",
+      title: "Funciones no definidas romperán el registro en runtime",
+      file: "app/(app)/nuevo-productor/page.jsx",
+      lines: "L62-L69",
+      desc: "Las funciones 'agregarACola' y 'procesarCola' son invocadas en las líneas 65 y 69 pero no existen ni se importan en el archivo, lo que producirá un error fatal (ReferenceError) inmediatamente al intentar crear un productor.",
+      code: "await agregarACola('productores', 'INSERT', newProductor);\n...\nawait procesarCola(supabase);",
+      solution: "Importar y usar 'saveRecord' desde @/lib/sync-engine.js, que encapsula de forma nativa e IndexedDB-first este proceso."
+    },
+    {
+      id: "QA-02",
+      category: "qa",
+      severity: "critical",
+      title: "El botón 'Evaluar ahora' redirige a una URL vacía/incorrecta",
+      file: "app/(app)/nuevo-productor/page.jsx",
+      lines: "L87",
+      desc: "Tras guardar exitosamente un productor, 'form.id' se intenta usar para navegar al módulo de calificación. Sin embargo, 'form.id' nunca se actualiza tras el guardado local, por lo que el redireccionamiento navega a '/calificacion/nueva/' sin el ID del productor.",
+      code: "router.push(`/calificacion/nueva/${form.id || ''}`)",
+      solution: "Asignar el ID autogenerado del nuevo registro ('newProductor.id') a una variable y realizar el push con dicho ID de forma correcta."
+    },
+    {
+      id: "QA-08",
+      category: "qa",
+      severity: "critical",
+      title: "Manifiesto PWA referencia iconos PNG inexistentes en el servidor",
+      file: "public/manifest.json",
+      lines: "L10-L19",
+      desc: "El manifest de PWA requiere iconos PNG de tamaños 192x192 y 512x512. El archivo de configuración apunta a '/icon-192x192.png' y '/icon-512x512.png', pero estos archivos no existen en 'public/'. La PWA no será catalogada como instalable por los navegadores.",
+      code: "\"icons\": [\n  { \"src\": \"/icon-192x192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\" },\n  { \"src\": \"/icon-512x512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\" }\n]",
+      solution: "Exportar el SVG del logo del proyecto en formato PNG optimizado a los tamaños correspondientes y guardarlos en la carpeta public."
+    },
+    
+    // HIGHS
+    {
+      id: "SEC-01",
+      category: "security",
+      severity: "high",
+      title: "Exposición de URL y ANON_KEY de Supabase en variables de entorno cliente",
+      file: ".env.local",
+      lines: "L1-L2",
+      desc: "Las variables NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY están expuestas. Esto es normal por diseño en Supabase SSR, pero es altamente crítico que RLS (Row Level Security) esté configurado con absoluta rigidez en la base de datos.",
+      code: "NEXT_PUBLIC_SUPABASE_URL=https://...\nNEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...",
+      solution: "Verificar políticas estrictas en el panel de Supabase para que ningún actor malicioso abuse del anon key expuesto."
+    },
+    {
+      id: "SEC-02",
+      category: "security",
+      severity: "high",
+      title: "Email institucional hardcodeado como valor por defecto de login",
+      file: "app/(auth)/login/page.jsx",
+      lines: "L7",
+      desc: "El correo electrónico 'sscpurace@gmail.com' está configurado como valor por defecto en la inicialización del estado, exponiendo la identidad oficial del usuario y facilitando ataques de fuerza bruta al conocer ya el usuario.",
+      code: "const [email, setEmail] = useState('sscpurace@gmail.com');",
+      solution: "Cambiar el estado por defecto a cadena vacía: useState('') y permitir que el usuario escriba su correo de forma natural."
+    },
+    {
+      id: "SEC-07",
+      category: "security",
+      severity: "high",
+      title: "Operaciones de eliminación del lado del cliente carecen de validación de autoría",
+      file: "app/(app)/calificacion/nueva/[productorId]/page.jsx",
+      lines: "L83-L116",
+      desc: "La función 'handleEliminar' realiza el borrado completo en cascada de evaluaciones y respuestas directamente, confiando exclusivamente en políticas de BD de Supabase. Si RLS falla, cualquier usuario autenticado podría eliminar evaluaciones de otros técnicos.",
+      code: "await db.evaluaciones.delete(id);\nawait _supabase.from('evaluaciones').delete().eq('id', id);",
+      solution: "Verificar en las políticas RLS que el DELETE solo esté habilitado si 'auth.uid() = tecnico_id'."
+    },
+    {
+      id: "SEC-08",
+      category: "security",
+      severity: "high",
+      title: "Sincronización inicial descarga la base de datos completa sin paginación",
+      file: "lib/sync-engine.js",
+      lines: "L263-L291",
+      desc: "La sincronización inicial 'syncInitialData' descarga todos los registros de productores, evaluaciones e indicadores. Esto expone potencialmente datos de otros usuarios, rompe el límite de 1000 filas por consulta de Supabase y degrada críticamente el ancho de banda del celular en campo.",
+      code: "_supabase.from('productores').select('*'),\n_supabase.from('evaluaciones').select('*')",
+      solution: "Implementar filtros server-side basados en el ID del técnico autenticado y paginar la descarga para evitar sobrecargar memoria local."
+    },
+    {
+      id: "QA-12",
+      category: "qa",
+      severity: "high",
+      title: "Icono de marcador Leaflet depende de CDN externo (Inviable offline)",
+      file: "components/Map.jsx",
+      lines: "L8-L16",
+      desc: "El componente del mapa carga la imagen del marcador desde 'unpkg.com/leaflet' vía URL HTTP externa. Dado que el software está diseñado para operar offline en el páramo, los marcadores serán invisibles en campo por la falta de señal.",
+      code: "iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png'",
+      solution: "Descargar los iconos de Leaflet y colocarlos en la carpeta 'public/images/', referenciándolos con rutas relativas locales."
+    },
+    {
+      id: "ARQ-09",
+      category: "architecture",
+      severity: "high",
+      title: "Contador de estadísticas 'Completadas' hardcodeado en cero",
+      file: "app/(app)/page.jsx",
+      lines: "L47, L104",
+      desc: "En el dashboard, el contador 'Completas' siempre muestra 0 porque se le asigna de manera constante un valor duro en la función cargarDatos(), impidiendo al técnico monitorear cuántas evaluaciones ha subido con éxito.",
+      code: "setStats({ total, pendientes, completadas: 0 });",
+      solution: "Agregar un contador dinámico con Dexie: 'db.evaluaciones.where('estado').equals('enviada').count()' e incorporarlo al setStats."
+    },
+
+    // MEDIUMS
+    {
+      id: "ARQ-02",
+      category: "architecture",
+      severity: "medium",
+      title: "Excesivo uso de Client Components rompe los beneficios de Next.js 14",
+      file: "Todas las rutas (11 páginas)",
+      lines: "L1",
+      desc: "Todas las páginas de la aplicación hacen uso obligatorio de 'use client'. Esto elimina por completo las bondades de Server Components y SSR (Server-Side Rendering) nativo, forzando la descarga de toda la UI en JS en el dispositivo cliente.",
+      code: "'use client';\nimport { useState, ... }",
+      solution: "Evaluar qué secciones o layouts pueden ser convertidos en Server Components, manteniendo los estados interactivos (como mapas y formularios) aislados."
+    },
+    {
+      id: "ARQ-04",
+      category: "architecture",
+      severity: "medium",
+      title: "Progreso de indicadores hardcodeado en 29 ítems",
+      file: "app/(app)/en-proceso/page.jsx",
+      lines: "L56-L59",
+      desc: "El cálculo del porcentaje visual de llenado de la evaluación se divide en duro por '29'. Si se agregan nuevos indicadores o se cambian las preguntas de biodiversidad o gobernanza en el backend, la barra de progreso romperá su escala o reportará valores inconsistentes.",
+      code: "style={{ width: `${(item.respondidos / 29) * 100}%` }}",
+      solution: "Contar de forma reactiva los indicadores disponibles en IndexedDB utilizando 'db.indicadores.count()' e inicializar el divisor con ese número."
+    },
+    {
+      id: "QA-01",
+      category: "qa",
+      severity: "medium",
+      title: "Ausencia de controles de recuperación de contraseña y logout en UI",
+      file: "app/(auth)/login/page.jsx & components/NavBar.jsx",
+      lines: "Global UI",
+      desc: "No existe en la interfaz ningún botón o opción de logout o cierre de sesión rápido. Asimismo, el formulario de Login carece de la opción de 'Recuperar contraseña' para técnicos que olviden sus claves en el territorio.",
+      code: "<!-- No logout found in NavBar or AppHeader -->",
+      solution: "Implementar un botón de logout seguro en el NavBar o el Header llamando a supabase.auth.signOut(), y enlazar la recuperación nativa de Supabase."
+    },
+    {
+      id: "QA-07",
+      category: "qa",
+      severity: "medium",
+      title: "Recarga de datos en eliminación usa 'setTimeout' frágil en lugar de await",
+      file: "app/(app)/calificacion/nueva/[productorId]/page.jsx",
+      lines: "L109",
+      desc: "Tras la confirmación de eliminación de una calificación en proceso, el sistema espera arbitrariamente 1.5 segundos (1500ms) para gatillar la recarga de datos locales en lugar de esperar la promesa nativa, lo cual puede derivar en condiciones de carrera con dispositivos lentos.",
+      code: "setTimeout(cargarDatos, 1500);",
+      solution: "Reemplazar el setTimeout por un flujo asíncrono ordenado con 'await' sobre las funciones de borrado deIndexedDB y Supabase."
+    },
+    {
+      id: "QA-05",
+      category: "qa",
+      severity: "medium",
+      title: "Descarga de archivo GeoJSON (1.2MB) en cada recarga de Mapa sin caché",
+      file: "components/Map.jsx",
+      lines: "L40-L45",
+      desc: "El perímetro del Parque Nacional Natural Puracé (1.2MB en formato GeoJSON) se descarga de manera incondicional de los assets estáticos cada vez que se ingresa a la pestaña de mapas. Esto consumirá megabytes críticos y ralentizará la interacción del mapa offline.",
+      code: "fetch('/images/pnn_perimetro.geojson')",
+      solution: "Almacenar el GeoJSON en la base de datos local Dexie una sola vez durante la descarga inicial y leerlo localmente en los componentes de mapas."
+    },
+    {
+      id: "SEC-03",
+      category: "security",
+      severity: "medium",
+      title: "Ausencia de rate limiting local en el formulario de Login",
+      file: "app/(auth)/login/page.jsx",
+      lines: "L14-L35",
+      desc: "El flujo de inicio de sesión de usuario no cuenta con un sistema de cooldown tras registrar sucesivos intentos fallidos de autenticación, lo que permitiría scripts automatizados de ataque local rápidos.",
+      code: "const handleLogin = async () => {\n  setLoading(true); ...",
+      solution: "Agregar un contador de intentos fallidos en un estado con persistencia temporal (sessionStorage) y bloquear el botón durante un periodo exponencial."
+    },
+
+    // LOWS
+    {
+      id: "ARQ-03",
+      category: "architecture",
+      severity: "low",
+      title: "Instanciación múltiple innecesaria de Supabase Client en vistas",
+      file: "Rutas múltiples",
+      lines: "Variable",
+      desc: "La función createClient() se invoca múltiples veces en el cuerpo principal de las vistas fuera de hooks de React, instanciando un nuevo cliente en cada render, lo cual es ineficiente aunque @supabase/ssr intente mitigar como singleton.",
+      code: "const supabase = createClient(); // En el cuerpo del componente",
+      solution: "Instanciar el cliente Supabase una sola vez y pasarlo mediante un React Context Provider para consumo general."
+    },
+    {
+      id: "ARQ-05",
+      category: "architecture",
+      severity: "low",
+      title: "Deuda Técnica: Archivos basura y debug en la raíz del repositorio",
+      file: "Raíz del proyecto",
+      lines: "Estructura de archivos",
+      desc: "Presencia de directorios legacy como 'backup_v1', 5 archivos HTML de debugging (debug_3.html, debug_full.html, etc.), scripts SQL enormes (02_import_datos_historicos.sql) y archivos de migración innecesarios que inflan el tamaño del repositorio.",
+      code: "backup_v1/, debug_*.html, 02_import_datos_historicos.sql",
+      solution: "Añadir estas extensiones y nombres al archivo .gitignore, eliminar los archivos debug obsoletos y archivar respaldos fuera de la rama principal."
+    },
+    {
+      id: "ARQ-06",
+      category: "architecture",
+      severity: "low",
+      title: "Presencia de console.log y console.error de desarrollo en producción",
+      file: "Múltiples archivos (lib/sync-engine.js, etc.)",
+      lines: "Múltiples",
+      desc: "El código fuente está saturado de impresiones por consola utilizadas para control de flujo del desarrollador. Algunas de estas impresiones incluyen caracteres especiales y emojis pesados.",
+      code: "console.log('🗑️ Registro borrado local');",
+      solution: "Configurar un wrapper condicional sobre console.log que evalúe si process.env.NODE_ENV === 'development' antes de emitir a consola."
+    },
+    {
+      id: "ARQ-07",
+      category: "architecture",
+      severity: "low",
+      title: "Carga incondicional de XLSX sin importación dinámica",
+      file: "package.json & components",
+      lines: "Dependencies",
+      desc: "La librería pesada 'xlsx' (~300KB) para exportar reportes de sostenibilidad a Excel se carga de manera síncrona, incrementando el bundle size inicial innecesariamente para vistas donde no se utiliza.",
+      code: "import * as XLSX from 'xlsx';",
+      solution: "Implementar importaciones dinámicas 'await import(\"xlsx\")' encapsulada puramente en la función handleExportToExcel()."
+    },
+    {
+      id: "ARQ-08",
+      category: "architecture",
+      severity: "low",
+      title: "Estructura legacy de base de datos offline Dexie en migraciones",
+      file: "lib/db-offline.js",
+      lines: "L5-L37",
+      desc: "El esquema de Dexie contiene almacenes definidos en las versiones 3 y 4 con valor nulo para forzar su borrado. Aunque es técnicamente correcto para la migración de datos, ensucia la lectura del archivo de configuración principal.",
+      code: "dimensiones: null, calificaciones: null",
+      solution: "Consolidar el esquema en una sola versión limpia de arranque una vez que se haga el pase a producción final."
+    },
+    {
+      id: "QA-04",
+      category: "qa",
+      severity: "low",
+      title: "Ausencia de debounce en el campo de búsqueda de productores",
+      file: "app/(app)/buscar/page.jsx",
+      lines: "L35",
+      desc: "La búsqueda ejecuta la query de coincidencia en el array de productores en cada pulsación de tecla ('onChange') sin control de tiempo de espera (debounce), lo que con cientos de registros provocará parpadeos y lentitud en la interfaz móvil.",
+      code: "onChange={(e) => filtrar(e.target.value)}",
+      solution: "Implementar una función debounce de 150-300ms para retrasar el filtro hasta que el usuario finalice de tipear."
+    },
+    {
+      id: "QA-09",
+      category: "qa",
+      severity: "low",
+      title: "Falta de atributos de Accesibilidad Web (ARIA y Roles)",
+      file: "Componentes múltiples (IndicadorCard, NavBar, etc.)",
+      lines: "UI",
+      desc: "La aplicación carece de etiquetas aria-label para los botones de navegación con iconos de flechas, los botones numéricos de puntuación de sostenibilidad carecen de descripción audible, y las tablas de base de datos no declaran sus scopes.",
+      code: "<button className=\"icon-btn\"><ArrowLeftIcon /></button>",
+      solution: "Incorporar aria-label='Volver a la base de datos' y roles de botón correspondientes para cumplir directrices WCAG."
+    },
+    {
+      id: "QA-10",
+      category: "qa",
+      severity: "low",
+      title: "Bloqueo de zoom en Viewport de página principal restringe accesibilidad",
+      file: "app/layout.js",
+      lines: "L17-L23",
+      desc: "La configuración de viewport bloquea el zoom del usuario ('userScalable: false', 'maximumScale: 1'). Aunque emula el look-and-feel de una app nativa, es un severo obstáculo para personas con visibilidad reducida en el campo.",
+      code: "maximumScale: 1, userScalable: false",
+      solution: "Remover 'userScalable: false' para permitir al navegador expandir de forma nativa por necesidades físicas del técnico."
+    },
+    {
+      id: "QA-11",
+      category: "qa",
+      severity: "low",
+      title: "Duplicación del import de estilos CSS de Leaflet (CDN e internamente)",
+      file: "app/globals.css & components/Map.jsx",
+      lines: "L5",
+      desc: "Los estilos de Leaflet se importan síncronamente desde UNPKG CDN en globals.css, pero a su vez ya se importan localmente a través de NPM en el componente del mapa. Esto provoca solicitudes HTTP redundantes.",
+      code: "@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');",
+      solution: "Remover el import de globals.css y depender únicamente del bundle css local embebido en el módulo de mapas."
+    }
+  ];
+
+  const passedData = [
+    {
+      id: "PASS-01",
+      category: "security",
+      severity: "passed",
+      title: "Middleware de Autenticación correctamente securizado",
+      file: "middleware.js",
+      lines: "L1-L84",
+      desc: "El middleware utiliza el cliente seguro SSR de Supabase, verificando 'getUser()' de forma activa en lugar de 'getSession()', mitigando la suplantación de identidad en cookies del lado del cliente de forma excelente."
+    },
+    {
+      id: "PASS-02",
+      category: "security",
+      severity: "passed",
+      title: "Código completamente libre de inyecciones XSS",
+      file: "Todos los componentes",
+      lines: "Global",
+      desc: "No se realiza el uso de 'dangerouslySetInnerHTML' ni interpolaciones inseguras en JSX. Todo el código pasa por el escapado nativo y seguro de React para mitigar vectores de Cross-Site Scripting."
+    },
+    {
+      id: "PASS-03",
+      category: "architecture",
+      severity: "passed",
+      title: "Excelente modularización y separación de responsabilidades",
+      file: "components/ (17 componentes)",
+      lines: "Global",
+      desc: "La arquitectura presenta una estructuración de componentes aislados y sumamente enfocados (AppHeader, IndicadorCard, ResultadosEvaluacion, etc.), con hooks personalizados muy limpios."
+    },
+    {
+      id: "PASS-04",
+      category: "architecture",
+      severity: "passed",
+      title: "Sync Engine robusto con control de cola e IndexedDB-first",
+      file: "lib/sync-engine.js",
+      lines: "L1-L292",
+      desc: "El motor de sincronización offline-first está extraordinariamente diseñado: maneja deduplicación, retry de 5 intentos, limpieza asíncrona de logs viejos tras 24h y listeners de reconexión nativos al sistema."
+    },
+    {
+      id: "PASS-05",
+      category: "qa",
+      severity: "passed",
+      title: "Validación de formularios exhaustiva implementada con Zod v4",
+      file: "lib/validation.js",
+      lines: "L10-L61",
+      desc: "Los esquemas de validación dinámicos por indicador impiden el envío de formularios incompletos, alertando al usuario de forma contextual y arrastrando el scroll vertical automáticamente al campo con error."
+    }
+  ];
+
+  /* ══════════════════════════════════════════════
+     UI LOGIC: RENDER FINDINGS
+     ══════════════════════════════════════════════ */
+  let currentCategoryTab = 'all';
+  let currentSeverityFilter = 'all';
+
+  function renderIssues() {
+    const container = document.getElementById('issues-container');
+    container.innerHTML = '';
+
+    // Join issues and passed elements depending on severity filter
+    let list = [...issuesData];
+    if (currentSeverityFilter === 'passed' || currentSeverityFilter === 'all') {
+      list = [...list, ...passedData];
+    }
+
+    // Filter by Tab (Category)
+    if (currentCategoryTab !== 'all') {
+      list = list.filter(item => item.category === currentCategoryTab);
+    }
+
+    // Filter by Severity Pill
+    if (currentSeverityFilter !== 'all') {
+      list = list.filter(item => item.severity === currentSeverityFilter);
+    }
+
+    // Filter by Search Query
+    const searchVal = document.getElementById('search-input').value.toLowerCase();
+    if (searchVal) {
+      list = list.filter(item => 
+        item.title.toLowerCase().includes(searchVal) ||
+        item.id.toLowerCase().includes(searchVal) ||
+        item.file.toLowerCase().includes(searchVal) ||
+        item.desc.toLowerCase().includes(searchVal)
+      );
+    }
+
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div class="card-glass" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+          <p style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">Ningún hallazgo coincide con los filtros</p>
+          <p style="font-size: 0.85rem;">Prueba a cambiar tu término de búsqueda o selecciona otra categoría.</p>
+        </div>
+      `;
+      return;
+    }
+
+    list.forEach(issue => {
+      const isPassed = issue.severity === 'passed';
+      const item = document.createElement('div');
+      item.className = 'issue-item';
+      item.setAttribute('data-id', issue.id);
+
+      let severityLabel = issue.severity;
+      if (severityLabel === 'critical') severityLabel = 'Crítico';
+      else if (severityLabel === 'high') severityLabel = 'Alta';
+      else if (severityLabel === 'medium') severityLabel = 'Media';
+      else if (severityLabel === 'low') severityLabel = 'Baja';
+      else if (severityLabel === 'passed') severityLabel = 'Aprobado';
+
+      let codeSnippetHTML = '';
+      if (issue.code) {
+        codeSnippetHTML = `
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem; text-transform: uppercase;">Líneas de Código Afectadas:</div>
+            <pre class="code-block-wrapper"><code>${escapeHTML(issue.code)}</code></pre>
+          </div>
+        `;
+      }
+
+      let recommendationHTML = '';
+      if (issue.solution) {
+        recommendationHTML = `
+          <div class="recommendation-box">
+            <div class="recommendation-title">Remedio Recomendado:</div>
+            <p>${issue.solution}</p>
+          </div>
+        `;
+      }
+
+      item.innerHTML = `
+        <div class="issue-header" onclick="toggleAccordion('${issue.id}')">
+          <div class="issue-title-area">
+            <span class="issue-code-id">${issue.id}</span>
+            <span class="severity-badge ${issue.severity}">${severityLabel}</span>
+            <span class="issue-title">${issue.title}</span>
+          </div>
+          <svg class="issue-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="issue-content">
+          <div class="issue-body-inner">
+            <div class="meta-table">
+              <span class="meta-label">Archivo:</span>
+              <span class="meta-value">${issue.file}</span>
+              <span class="meta-label">Líneas:</span>
+              <span class="meta-value">${issue.lines}</span>
+            </div>
+            
+            <p class="issue-desc">${issue.desc}</p>
+            
+            ${codeSnippetHTML}
+            ${recommendationHTML}
+          </div>
+        </div>
+      `;
+
+      container.appendChild(item);
+    });
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+      tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    );
+  }
+
+  function toggleAccordion(id) {
+    const items = document.querySelectorAll('.issue-item');
+    items.forEach(item => {
+      if (item.getAttribute('data-id') === id) {
+        const isOpen = item.classList.contains('open');
+        item.classList.toggle('open', !isOpen);
+        
+        // Dynamic smooth slide
+        const content = item.querySelector('.issue-content');
+        if (!isOpen) {
+          content.style.maxHeight = content.scrollHeight + "px";
+        } else {
+          content.style.maxHeight = "0px";
+        }
+      }
+    });
+  }
+
+  /* ══════════════════════════════════════════════
+     TAB SWITCHING & FILTERS
+     ══════════════════════════════════════════════ */
+  function switchTab(tab) {
+    currentCategoryTab = tab;
+    
+    // Update active tab button style
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+    // Toggle panels depending on tab choice
+    const filtersRow = document.getElementById('audit-filters-row');
+    const issuesContainer = document.getElementById('issues-container');
+    const playgroundContainer = document.getElementById('playground-container');
+
+    if (tab === 'action') {
+      filtersRow.style.display = 'none';
+      issuesContainer.style.display = 'none';
+      playgroundContainer.style.display = 'block';
+    } else {
+      filtersRow.style.display = 'flex';
+      issuesContainer.style.display = 'flex';
+      playgroundContainer.style.display = 'none';
+      renderIssues();
+    }
+  }
+
+  function toggleFilter(severity, btnEl) {
+    currentSeverityFilter = severity;
+    const pills = document.querySelectorAll('.filter-pill');
+    pills.forEach(p => p.classList.remove('active'));
+    btnEl.classList.add('active');
+    renderIssues();
+  }
+
+  function filterIssues() {
+    renderIssues();
+  }
+
+  /* ══════════════════════════════════════════════
+     PLAYGROUND CHECKS & REALTIME HEALTH ENGINE
+     ══════════════════════════════════════════════ */
+  // Give distinct weights to issues depending on severity
+  const baseHealthWeights = {
+    "ARQ-01": 15, // Undefined functions (Critical)
+    "QA-02": 10,  // Broken redirection (Critical)
+    "QA-08": 10,  // Broken PWA (Critical)
+    "SEC-01": 8,  // Anon key risk (High)
+    "SEC-02": 8,  // Hardcoded email (High)
+    "SEC-07": 8,  // Auth-less deletes (High)
+    "SEC-08": 8,  // DB-wide sync (High)
+    "QA-12": 8,   // CDN map marker (High)
+    "ARQ-09": 7,  // Hardcoded dashboard stat (High)
+    "ARQ-02": 3,  // Client Components (Medium)
+    "ARQ-04": 3,  // Divisor 29 (Medium)
+    "QA-01": 3,   // Missing security UI features (Medium)
+    "QA-07": 3,   // Timeout on reload (Medium)
+    "QA-05": 3,   // GeoJSON download reload (Medium)
+    "SEC-03": 3,  // Lack of login rate limit (Medium)
+    "ARQ-03": 1,  // Client multiples (Low)
+    "ARQ-05": 1,  // Trash files in repo (Low)
+    "ARQ-06": 1,  // Console logs (Low)
+    "ARQ-07": 1,  // XLSX import (Low)
+    "ARQ-08": 1,  // Dexie Null version (Low)
+    "QA-04": 1,   // Debounce search (Low)
+    "QA-09": 1,   // ARIA labels (Low)
+    "QA-10": 1,   // Viewport scale lock (Low)
+    "QA-11": 1    // Leaflet duplicate css (Low)
+  };
+
+  // Keep track of which playground items are checked (meaning: resolved)
+  let resolvedMap = {};
+
+  function initPlayground() {
+    const container = document.getElementById('checklist-container');
+    container.innerHTML = '';
+
+    // Order from critical down to low
+    const checklistData = [...issuesData].sort((a,b) => {
+      const order = { critical: 0, high: 1, medium: 2, low: 3 };
+      return order[a.severity] - order[b.severity];
+    });
+
+    checklistData.forEach(issue => {
+      resolvedMap[issue.id] = false; // initially unresolved
+
+      let sevLabel = issue.severity;
+      if (sevLabel === 'critical') sevLabel = 'Crítico';
+      else if (sevLabel === 'high') sevLabel = 'Alta';
+      else if (sevLabel === 'medium') sevLabel = 'Media';
+      else if (sevLabel === 'low') sevLabel = 'Baja';
+
+      let timeEstim = "10 min";
+      if (issue.severity === 'critical') timeEstim = "20 min";
+      else if (issue.id === 'SEC-08') timeEstim = "45 min";
+      else if (issue.id === 'QA-01') timeEstim = "45 min";
+      else if (issue.id === 'QA-05') timeEstim = "30 min";
+
+      const item = document.createElement('div');
+      item.className = 'checklist-item';
+      item.setAttribute('id', `check-${issue.id}`);
+      item.onclick = () => toggleCheckPlayground(issue.id);
+
+      item.innerHTML = `
+        <div class="checklist-checkbox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="checklist-content">
+          <div class="checklist-title-row">
+            <span class="checklist-title">${issue.id} · ${issue.title}</span>
+            <div class="checklist-tag-group">
+              <span class="checklist-tag ${issue.severity}">${sevLabel}</span>
+              <span class="checklist-time">⏱️ ${timeEstim}</span>
+            </div>
+          </div>
+          <p class="checklist-desc">${issue.desc}</p>
+        </div>
+      `;
+
+      container.appendChild(item);
+    });
+  }
+
+  function toggleCheckPlayground(id) {
+    resolvedMap[id] = !resolvedMap[id];
+    const el = document.getElementById(`check-${id}`);
+    el.classList.toggle('checked', resolvedMap[id]);
+    calculateRealtimeScore();
+  }
+
+  function checkAllPlayground(status) {
+    Object.keys(resolvedMap).forEach(id => {
+      resolvedMap[id] = status;
+      const el = document.getElementById(`check-${id}`);
+      if (el) el.classList.toggle('checked', status);
+    });
+    calculateRealtimeScore();
+  }
+
+  function calculateRealtimeScore() {
+    // Total sum of all issues weights is 100.
+    // Starting health with 0 resolved is 100 - total weights of active issues.
+    // Wait, let's make it intuitive:
+    // If 0 are resolved, current score is 68% (given that some aspects are already clean/passed: our 5 elements!).
+    // Actually, let's start at 68%. The 32% missing score is represented by the 24 active issues.
+    // Let's divide that 32% weight across the issues!
+    let totalDeduction = 0;
+    Object.keys(baseHealthWeights).forEach(id => {
+      if (!resolvedMap[id]) {
+        // Issue is unresolved, deduct from 100%
+        totalDeduction += baseHealthWeights[id];
+      }
+    });
+
+    // Cap deduction to ensure it maps exactly 100% down
+    let calculatedScore = 100 - totalDeduction;
+    if (calculatedScore < 10) calculatedScore = 10; // keep a floor
+
+    // Update gauge values
+    updateScoreUI(calculatedScore);
+  }
+
+  function updateScoreUI(score) {
+    const strokeOffset = 440 - (440 * score) / 100;
+    document.getElementById('score-circle').style.strokeDashoffset = strokeOffset;
+    
+    document.getElementById('score-percent').innerText = `${score}%`;
+
+    // Dynamic color thresholds
+    const circle = document.getElementById('score-circle');
+    const badge = document.getElementById('score-status-badge');
+    const grade = document.getElementById('score-grade');
+    const celebration = document.getElementById('celebration-box');
+
+    if (score < 50) {
+      grade.innerText = "Crítica";
+      grade.style.color = "var(--severity-critical)";
+      badge.innerText = "Salud Crítica";
+      badge.className = "score-badge";
+      badge.style.background = "var(--severity-critical-glow)";
+      badge.style.color = "var(--severity-critical)";
+      badge.style.borderColor = "var(--severity-critical)";
+      celebration.style.display = 'none';
+    } else if (score < 80) {
+      grade.innerText = "Media";
+      grade.style.color = "var(--severity-medium)";
+      badge.innerText = "Preparación Media";
+      badge.className = "score-badge";
+      badge.style.background = "var(--severity-medium-glow)";
+      badge.style.color = "var(--severity-medium)";
+      badge.style.borderColor = "var(--severity-medium)";
+      celebration.style.display = 'none';
+    } else if (score < 100) {
+      grade.innerText = "Excelente";
+      grade.style.color = "var(--pnn-apple)";
+      badge.innerText = "Preparado (Casi Listo)";
+      badge.className = "score-badge";
+      badge.style.background = "var(--severity-passed-glow)";
+      badge.style.color = "var(--severity-passed)";
+      badge.style.borderColor = "var(--severity-passed)";
+      celebration.style.display = 'none';
+    } else {
+      grade.innerText = "Listo";
+      grade.style.color = "var(--severity-passed)";
+      badge.innerText = "Listo para Producción";
+      badge.className = "score-badge";
+      badge.style.background = "var(--severity-passed-glow)";
+      badge.style.color = "var(--severity-passed)";
+      badge.style.borderColor = "var(--severity-passed)";
+      celebration.style.display = 'block';
+    }
+  }
+
+  /* ══════════════════════════════════════════════
+     INITIALIZATION
+     ══════════════════════════════════════════════ */
+  window.onload = () => {
+    // Initial Render of list
+    renderIssues();
+    
+    // Initial Render of Interactive Checklist
+    initPlayground();
+    
+    // Set circle starting value
+    updateScoreUI(68);
+  };
+</script>
+
+</body>
+</html>

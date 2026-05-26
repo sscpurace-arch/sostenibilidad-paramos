@@ -27,7 +27,7 @@ export default function MapaPage({ params }) {
       setLoading(false);
     }
     cargarProductor();
-  }, [params.id]);
+  }, [params.id, router]);
 
   if (loading) return <div className="p-10 text-center text-gray-400">Cargando datos del predio...</div>;
 

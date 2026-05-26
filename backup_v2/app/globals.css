@@ -1,0 +1,292 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+
+/* ══════════════════════════════════════════════
+   LEAFLET MAP OVERRIDES
+   ══════════════════════════════════════════════ */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.user-location-marker {
+  background-color: #4285F4;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* ══════════════════════════════════════════════
+   DESIGN SYSTEM — Páramo Digital
+   Variables CSS oficiales PNN + Dark Theme
+   ══════════════════════════════════════════════ */
+:root {
+  /* PNN Institucional */
+  --primary: #03A64A;
+  --primary-dark: #028A3D;
+  --primary-deeper: #016B30;
+  --secondary: #049DD9;
+  --accent: #FFC800;
+  --color-danger: #D80025;
+  --color-warning: #F57C00;
+  --verde-manzana: #96BE52;
+  --azul-claro: #05C7F2;
+
+  /* Dark Theme — Páramo */
+  --bg-deep: #0A2E1C;
+  --bg-dark: #0D3B23;
+  --bg-surface: #1A4D33;
+  --text-on-dark: #E8F5EC;
+  --text-on-dark-muted: #9CB8A4;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-bg-hover: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Legacy compatibility */
+  --background: #0A2E1C;
+}
+
+body {
+  background: linear-gradient(180deg, #0D3B23 0%, #0A2E1C 40%, #071E13 100%);
+  background-attachment: fixed;
+  color: var(--text-on-dark);
+  -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+}
+
+/* Global Input Text Color for Contrast */
+input, textarea, select {
+  color: #1A1A1B !important;
+}
+
+/* Placeholder contrast */
+::placeholder {
+  color: #9CA3AF !important;
+  opacity: 1;
+}
+
+
+/* ══════════════════════════════════════════════
+   COMPONENT CLASSES — Premium
+   ══════════════════════════════════════════════ */
+@layer components {
+  /* Botón principal con glow */
+  .btn-primary {
+    @apply bg-pnn-verde text-white py-3 px-6 rounded-xl font-bold shadow-md 
+           hover:bg-pnn-verde-oscuro hover:shadow-glow-green hover:-translate-y-0.5
+           active:scale-95 active:shadow-sm active:translate-y-0
+           transition-all duration-200 cursor-pointer;
+  }
+
+  /* Card glassmorphism (sobre fondo oscuro) */
+  .card-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    box-shadow: var(--glass-shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-glass:hover {
+    background: var(--glass-bg-hover);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+  }
+
+  /* Card sólida blanca (para listas, formularios) */
+  .card-solid {
+    @apply bg-white/95 backdrop-blur-sm p-4 rounded-2xl shadow-card-premium 
+           border border-white/20
+           hover:shadow-card-hover hover:-translate-y-0.5
+           active:scale-[0.98] active:translate-y-0
+           transition-all duration-200;
+  }
+
+  /* Acción card del dashboard */
+  .action-card {
+    @apply bg-white/95 backdrop-blur-sm rounded-2xl shadow-card-premium 
+           border border-white/20 flex items-center gap-4 px-5 py-4
+           hover:shadow-card-hover hover:-translate-y-1 hover:bg-white
+           active:scale-[0.97] active:translate-y-0
+           transition-all duration-300 cursor-pointer;
+  }
+
+  /* Círculo de ícono con gradiente */
+  .icon-circle {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center shrink-0
+           shadow-md transition-all duration-300;
+  }
+
+  .icon-circle-green {
+    background: linear-gradient(135deg, #03A64A, #028A3D);
+    box-shadow: 0 4px 15px rgba(3, 166, 74, 0.35);
+  }
+
+  .icon-circle-blue {
+    background: linear-gradient(135deg, #049DD9, #0380B0);
+    box-shadow: 0 4px 15px rgba(4, 157, 217, 0.35);
+  }
+
+  .icon-circle-teal {
+    background: linear-gradient(135deg, #05C7F2, #049DD9);
+    box-shadow: 0 4px 15px rgba(5, 199, 242, 0.35);
+  }
+
+  .icon-circle-amber {
+    background: linear-gradient(135deg, #FFC800, #E6B400);
+    box-shadow: 0 4px 15px rgba(255, 200, 0, 0.35);
+  }
+
+  /* Texto sobre fondo oscuro */
+  .text-on-dark {
+    color: var(--text-on-dark);
+  }
+
+  .text-on-dark-muted {
+    color: var(--text-on-dark-muted);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   TOPOGRAPHIC BACKGROUND PATTERN
+   ══════════════════════════════════════════════ */
+.topo-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.topo-bg svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.04;
+}
+
+.topo-bg .topo-lines {
+  animation: topoDrift 40s linear infinite;
+}
+
+@keyframes topoDrift {
+  0% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-15px) translateY(-10px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+
+/* ══════════════════════════════════════════════
+   GLOBAL INTERACTION EFFECTS
+   ══════════════════════════════════════════════ */
+
+/* Botones genéricos */
+button, 
+[role="button"],
+a.btn,
+.interactive {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+button:hover, 
+[role="button"]:hover,
+a.btn:hover,
+.interactive:hover {
+  transform: translateY(-1px);
+}
+
+button:active, 
+[role="button"]:active,
+a.btn:active,
+.interactive:active {
+  transform: scale(0.97) translateY(0px);
+}
+
+/* NavBar items */
+nav a {
+  transition: all 0.2s ease;
+}
+
+nav a:active {
+  transform: scale(0.92);
+}
+
+/* ══════════════════════════════════════════════
+   ENTRY ANIMATIONS — Staggered fade-in
+   ══════════════════════════════════════════════ */
+.animate-entry {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-entry-d1 { animation-delay: 0.08s; }
+.animate-entry-d2 { animation-delay: 0.16s; }
+.animate-entry-d3 { animation-delay: 0.24s; }
+.animate-entry-d4 { animation-delay: 0.32s; }
+.animate-entry-d5 { animation-delay: 0.40s; }
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════
+   RADAR CHART ANIMATIONS (Existing)
+   ══════════════════════════════════════════════ */
+.mi-radar-animado .apexcharts-radar-series path {
+  stroke-dasharray: 2500;
+  stroke-dashoffset: 2500;
+  animation: drawRadarLine 6s ease-in-out forwards;
+}
+
+.mi-radar-animado .apexcharts-radar-series polygon {
+  opacity: 0;
+  animation: fadeInFill 2s ease-in-out 4s forwards;
+}
+
+.mi-radar-animado .apexcharts-marker,
+.mi-radar-animado .apexcharts-datalabel,
+.mi-radar-animado .apexcharts-datalabels {
+  opacity: 0;
+  animation: fadeInMarkers 0.8s ease-in-out 5s forwards;
+}
+
+@keyframes drawRadarLine {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeInFill {
+  to { opacity: 0.15; }
+}
+
+@keyframes fadeInMarkers {
+  to { opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════
+   SCROLLBAR (Dark theme)
+   ══════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}

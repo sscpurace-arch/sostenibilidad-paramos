@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 export default function EnProcesoPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalIndicadores, setTotalIndicadores] = useState(29);
   const router = useRouter();
 
   useEffect(() => {
@@ -14,6 +15,10 @@ export default function EnProcesoPage() {
 
   async function cargarPendientes() {
     setLoading(true);
+    const indCount = await db.indicadores.count();
+    const totalInd = indCount > 0 ? indCount : 29;
+    setTotalIndicadores(totalInd);
+
     const evals = await db.evaluaciones
       .where('estado').equals('borrador')
       .reverse()
@@ -53,10 +58,10 @@ export default function EnProcesoPage() {
                 <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-gradient-to-r from-pnn-azul to-pnn-azul-claro rounded-full transition-all duration-500" 
-                    style={{ width: `${(item.respondidos / 29) * 100}%` }}
+                    style={{ width: `${(item.respondidos / totalIndicadores) * 100}%` }}
                   ></div>
                 </div>
-                <span className="text-xs font-bold text-gray-500">{item.respondidos} / 29</span>
+                <span className="text-xs font-bold text-gray-500">{item.respondidos} / {totalIndicadores}</span>
               </div>
 
               <button 

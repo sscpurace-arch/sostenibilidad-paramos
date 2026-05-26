@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { saveRecord, deleteRecord, deleteRecordBulk, waitForSync } from '@/lib/sync-engine';
@@ -24,9 +24,7 @@ export default function PerfilProductorPage({ params }) {
   const router = useRouter();
   const supabase = createClient();
 
-  useEffect(() => { cargarDatos(); }, [params.productorId]);
-
-  async function cargarDatos() {
+  const cargarDatos = useCallback(async () => {
     setLoading(true);
     const prod = await db.productores.get(params.productorId);
     if (!prod) return router.push('/buscar');
@@ -67,7 +65,11 @@ export default function PerfilProductorPage({ params }) {
       }
     } catch (e) { console.error('Error cargando evaluaciones:', e); }
     setLoading(false);
-  }
+  }, [params.productorId, router, supabase]);
+
+  useEffect(() => {
+    cargarDatos();
+  }, [cargarDatos]);
 
   const handleIniciar = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -105,8 +107,8 @@ export default function PerfilProductorPage({ params }) {
       await deleteRecord('evaluaciones', evalId);
       
       console.log('⏳ Sincronización en segundo plano iniciada...');
-      // Recargar datos desde DB local/remota para asegurar consistencia tras 1.5s
-      setTimeout(() => cargarDatos(), 1500);
+      // Recargar datos localmente de forma determinista e inmediata
+      await cargarDatos();
       
     } catch (e) { 
       console.error('❌ Error en handleEliminar:', e); 

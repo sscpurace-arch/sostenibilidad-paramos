@@ -31,7 +31,6 @@ export default function EvaluacionPage({ params }) {
   const { pendingCount } = useOfflineSync();
 
   useEffect(() => { detallesRef.current = detalles; }, [detalles]);
-  useEffect(() => { cargarDatos(); }, [params.id]);
 
   // ─── Autosave cada 30 segundos ──────────────────────────
   useEffect(() => {
@@ -53,38 +52,41 @@ export default function EvaluacionPage({ params }) {
     return () => clearInterval(interval);
   }, [params.id]);
 
-  // ─── Carga de datos ─────────────────────────────────────
-  async function cargarDatos() {
-    setLoading(true);
-    const eval_ = await db.evaluaciones.get(params.id);
-    if (!eval_) return router.push('/');
-    setEvaluacion(eval_);
+  useEffect(() => {
+    async function cargarDatos() {
+      setLoading(true);
+      const eval_ = await db.evaluaciones.get(params.id);
+      if (!eval_) return router.push('/');
+      setEvaluacion(eval_);
 
-    const [prod, inds, existingDets] = await Promise.all([
-      db.productores.get(eval_.finca_id),
-      db.indicadores.orderBy('orden').toArray(),
-      db.respuestas_indicadores.where('evaluacion_id').equals(eval_.id).toArray()
-    ]);
+      const [prod, inds, existingDets] = await Promise.all([
+        db.productores.get(eval_.finca_id),
+        db.indicadores.orderBy('orden').toArray(),
+        db.respuestas_indicadores.where('evaluacion_id').equals(eval_.id).toArray()
+      ]);
 
-    setProductor(prod);
-    setIndicadores(inds);
-    setDimensiones([...new Set(inds.map(i => i.dimension))].map(nombre => ({
-      nombre, color: DIMENSION_COLORS[nombre] || '#666'
-    })));
+      setProductor(prod);
+      setIndicadores(inds);
+      setDimensiones([...new Set(inds.map(i => i.dimension))].map(nombre => ({
+        nombre, color: DIMENSION_COLORS[nombre] || '#666'
+      })));
 
-    const detMap = {};
-    existingDets.forEach(d => { detMap[d.indicador_id] = { id: d.id, valor: d.valor, observacion: d.observacion }; });
-    setDetalles(detMap);
+      const detMap = {};
+      existingDets.forEach(d => { detMap[d.indicador_id] = { id: d.id, valor: d.valor, observacion: d.observacion }; });
+      setDetalles(detMap);
 
-    const prevEvals = await db.evaluaciones
-      .where('finca_id').equals(eval_.finca_id)
-      .and(e => e.estado === 'enviada' && e.id !== eval_.id)
-      .reverse().sortBy('fecha');
-    if (prevEvals.length > 0) {
-      setLastResults(await db.respuestas_indicadores.where('evaluacion_id').equals(prevEvals[0].id).toArray());
+      const prevEvals = await db.evaluaciones
+        .where('finca_id').equals(eval_.finca_id)
+        .and(e => e.estado === 'enviada' && e.id !== eval_.id)
+        .reverse().sortBy('fecha');
+      if (prevEvals.length > 0) {
+        setLastResults(await db.respuestas_indicadores.where('evaluacion_id').equals(prevEvals[0].id).toArray());
+      }
+      setLoading(false);
     }
-    setLoading(false);
-  }
+
+    cargarDatos();
+  }, [params.id, router]);
 
   // ─── Handlers ───────────────────────────────────────────
   const handleScoreChange = useCallback(async (indId, score) => {
