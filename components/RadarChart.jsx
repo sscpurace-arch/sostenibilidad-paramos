@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -9,18 +9,12 @@ const BASE_OPTIONS = {
   chart: {
     type: 'radar',
     toolbar: { show: false },
-    animations: { 
+    animations: {
       enabled: true,
       easing: 'easeinout',
       speed: 800,
-      animateGradually: {
-        enabled: true,
-        delay: 150
-      },
-      dynamicAnimation: {
-        enabled: true,
-        speed: 350
-      }
+      animateGradually: { enabled: false },
+      dynamicAnimation: { enabled: true, speed: 1400, easing: 'easeout' }
     },
     dropShadow: { enabled: false },
     fontFamily: 'Outfit, system-ui, sans-serif',
@@ -62,13 +56,23 @@ function RadarChartComponent({
   dimensiones,
   indicadores,
 }) {
+  // Arranca en cero y anima hacia los valores reales → efecto radar expandiéndose
+  const [animatedDatasets, setAnimatedDatasets] = useState(
+    () => (datasets ?? []).map(d => ({ ...d, data: (d.data ?? []).map(() => 0) }))
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimatedDatasets(datasets ?? []), 200);
+    return () => clearTimeout(timer);
+  }, [datasets]);
+
   const series = useMemo(
     () =>
-      (datasets ?? []).map((ds) => ({
+      animatedDatasets.map((ds) => ({
         name: ds.name ?? 'Serie',
         data: ds.data ?? [],
       })),
-    [datasets]
+    [animatedDatasets]
   );
 
   const shortLabels = useMemo(
@@ -159,18 +163,14 @@ function RadarChartComponent({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Wrapper externo sin animación — solo dimensiona */}
-      <div style={{ width: '100%', height }}>
-        {/* Wrapper animado DENTRO — no toca el SVG durante el paint inicial */}
-        <div className="mi-radar-animado" style={{ width: '100%', height: '100%' }}>
-          <Chart
-            options={options}
-            series={series}
-            type="radar"
-            width="100%"
-            height="100%"
-          />
-        </div>
+      <div className="animate-entry" style={{ width: '100%', height }}>
+        <Chart
+          options={options}
+          series={series}
+          type="radar"
+          width="100%"
+          height="100%"
+        />
       </div>
 
       {indicadores && indicadores.length > 0 && (

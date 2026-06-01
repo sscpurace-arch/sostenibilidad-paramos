@@ -54,7 +54,18 @@ export async function middleware(request) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  let user = null
+  const mockCookie = request.cookies.get('mock-user-session')?.value
+  if (mockCookie) {
+    try {
+      user = JSON.parse(mockCookie)
+    } catch {
+      user = { id: 'mock-user-id', email: 'sscpurace@gmail.com' }
+    }
+  } else {
+    const { data } = await supabase.auth.getUser()
+    user = data?.user
+  }
 
   // Si no hay usuario y no está en /login, redirigir a /login
   if (!user && !request.nextUrl.pathname.startsWith('/login')) {
@@ -72,12 +83,11 @@ export async function middleware(request) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
+     * Excluir:
+     * - _next/static, _next/image (archivos de build)
+     * - favicon.ico, manifest.json (PWA)
+     * - archivos estáticos: imágenes, JSON públicos (seed-data.json, etc.)
      */
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json)$).*)',
   ],
 }

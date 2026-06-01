@@ -30,6 +30,7 @@ export default function SostenibilidadPanel({
         <div className="flex flex-col gap-6">
           <div className="w-full bg-gray-50 rounded-3xl p-2">
             <RadarChart
+              key={radarData?.length > 0 ? `data-${todasEvals.map(e => e.id).join('-')}` : 'empty'}
               labels={indicadores.map(i => i.nombre)}
               datasets={todasEvals.map((ev, idx) => ({
                 name: `Evaluación ${todasEvals.length - idx}${ev.es_prueba ? ' (Prueba)' : ''}`,

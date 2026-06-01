@@ -31,14 +31,14 @@ export default function AppHeader({ title, subtitle }) {
             .single();
           setUser({
             email: authUser.email,
-            nombre: userData?.nombre || authUser.email.split('@')[0],
-            rol: userData?.rol || 'Técnico'
+            nombre: userData?.nombre || authUser.user_metadata?.nombre || authUser.email.split('@')[0],
+            rol: userData?.rol || authUser.user_metadata?.rol || 'Técnico'
           });
         } catch {
           setUser({
             email: authUser.email,
-            nombre: authUser.email.split('@')[0],
-            rol: 'Técnico'
+            nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0],
+            rol: authUser.user_metadata?.rol || 'Técnico'
           });
         }
       }

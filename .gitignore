@@ -38,3 +38,6 @@ next-env.d.ts
 # local development & scratch
 .next_dev/
 scratch/
+
+# claude code settings (contiene tokens locales)
+.claude/

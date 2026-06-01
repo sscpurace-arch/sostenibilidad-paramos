@@ -8,7 +8,8 @@ import TopographicBg from '@/components/TopographicBg';
 
 export default function AppLayout({ children }) {
   useEffect(() => {
-    const supabase = createClient();
+    const isMock = document.cookie.includes('mock-user-session') || !!localStorage.getItem('mock-user-session');
+    const supabase = isMock ? null : createClient();
     initSyncEngine(supabase);
   }, []);
 

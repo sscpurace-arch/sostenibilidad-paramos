@@ -36,35 +36,58 @@ export default function PerfilProductorPage({ params }) {
       nombre, color: DIMENSION_COLORS[nombre] || '#666'
     })));
 
+    // 1. CARGAR SIEMPRE PRIMERO DE INDEXEDDB (Inmediato)
     try {
-      if (navigator.onLine) {
+      const localEvals = await db.evaluaciones
+        .where('finca_id').equals(params.productorId)
+        .and(e => e.estado === 'enviada').reverse().sortBy('fecha');
+      const limitEvals = localEvals.slice(0, 4);
+      
+      if (limitEvals.length > 0) {
+        setUltimaEval(limitEvals[0]);
+        setTodasEvals(limitEvals);
+        const localRespuestas = await db.respuestas_indicadores
+          .where('evaluacion_id').anyOf(limitEvals.map(e => e.id)).toArray();
+        setRadarData(localRespuestas);
+      } else {
+        setUltimaEval(null);
+        setTodasEvals([]);
+        setRadarData([]);
+      }
+    } catch (e) {
+      console.error('Error cargando datos locales:', e);
+    }
+    setLoading(false); // Quitar loader de inmediato para renderizar la UI con datos locales
+
+    // 2. SINCRONIZAR CON SUPABASE EN SEGUNDO PLANO (Si hay conexión)
+    if (navigator.onLine) {
+      try {
         const { data: evals } = await supabase
           .from('evaluaciones').select('*')
           .eq('finca_id', params.productorId).eq('estado', 'enviada')
           .order('fecha', { ascending: false }).limit(4);
 
-        if (evals?.length > 0) {
-          setUltimaEval(evals[0]);
-          setTodasEvals(evals);
+        if (evals && evals.length > 0) {
+          // Guardar en IndexedDB para asegurar persistencia local
+          await db.evaluaciones.bulkPut(evals);
+          
           const { data: respuestas } = await supabase
             .from('respuestas_indicadores').select('*')
             .in('evaluacion_id', evals.map(e => e.id));
+            
+          if (respuestas && respuestas.length > 0) {
+            await db.respuestas_indicadores.bulkPut(respuestas);
+          }
+
+          // Actualizar estado de React con los datos frescos
+          setUltimaEval(evals[0]);
+          setTodasEvals(evals);
           setRadarData(respuestas || []);
-        } else {
-          setUltimaEval(null); setTodasEvals([]); setRadarData([]);
         }
-      } else {
-        const evals = await db.evaluaciones
-          .where('finca_id').equals(params.productorId)
-          .and(e => e.estado === 'enviada').reverse().sortBy('fecha');
-        const limitEvals = evals.slice(0, 4);
-        if (limitEvals.length > 0) {
-          setUltimaEval(limitEvals[0]); setTodasEvals(limitEvals);
-          setRadarData(await db.respuestas_indicadores.where('evaluacion_id').anyOf(limitEvals.map(e => e.id)).toArray());
-        }
+      } catch (e) {
+        console.error('Error sincronizando con Supabase en segundo plano:', e);
       }
-    } catch (e) { console.error('Error cargando evaluaciones:', e); }
-    setLoading(false);
+    }
   }, [params.productorId, router, supabase]);
 
   useEffect(() => {

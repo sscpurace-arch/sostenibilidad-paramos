@@ -237,24 +237,39 @@ nav a:active {
 }
 
 /* ══════════════════════════════════════════════
-   RADAR CHART ANIMATIONS (Existing)
+   RADAR CHART ANIMATIONS
+   Selectores cubren ApexCharts 4.x y 5.x
    ══════════════════════════════════════════════ */
-.mi-radar-animado .apexcharts-radar-series path {
-  stroke-dasharray: 2500;
-  stroke-dashoffset: 2500;
-  animation: drawRadarLine 6s ease-in-out forwards;
+
+/* Líneas del radar: path (v4) y polyline (v5) */
+.mi-radar-animado .apexcharts-radar-series path,
+.mi-radar-animado .apexcharts-series path,
+.mi-radar-animado .apexcharts-radar-series polyline,
+.mi-radar-animado .apexcharts-series polyline {
+  stroke-dasharray: 3000;
+  stroke-dashoffset: 3000;
+  animation: drawRadarLine 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.mi-radar-animado .apexcharts-radar-series polygon {
+/* Relleno del radar: polygon (v4) y path fill (v5) */
+.mi-radar-animado .apexcharts-radar-series polygon,
+.mi-radar-animado .apexcharts-series polygon {
   opacity: 0;
-  animation: fadeInFill 2s ease-in-out 4s forwards;
+  animation: fadeInFill 0.8s ease-in-out 1.4s forwards;
 }
 
+/* Marcadores y etiquetas */
 .mi-radar-animado .apexcharts-marker,
 .mi-radar-animado .apexcharts-datalabel,
-.mi-radar-animado .apexcharts-datalabels {
+.mi-radar-animado .apexcharts-datalabels,
+.mi-radar-animado circle {
   opacity: 0;
-  animation: fadeInMarkers 0.8s ease-in-out 5s forwards;
+  animation: fadeInMarkers 0.5s ease-in-out 1.6s forwards;
+}
+
+/* Entrada del contenedor completo */
+.mi-radar-animado {
+  animation: fadeInUp 0.4s ease-out forwards;
 }
 
 @keyframes drawRadarLine {

@@ -30,9 +30,9 @@ export default function Dashboard() {
       if (authUser) {
         try {
           const { data: userData } = await supabase.from('usuarios').select('nombre').eq('id', authUser.id).single();
-          setUser(userData || { nombre: authUser.email.split('@')[0] });
+          setUser(userData || { nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0] });
         } catch {
-          setUser({ nombre: authUser.email.split('@')[0] });
+          setUser({ nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0] });
         }
       }
 
