@@ -95,11 +95,17 @@ export default function PerfilProductorPage({ params }) {
   }, [cargarDatos]);
 
   const handleIniciar = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    const isMock = typeof window !== 'undefined' && !!localStorage.getItem('mock-user-session');
+    let userId = 'e81ba52c-23df-4f4e-808d-937fd606426c';
+    if (!isMock) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      userId = user.id;
+    }
     const newEval = {
-      id: crypto.randomUUID(), finca_id: params.productorId, tecnico_id: user.id,
-      estado: 'borrador', fecha: new Date(fechaNuevaEval + 'T12:00:00').toISOString(), es_prueba: esPrueba
+      id: crypto.randomUUID(), finca_id: params.productorId, tecnico_id: userId,
+      estado: 'borrador', fecha: new Date(fechaNuevaEval + 'T12:00:00').toISOString(),
+      es_prueba: isMock || esPrueba
     };
     await saveRecord('evaluaciones', newEval);
     router.push(`/calificacion/${newEval.id}`);

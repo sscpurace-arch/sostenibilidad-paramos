@@ -46,16 +46,22 @@ export default function NuevoProductorPage() {
         return setError('Esta cédula ya está registrada localmente');
       }
 
-      // 2. Obtener usuario actual
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No hay sesión activa');
+      // 2. Obtener usuario actual (real o modo prueba)
+      const isMock = typeof window !== 'undefined' && !!localStorage.getItem('mock-user-session');
+      let userId = 'e81ba52c-23df-4f4e-808d-937fd606426c'; // fallback mock
+      if (!isMock) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error('No hay sesión activa');
+        userId = user.id;
+      }
 
       const newId = crypto.randomUUID();
       const newProductor = {
         ...form,
         id: newId,
-        created_by: user.id,
-        created_at: new Date().toISOString()
+        created_by: userId,
+        created_at: new Date().toISOString(),
+        es_prueba: isMock
       };
 
       // 3. Guardar local y cola de sincronización (e intentar sync inmediato si hay red)
