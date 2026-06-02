@@ -88,6 +88,6 @@ export const config = {
      * - favicon.ico, manifest.json (PWA)
      * - archivos estáticos: imágenes, JSON públicos (seed-data.json, etc.)
      */
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|api/.*|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json)$).*)',
   ],
 }
