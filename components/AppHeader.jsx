@@ -16,10 +16,19 @@ export default function AppHeader({ title, subtitle }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isMock, setIsMock] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
   useEffect(() => {
+    const mockSession = !!localStorage.getItem('mock-user-session');
+    setIsMock(mockSession);
+
+    if (mockSession) {
+      setUser({ nombre: 'Modo Prueba', email: 'prueba@test.local', rol: 'Visitante' });
+      return;
+    }
+
     async function getSessionUser() {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser) {
@@ -46,11 +55,16 @@ export default function AppHeader({ title, subtitle }) {
     getSessionUser();
   }, [supabase]);
 
+  const handleSalirPrueba = () => {
+    localStorage.removeItem('mock-user-session');
+    document.cookie = 'mock-user-session=; path=/; max-age=0;';
+    window.location.href = '/login';
+  };
+
   const handleLogout = async () => {
     setLoading(true);
     try {
       await supabase.auth.signOut();
-      // Limpiar datos o redirigir
       router.push('/login');
       router.refresh();
     } catch (e) {
@@ -156,25 +170,38 @@ export default function AppHeader({ title, subtitle }) {
 
               <div className="w-full border-t border-white/5 my-6"></div>
 
-              {/* Botón de Cerrar Sesión */}
-              <button
-                onClick={handleLogout}
-                disabled={loading}
-                className="w-full bg-[#D80025] hover:bg-red-700 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <span>Cerrando sesión...</span>
-                ) : (
-                  <>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16 17 21 12 16 7" />
-                      <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                    <span>Cerrar Sesión</span>
-                  </>
-                )}
-              </button>
+              {isMock ? (
+                <button
+                  onClick={handleSalirPrueba}
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  <span>Salir del modo prueba</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleLogout}
+                  disabled={loading}
+                  className="w-full bg-[#D80025] hover:bg-red-700 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <span>Cerrando sesión...</span>
+                  ) : (
+                    <>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                      </svg>
+                      <span>Cerrar Sesión</span>
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>

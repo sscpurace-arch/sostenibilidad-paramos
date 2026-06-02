@@ -123,6 +123,24 @@ export default function EvaluacionPage({ params }) {
       return;
     }
     await saveRecord('evaluaciones', { ...evaluacion, estado: 'enviada' });
+
+    const avgs = calculateAverages(detalles);
+    const puntajeGlobal = (
+      Object.values(avgs).reduce((a, b) => a + parseFloat(b), 0) /
+      Object.values(avgs).length
+    ).toFixed(1);
+
+    fetch('/api/notificar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        productor: productor.nombre_completo,
+        fecha: new Date(evaluacion.fecha).toLocaleDateString('es-CO'),
+        puntaje: `${puntajeGlobal} / 5`,
+        sector: productor.sector,
+      }),
+    }).catch(() => {});
+
     setShowResults(true);
   };
 
