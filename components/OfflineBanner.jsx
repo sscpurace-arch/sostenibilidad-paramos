@@ -31,9 +31,9 @@ export default function OfflineBanner() {
   // Modo prueba: banner fijo informativo, sin cola de sync
   if (isMock) {
     return (
-      <div className="text-center py-2 px-4 text-xs font-bold text-amber-900 bg-amber-300 shadow-md flex items-center justify-center gap-2 sticky top-0 z-50">
+      <div className="text-center py-2 px-4 text-xs font-bold text-amber-900 bg-amber-300 shadow-md flex items-center justify-center gap-2">
         <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
-        Modo Prueba — Los datos son locales y no se guardan en el sistema real
+        Modo Prueba — Los datos no se guardan en el sistema real
       </div>
     );
   }
@@ -41,7 +41,7 @@ export default function OfflineBanner() {
   // Sin conexión
   if (!isOnline) {
     return (
-      <div className="text-center py-2 px-4 text-xs font-bold text-white bg-red-500 shadow-md sticky top-0 z-50">
+      <div className="text-center py-2 px-4 text-xs font-bold text-white bg-red-500 shadow-md">
         📡 Sin conexión — Modo Offline activado
       </div>
     );
@@ -52,7 +52,7 @@ export default function OfflineBanner() {
 
   // Sincronizando o pendientes
   return (
-    <div className="text-center py-2 px-4 text-xs font-bold text-white bg-amber-500 shadow-md flex items-center justify-between sticky top-0 z-50">
+    <div className="text-center py-2 px-4 text-xs font-bold text-white bg-amber-500 shadow-md flex items-center justify-between">
       <div className="flex items-center justify-center flex-1">
         {state.isSyncing ? (
           <span className="flex items-center gap-2">
