@@ -25,25 +25,34 @@ Deno.serve(async (req) => {
 
   try {
     // ─── Auth ───────────────────────────────────────────
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) return jsonResponse({ success: false, error: "Missing Auth" }, 401);
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) return jsonResponse({ success: false, error: "No auth" }, 401);
+    const MOCK_USER_ID = "e81ba52c-23df-4f4e-808d-937fd606426c";
+    const body = await req.json();
+    const { evaluacion_id, is_mock } = body;
+
+    let userId: string;
+
+    if (is_mock) {
+      // Modo prueba: usar ID fijo, sin verificar sesión real
+      userId = MOCK_USER_ID;
+    } else {
+      const authHeader = req.headers.get("Authorization");
+      if (!authHeader) return jsonResponse({ success: false, error: "Missing Auth" }, 401);
+      const token = authHeader.replace("Bearer ", "");
+      const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+      if (authError || !user) return jsonResponse({ success: false, error: "No auth" }, 401);
+      userId = user.id;
+    }
 
     // ─── Rate limit: 10 req/min por usuario ─────────────
     const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
     const { count } = await supabase
       .from("rate_limits")
       .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .eq("endpoint", "generar-diagnostico")
       .gt("called_at", oneMinuteAgo);
     if (count !== null && count >= 10) return jsonResponse({ success: false, error: "Rate limit" }, 429);
-    await supabase.from("rate_limits").insert({ user_id: user.id, endpoint: "generar-diagnostico" });
-
-    const body = await req.json();
-    const { evaluacion_id } = body;
+    await supabase.from("rate_limits").insert({ user_id: userId, endpoint: "generar-diagnostico" });
 
     // ─── Cargar datos en paralelo ────────────────────────
     const [{ data: evaluacion }, { data: indicadores }] = await Promise.all([

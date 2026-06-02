@@ -4,6 +4,7 @@ import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
 import { crearSchemaEvaluacion } from '@/lib/validation';
+import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 import IndicadorCard from '@/components/IndicadorCard';
@@ -24,10 +25,12 @@ export default function EvaluacionPage({ params }) {
   const [validationErrors, setValidationErrors] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   const [autoSaveMsg, setAutoSaveMsg] = useState(null);
+  const [tecnicoNombre, setTecnicoNombre] = useState('Técnico');
 
   const detallesRef = useRef(detalles);
   const dirtyRef = useRef(false);
   const router = useRouter();
+  const supabase = createClient();
   const { pendingCount } = useOfflineSync();
 
   useEffect(() => { detallesRef.current = detalles; }, [detalles]);
@@ -82,11 +85,25 @@ export default function EvaluacionPage({ params }) {
       if (prevEvals.length > 0) {
         setLastResults(await db.respuestas_indicadores.where('evaluacion_id').equals(prevEvals[0].id).toArray());
       }
+      // Cargar nombre del técnico
+      const isMock = !!localStorage.getItem('mock-user-session');
+      if (isMock) {
+        setTecnicoNombre('Usuario Prueba');
+      } else {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const { data: userData } = await supabase.from('usuarios').select('nombre').eq('id', user.id).single();
+            setTecnicoNombre(userData?.nombre || user.user_metadata?.nombre || user.email?.split('@')[0] || 'Técnico');
+          }
+        } catch { /* silencioso */ }
+      }
+
       setLoading(false);
     }
 
     cargarDatos();
-  }, [params.id, router]);
+  }, [params.id, router, supabase]);
 
   // ─── Handlers ───────────────────────────────────────────
   const handleScoreChange = useCallback(async (indId, score) => {
@@ -138,6 +155,8 @@ export default function EvaluacionPage({ params }) {
         fecha: new Date(evaluacion.fecha).toLocaleDateString('es-CO'),
         puntaje: `${puntajeGlobal} / 5`,
         sector: productor.sector,
+        tecnico: tecnicoNombre,
+        es_prueba: !!evaluacion.es_prueba,
       }),
     }).catch(() => {});
 

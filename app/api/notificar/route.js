@@ -7,13 +7,22 @@ export async function POST(request) {
     return Response.json({ ok: false, error: 'Sin configuración Telegram' }, { status: 500 });
   }
 
-  const texto = [
-    `📋 *Nueva calificación registrada*`,
+  const esPrueba = !!body.es_prueba;
+
+  const lineas = [
+    esPrueba ? '🧪 *CALIFICACIÓN DE PRUEBA*' : '📋 *Nueva calificación registrada*',
     `👤 *Productor:* ${body.productor}`,
     `📅 *Fecha:* ${body.fecha}`,
     `📊 *Puntaje global:* ${body.puntaje}`,
     `🗺️ *Sector:* ${body.sector || 'No especificado'}`,
-  ].join('\n');
+    `👨‍💼 *Técnico:* ${body.tecnico || 'No especificado'}`,
+  ];
+
+  if (esPrueba) {
+    lineas.push('_⚠️ Datos de prueba — no se guardan en el sistema real_');
+  }
+
+  const texto = lineas.join('\n');
 
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
