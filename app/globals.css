@@ -60,13 +60,14 @@ body {
 }
 
 /* Global Input Text Color for Contrast */
+/* Sin !important para que cada componente pueda sobreescribir el color */
 input, textarea, select {
-  color: #1A1A1B !important;
+  color: #1A1A1B;
 }
 
 /* Placeholder contrast */
 ::placeholder {
-  color: #9CA3AF !important;
+  color: #9CA3AF;
   opacity: 1;
 }
 
