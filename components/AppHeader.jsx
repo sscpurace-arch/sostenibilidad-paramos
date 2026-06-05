@@ -49,16 +49,20 @@ export default function AppHeader({ title, subtitle }) {
             if (byEmail) userData = byEmail;
           }
 
+          const rolFinal = userData?.rol || authUser.user_metadata?.rol
+            || (authUser.email === 'sscpurace@gmail.com' ? 'admin' : 'Técnico');
           setUser({
             email: authUser.email,
             nombre: userData?.nombre || authUser.user_metadata?.nombre || authUser.email.split('@')[0],
-            rol: userData?.rol || authUser.user_metadata?.rol || 'Técnico'
+            rol: rolFinal
           });
         } catch {
+          const rolFinal = authUser.user_metadata?.rol
+            || (authUser.email === 'sscpurace@gmail.com' ? 'admin' : 'Técnico');
           setUser({
             email: authUser.email,
             nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0],
-            rol: authUser.user_metadata?.rol || 'Técnico'
+            rol: rolFinal
           });
         }
       }

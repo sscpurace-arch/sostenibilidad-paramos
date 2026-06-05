@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
+import { subscribe } from '@/lib/sync-engine';
 import { useRouter } from 'next/navigation';
 import AppHeader from '@/components/AppHeader';
 
@@ -46,6 +47,14 @@ export default function Dashboard() {
     }
 
     cargarDatos();
+
+    // Recargar stats cuando el sync engine termine de descargar datos de Supabase
+    let prevSyncing = false;
+    const unsub = subscribe(({ isSyncing }) => {
+      if (prevSyncing && !isSyncing) cargarDatos();
+      prevSyncing = isSyncing;
+    });
+    return unsub;
   }, [supabase]);
 
   return (
