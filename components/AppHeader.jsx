@@ -33,11 +33,22 @@ export default function AppHeader({ title, subtitle }) {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser) {
         try {
-          const { data: userData } = await supabase
+          // Buscar primero por id, luego por email como respaldo
+          let { data: userData } = await supabase
             .from('usuarios')
             .select('nombre, rol')
             .eq('id', authUser.id)
             .single();
+
+          if (!userData?.rol) {
+            const { data: byEmail } = await supabase
+              .from('usuarios')
+              .select('nombre, rol')
+              .eq('email', authUser.email)
+              .single();
+            if (byEmail) userData = byEmail;
+          }
+
           setUser({
             email: authUser.email,
             nombre: userData?.nombre || authUser.user_metadata?.nombre || authUser.email.split('@')[0],
