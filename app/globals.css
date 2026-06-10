@@ -59,15 +59,15 @@ body {
   min-height: 100vh;
 }
 
-/* Global Input Text Color for Contrast */
-/* Sin !important para que cada componente pueda sobreescribir el color */
+/* Global Input Text Color for Contrast — Dark Theme */
+/* Blanco por defecto; campos sobre fondo claro deben usar text-gray-900 explícito */
 input, textarea, select {
-  color: #1A1A1B;
+  color: #FFFFFF;
 }
 
 /* Placeholder contrast */
 ::placeholder {
-  color: #9CA3AF;
+  color: rgba(255, 255, 255, 0.4);
   opacity: 1;
 }
 

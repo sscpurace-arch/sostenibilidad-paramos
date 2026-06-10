@@ -111,16 +111,16 @@ export default function NuevoProductorPage() {
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-5">
         <div>
           <label className="text-xs text-gray-400 uppercase font-bold">Información Básica</label>
-          <input 
-            type="number" 
-            placeholder="Cédula *" 
-            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A]"
+          <input
+            type="number"
+            placeholder="Cédula *"
+            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-gray-900 placeholder-gray-400"
             value={form.cedula}
             onChange={e => setForm({...form, cedula: e.target.value})}
           />
-          <input 
-            placeholder="Nombre completo *" 
-            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A]"
+          <input
+            placeholder="Nombre completo *"
+            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-gray-900 placeholder-gray-400"
             value={form.nombre_completo}
             onChange={e => setForm({...form, nombre_completo: e.target.value})}
           />
@@ -128,15 +128,15 @@ export default function NuevoProductorPage() {
 
         <div>
           <label className="text-xs text-gray-400 uppercase font-bold">Predio y Ubicación</label>
-          <input 
-            placeholder="Nombre del predio" 
-            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A]"
+          <input
+            placeholder="Nombre del predio"
+            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-gray-900 placeholder-gray-400"
             value={form.nombre_predio}
             onChange={e => setForm({...form, nombre_predio: e.target.value})}
           />
-          <input 
-            placeholder="Vereda" 
-            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A]"
+          <input
+            placeholder="Vereda"
+            className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-gray-900 placeholder-gray-400"
             value={form.vereda}
             onChange={e => setForm({...form, vereda: e.target.value})}
           />

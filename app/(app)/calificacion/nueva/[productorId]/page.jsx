@@ -113,14 +113,11 @@ export default function PerfilProductorPage({ params }) {
 
   const handleEliminar = async (evalId) => {
     try {
-      console.log('🗑️ Intentando borrar evaluación:', evalId);
-      
       // 1. Optimistic UI: Eliminar instantáneamente del estado local
       const nuevasEvals = todasEvals.filter(e => e.id !== evalId);
       setTodasEvals(nuevasEvals);
       setUltimaEval(nuevasEvals[0] || null);
 
-      console.log('📦 Borrando de base local...');
       // 2. Obtener respuestas relacionadas
       const respuestas = await db.respuestas_indicadores.where('evaluacion_id').equals(evalId).toArray();
       const respIds = respuestas.map(r => r.id);
@@ -135,7 +132,6 @@ export default function PerfilProductorPage({ params }) {
       
       await deleteRecord('evaluaciones', evalId);
       
-      console.log('⏳ Sincronización en segundo plano iniciada...');
       // Recargar datos localmente de forma determinista e inmediata
       await cargarDatos();
       

@@ -50,7 +50,7 @@ export default function ResultadosEvaluacion({
         <div className="grid grid-cols-3 gap-2">
           {dimensiones.map(d => (
             <div key={d.nombre} className="text-center p-2 bg-white rounded-lg border border-gray-100">
-              <p className="text-[9px] uppercase font-bold" style={{ color: d.color }}>{d.nombre.substring(0, 5)}</p>
+              <p className="text-[9px] uppercase font-bold" style={{ color: d.color }}>{d.nombre.split(' ')[0].substring(0, 6)}</p>
               <p className="text-lg font-black" style={{ color: d.color }}>{currentAvgs[d.nombre]}</p>
             </div>
           ))}
@@ -120,7 +120,18 @@ export default function ResultadosEvaluacion({
             </div>
           </div>
         )}
-        {errorIA && <p className="text-center text-xs text-red-500 mt-2 font-medium">⚠️ {errorIA}</p>}
+        {errorIA && (
+          <div className="mt-3 flex flex-col items-center gap-2">
+            <p className="text-center text-xs text-red-500 font-medium">⚠️ {errorIA}</p>
+            <button
+              onClick={generarNuevo}
+              disabled={isLoading}
+              className="text-xs font-bold text-blue-600 underline hover:no-underline disabled:opacity-50"
+            >
+              Reintentar
+            </button>
+          </div>
+        )}
       </div>
 
       <button

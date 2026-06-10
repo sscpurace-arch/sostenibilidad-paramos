@@ -99,7 +99,7 @@ export default function IndicadorCard({
       {/* Observación — se muestra al seleccionar un score */}
       {score && (
         <textarea
-          className="w-full p-3 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:border-[#03A64A] focus:bg-white outline-none transition-colors resize-none"
+          className="w-full p-3 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-800 placeholder-gray-400 focus:border-[#03A64A] focus:bg-white outline-none transition-colors resize-none"
           placeholder="Observaciones (opcional)..."
           rows={2}
           value={observation || ''}

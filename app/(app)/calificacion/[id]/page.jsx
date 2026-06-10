@@ -186,6 +186,23 @@ export default function EvaluacionPage({ params }) {
 
   if (loading) return <div className="p-10 text-center text-gray-400">Cargando evaluación...</div>;
 
+  // Estado vacío: cargó pero no hay indicadores (problema de datos/conexión)
+  if (!loading && indicadores.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-5 text-center px-6">
+        <div className="text-5xl">⚠️</div>
+        <h2 className="text-lg font-bold text-white">No se pudieron cargar los indicadores</h2>
+        <p className="text-sm text-white/60">Verifica tu conexión e intenta de nuevo.</p>
+        <button
+          onClick={() => location.reload()}
+          className="bg-[#03A64A] text-white py-3 px-8 rounded-xl font-bold shadow-lg active:scale-95 transition-all"
+        >
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+
   const totalRespondidos = Object.keys(detalles).filter(id => detalles[id]?.valor).length;
   const totalIndicadores = indicadores.length;
   const todosCompletos = totalRespondidos === totalIndicadores;

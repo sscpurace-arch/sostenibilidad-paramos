@@ -10,14 +10,12 @@ export default function BaseDatosPage() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('Cargando productores...');
     cargarProductores();
   }, []);
 
   async function cargarProductores() {
     setLoading(true);
     const all = await db.productores.toArray();
-    console.log('Productores cargados:', all.length, all[0]);
     setProductores(all);
     setLoading(false);
   }

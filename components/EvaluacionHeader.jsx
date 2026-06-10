@@ -15,7 +15,7 @@ export default function EvaluacionHeader({
 
   return (
     <header className="sticky top-0 bg-[#F5F5F5]/95 backdrop-blur-md pt-2 pb-4 z-20 border-b border-gray-200 shadow-sm">
-      <div className="px-6 max-w-xl mx-auto">
+      <div className="px-6 w-full">
         <div className="flex justify-between items-center mb-2">
           <div className="flex flex-col gap-0.5 max-w-[70%]">
             <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Productor</span>

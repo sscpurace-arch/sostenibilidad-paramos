@@ -1,6 +1,26 @@
 ﻿'use client';
 import RadarChart from '@/components/RadarChart';
 
+// Mapa de abreviaciones para etiquetas de dimensión en la cuadrícula de resumen
+const ABREV_DIMENSION = {
+  'Ambiental': 'Amb.',
+  'Socioeconómica': 'Socio.',
+  'Sociocultural': 'Socio.',
+  'Socioeconómico': 'Socio.',
+  'Económico': 'Econ.',
+  'Económica': 'Econ.',
+  'Productiva': 'Prod.',
+  'Productivo': 'Prod.',
+  'Técnico': 'Téc.',
+  'Técnica': 'Téc.',
+};
+
+function abreviarDimension(nombre) {
+  if (ABREV_DIMENSION[nombre]) return ABREV_DIMENSION[nombre];
+  // Fallback: primera palabra con punto, máximo 6 caracteres
+  return nombre.split(' ')[0].substring(0, 5) + '.';
+}
+
 /**
  * Panel de sostenibilidad: radar comparativo + promedios por dimensión.
  * Muestra empty state si no hay evaluaciones.
@@ -61,7 +81,7 @@ export default function SostenibilidadPanel({
               const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '0';
               return (
                 <div key={dim.nombre} className="p-3 rounded-xl text-center" style={{ backgroundColor: dim.color + '15' }}>
-                  <p className="text-[10px] font-bold uppercase" style={{ color: dim.color }}>{dim.nombre.substring(0, 5)}</p>
+                  <p className="text-[10px] font-bold uppercase" style={{ color: dim.color }}>{abreviarDimension(dim.nombre)}</p>
                   <p className="text-xl font-black" style={{ color: dim.color }}>{avg}</p>
                 </div>
               );

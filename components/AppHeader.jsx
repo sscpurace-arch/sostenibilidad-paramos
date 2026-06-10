@@ -17,6 +17,8 @@ export default function AppHeader({ title, subtitle }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isMock, setIsMock] = useState(false);
+  const [logoParqueVisible, setLogoParqueVisible] = useState(true);
+  const [logoPnnVisible, setLogoPnnVisible] = useState(true);
   const supabase = createClient();
   const router = useRouter();
 
@@ -96,16 +98,19 @@ export default function AppHeader({ title, subtitle }) {
         <div className="flex items-center justify-between">
           {/* Logo Puracé + Texto */}
           <div className="flex items-center gap-3">
-            <div className="shrink-0 w-11 h-11 rounded-full overflow-hidden ring-2 ring-white/30 shadow-lg">
-              <Image
-                src="/images/logo-purace.png"
-                alt="PNN Puracé"
-                width={44}
-                height={44}
-                className="w-full h-full object-cover"
-                priority
-              />
-            </div>
+            {logoParqueVisible && (
+              <div className="shrink-0 w-11 h-11 rounded-full overflow-hidden ring-2 ring-white/30 shadow-lg">
+                <Image
+                  src="/images/logo-purace.png"
+                  alt="PNN Puracé"
+                  width={44}
+                  height={44}
+                  className="w-full h-full object-cover"
+                  priority
+                  onError={() => setLogoParqueVisible(false)}
+                />
+              </div>
+            )}
             <div className="min-w-0">
               <h1 className="text-base font-extrabold text-white leading-tight truncate drop-shadow-sm">
                 {title || 'Sostenibilidad'}
@@ -124,15 +129,18 @@ export default function AppHeader({ title, subtitle }) {
 
           <div className="flex items-center gap-3">
             {/* Logo PNN Nacional */}
-            <div className="shrink-0 w-11 h-11 rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm p-1 ring-1 ring-white/20">
-              <Image
-                src="/images/logo-pnn-nacional.png"
-                alt="Parques Nacionales Naturales"
-                width={44}
-                height={44}
-                className="w-full h-full object-contain"
-              />
-            </div>
+            {logoPnnVisible && (
+              <div className="shrink-0 w-11 h-11 rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm p-1 ring-1 ring-white/20">
+                <Image
+                  src="/images/logo-pnn-nacional.png"
+                  alt="Parques Nacionales Naturales"
+                  width={44}
+                  height={44}
+                  className="w-full h-full object-contain"
+                  onError={() => setLogoPnnVisible(false)}
+                />
+              </div>
+            )}
 
             {/* Botón de Menú Hamburguesa */}
             <button

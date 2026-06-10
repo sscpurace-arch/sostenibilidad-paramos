@@ -69,6 +69,7 @@ function OfflineNotice() {
 export default function Map({ farmCoords, farmName }) {
   const [userCoords, setUserCoords] = useState(null);
   const [boundary, setBoundary] = useState(null);
+  const [geoError, setGeoError] = useState(false);
 
   useEffect(() => {
     fetch('/purace-boundary.json')
@@ -81,12 +82,18 @@ export default function Map({ farmCoords, farmName }) {
     if ('geolocation' in navigator) {
       const watchId = navigator.geolocation.watchPosition(
         (position) => {
+          setGeoError(false);
           setUserCoords([position.coords.latitude, position.coords.longitude]);
         },
-        (error) => console.error('Error getting location:', error),
+        (error) => {
+          console.error('Error getting location:', error);
+          setGeoError(true);
+        },
         { enableHighAccuracy: true }
       );
       return () => navigator.geolocation.clearWatch(watchId);
+    } else {
+      setGeoError(true);
     }
   }, []);
 
@@ -95,6 +102,12 @@ export default function Map({ farmCoords, farmName }) {
   return (
     <div style={{ width: '100%', height: '100%', minHeight: '400px' }} className="relative">
       <OfflineNotice />
+      {/* Aviso cuando la geolocalización no está disponible o fue denegada */}
+      {geoError && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] bg-black/75 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+          📍 Ubicación no disponible
+        </div>
+      )}
       <MapContainer
         center={center} 
         zoom={15} 
