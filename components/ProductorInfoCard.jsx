@@ -8,15 +8,15 @@ export default function ProductorInfoCard({ productor, onVerMapa }) {
     <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
       <h2 className="text-2xl font-bold text-[#03A64A]">{productor.nombre_completo}</h2>
       <p className="text-sm text-gray-500 mt-1">CC: {productor.cedula}</p>
-      <div className="grid grid-cols-2 gap-4 mt-6">
-        <div>
-          <p className="text-[10px] text-gray-400 uppercase font-bold">Predio</p>
-          <p className="text-sm">{productor.nombre_predio || '-'}</p>
-        </div>
-        <div>
-          <p className="text-[10px] text-gray-400 uppercase font-bold">Vereda</p>
-          <p className="text-sm">{productor.vereda || '-'}</p>
-        </div>
+      <div className="mt-6">
+        <p className="text-[10px] text-gray-700 uppercase font-bold">Nombre del predio</p>
+        <p className="text-sm">
+          {productor.nombre_predio
+            ? productor.vereda
+              ? `${productor.nombre_predio} • ${productor.vereda}`
+              : productor.nombre_predio
+            : '-'}
+        </p>
       </div>
 
       <button

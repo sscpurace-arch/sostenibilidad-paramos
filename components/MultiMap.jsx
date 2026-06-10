@@ -55,6 +55,7 @@ function OfflineNotice() {
 export default function MultiMap({ producers }) {
   const router = useRouter();
   const [boundary, setBoundary] = useState(null);
+  const [selectedVeredas, setSelectedVeredas] = useState([]);
 
   useEffect(() => {
     fetch('/purace-boundary.json')
@@ -63,14 +64,18 @@ export default function MultiMap({ producers }) {
       .catch(err => console.error('Error cargando perímetro:', err));
   }, []);
 
-  // Filtrar productores con coordenadas válidas
+  // Filtrar productores con coordenadas válidas + aplicar filtro de veredas
   const validProducers = useMemo(() => {
-    return producers.filter(p => p.ubicacion_lat && p.ubicacion_lng).map(p => ({
+    let filtered = producers.filter(p => p.ubicacion_lat && p.ubicacion_lng).map(p => ({
       ...p,
       lat: parseFloat(p.ubicacion_lat),
       lng: parseFloat(p.ubicacion_lng)
     }));
-  }, [producers]);
+    if (selectedVeredas.length > 0) {
+      filtered = filtered.filter(p => selectedVeredas.includes(p.vereda || 'Sin registrar'));
+    }
+    return filtered;
+  }, [producers, selectedVeredas]);
 
   // Generar iconos basados en el color de la vereda
   const getMarkerIcon = (color) => {
@@ -169,16 +174,29 @@ export default function MultiMap({ producers }) {
       </MapContainer>
 
       {/* Leyenda de Veredas */}
-      <div className="absolute bottom-6 left-6 z-[1000] bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-2xl border border-gray-100 max-h-[180px] overflow-y-auto min-w-[140px]">
-        <h4 className="text-[10px] font-black uppercase text-gray-400 mb-2 border-b pb-1">Veredas</h4>
-        <div className="flex flex-col gap-2">
-          {Array.from(new Set(validProducers.map(p => p.vereda))).sort().map(vereda => {
-            const prod = validProducers.find(p => p.vereda === vereda);
+      <div className="absolute bottom-6 left-6 z-[1000] bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-100 max-h-[350px] overflow-hidden flex flex-col min-w-[160px]">
+        <div className="sticky top-0 bg-white/95 p-3 border-b pb-1">
+          <h4 className="text-[10px] font-black uppercase text-gray-400 mb-2">Veredas</h4>
+          {selectedVeredas.length > 0 && (
+            <button onClick={() => setSelectedVeredas([])} className="text-[10px] font-bold text-[#03A64A] hover:underline text-left">
+              ✕ Mostrar todas
+            </button>
+          )}
+        </div>
+        <div className="overflow-y-auto flex-1 p-3 flex flex-col gap-2">
+          {Array.from(new Set(producers.map(p => p.vereda || 'Sin registrar'))).sort().map(vereda => {
+            const prod = producers.find(p => (p.vereda || 'Sin registrar') === vereda);
+            const count = producers.filter(p => (p.vereda || 'Sin registrar') === vereda && p.ubicacion_lat).length;
+            const isSelected = selectedVeredas.includes(vereda);
             return (
-              <div key={vereda || 'none'} className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full border border-white shadow-sm" style={{ backgroundColor: prod?.color || '#03A64A' }}></span>
-                <span className="text-[11px] text-gray-700 font-bold leading-tight">{vereda || 'Sin registrar'}</span>
-              </div>
+              <button
+                key={vereda}
+                onClick={() => setSelectedVeredas(isSelected ? selectedVeredas.filter(v => v !== vereda) : [...selectedVeredas, vereda])}
+                className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-all ${isSelected ? 'bg-green-50 ring-1 ring-green-200' : 'hover:bg-gray-50'}`}
+              >
+                <span className={`w-3.5 h-3.5 rounded-full border shadow-sm transition-all ${isSelected ? 'ring-2 ring-offset-1 ring-green-500' : 'border-white'}`} style={{ backgroundColor: prod?.color || '#03A64A' }}></span>
+                <span className="text-[11px] text-gray-700 font-bold leading-tight">{vereda} ({count})</span>
+              </button>
             );
           })}
           <div className="flex items-center gap-2 pt-1 border-t mt-1">

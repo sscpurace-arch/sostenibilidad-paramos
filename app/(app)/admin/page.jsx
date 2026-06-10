@@ -2,8 +2,6 @@
 import { useState, useEffect } from 'react';
 import { createClient, getMockSession } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-import AppHeader from '@/components/AppHeader';
-
 const ADMIN_EMAIL = 'sscpurace@gmail.com';
 
 function RolBadge({ rol }) {
@@ -106,8 +104,6 @@ export default function AdminPage() {
 
   return (
     <div className="flex flex-col gap-5 pb-10">
-      <AppHeader title="Panel Admin" subtitle="Gestión de usuarios y actividad" />
-
       {loading && (
         <div className="card-glass p-8 text-center">
           <div className="w-8 h-8 border-2 border-pnn-verde border-t-transparent rounded-full animate-spin mx-auto mb-3" />

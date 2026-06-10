@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Flujo Técnico — App Sostenibilidad Páramos</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #07100D;
+  color: #e8f5e9;
+  font-family: 'Segoe UI', system-ui, monospace, sans-serif;
+  padding: 40px 20px 100px;
+  min-width: 900px;
+}
+
+/* ── HEADER ── */
+h1 { text-align:center; font-size:1.3rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:#fff; margin-bottom:4px; }
+.sub { text-align:center; font-size:.7rem; color:rgba(255,255,255,.35); letter-spacing:.12em; text-transform:uppercase; margin-bottom:50px; }
+
+/* ── CANVAS ── */
+.canvas { position:relative; max-width:1100px; margin:0 auto; }
+
+/* ── LANES ── */
+.lanes {
+  display: grid;
+  grid-template-columns: 220px 1fr 220px;
+  gap: 0;
+  position: relative;
+}
+.lane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0;
+  gap: 0;
+}
+.lane-label {
+  font-size:.58rem; font-weight:900; letter-spacing:.15em; text-transform:uppercase;
+  padding:5px 16px; border-radius:20px; margin-bottom:24px;
+  white-space:nowrap;
+}
+.lane-label.lane-user   { background:rgba(3,166,74,.18); border:1px solid rgba(3,166,74,.35); color:rgba(100,255,150,.8); }
+.lane-label.lane-system { background:rgba(0,120,255,.15); border:1px solid rgba(0,120,255,.3);  color:rgba(100,180,255,.8); }
+.lane-label.lane-cloud  { background:rgba(160,60,255,.15); border:1px solid rgba(160,60,255,.3); color:rgba(200,150,255,.8); }
+
+/* ── NODES ── */
+.node {
+  position:relative;
+  border-radius:12px;
+  padding:12px 18px;
+  font-size:.76rem;
+  line-height:1.4;
+  z-index:2;
+  transition:transform .15s, box-shadow .15s;
+  cursor:default;
+  width:100%;
+  max-width:200px;
+}
+.node:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.5); }
+.node b { display:block; font-size:.8rem; font-weight:800; margin-bottom:3px; }
+.node .detail { font-size:.64rem; opacity:.6; margin-top:3px; line-height:1.5; }
+.node .code   { font-family:monospace; font-size:.6rem; background:rgba(0,0,0,.3); padding:2px 6px; border-radius:4px; margin-top:4px; display:inline-block; }
+.node .tag    { font-size:.55rem; font-weight:900; letter-spacing:.1em; text-transform:uppercase;
+                padding:2px 7px; border-radius:10px; margin-top:5px; display:inline-block; }
+
+/* Node color variants */
+.n-start    { background:linear-gradient(135deg,#03A64A,#026B30); border:1.5px solid rgba(3,166,74,.6); color:#fff; border-radius:50px; text-align:center; }
+.n-decision { background:rgba(255,200,0,.1); border:1.5px solid rgba(255,200,0,.45); color:rgba(255,230,100,.9); clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); text-align:center; padding:16px 10px; max-width:160px; border-radius:0; }
+.n-action   { background:rgba(255,255,255,.05); border:1.5px solid rgba(255,255,255,.12); color:rgba(255,255,255,.85); }
+.n-system   { background:rgba(0,120,255,.12); border:1.5px solid rgba(0,120,255,.3); color:rgba(180,220,255,.9); }
+.n-warn     { background:rgba(255,80,60,.1); border:1.5px solid rgba(255,80,60,.3); color:rgba(255,160,140,.9); }
+.n-offline  { background:rgba(255,255,255,.03); border:1.5px dotted rgba(255,255,255,.2); color:rgba(255,255,255,.65); }
+.n-success  { background:rgba(3,166,74,.18); border:1.5px solid rgba(3,166,74,.45); color:rgba(150,255,180,.9); }
+.n-ai       { background:rgba(160,60,255,.18); border:1.5px solid rgba(160,60,255,.45); color:rgba(220,180,255,.9); }
+.n-telegram { background:rgba(0,136,204,.18); border:1.5px solid rgba(0,136,204,.45); color:rgba(140,210,255,.9); }
+.n-end      { background:rgba(3,166,74,.12); border:1.5px solid rgba(3,166,74,.3); color:rgba(150,255,180,.8); border-radius:50px; text-align:center; }
+
+/* ── ARROWS (SVG overlay) ── */
+svg.arrows { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; overflow:visible; }
+
+/* ── CONNECTOR LABELS ── */
+.edge-label {
+  font-size:.58rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em;
+  color:rgba(255,255,255,.35); text-align:center; margin:2px 0;
+  pointer-events:none;
+}
+.edge-label.ok  { color:rgba(100,255,150,.5); }
+.edge-label.err { color:rgba(255,130,100,.6); }
+
+/* ── VERTICAL SPACER / ARROW in column ── */
+.col-arrow {
+  display:flex; flex-direction:column; align-items:center;
+  gap:0; margin:0;
+}
+.col-arrow .line { width:2px; flex:1; }
+.col-arrow .head { width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; }
+.col-arrow.green .line { background:linear-gradient(to bottom,rgba(3,166,74,.7),rgba(3,166,74,.2)); }
+.col-arrow.green .head { border-top:8px solid rgba(3,166,74,.7); }
+.col-arrow.red   .line { background:linear-gradient(to bottom,rgba(255,80,60,.7),rgba(255,80,60,.2)); }
+.col-arrow.red   .head { border-top:8px solid rgba(255,80,60,.6); }
+.col-arrow.blue  .line { background:linear-gradient(to bottom,rgba(0,120,255,.6),rgba(0,120,255,.2)); }
+.col-arrow.blue  .head { border-top:8px solid rgba(0,120,255,.6); }
+.col-arrow.gray  .line { background:linear-gradient(to bottom,rgba(255,255,255,.25),rgba(255,255,255,.08)); }
+.col-arrow.gray  .head { border-top:8px solid rgba(255,255,255,.25); }
+.arrow-h { height:24px; }
+.arrow-m { height:36px; }
+.arrow-l { height:52px; }
+
+/* ── SECTION DIVIDER ── */
+.section-div {
+  grid-column: 1/-1;
+  display:flex; align-items:center; gap:12px;
+  margin:20px 0 8px;
+  padding:0 8px;
+}
+.section-div::before,.section-div::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.07); }
+.section-div span { font-size:.58rem; font-weight:900; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.22); white-space:nowrap; }
+
+/* ── HORIZONTAL BRANCH ── */
+.branch-wrap {
+  grid-column:1/-1;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  width:100%;
+  position:relative;
+  padding:0 0 8px;
+}
+.branch-wrap::before {
+  content:'';
+  position:absolute;
+  top:0; left:15%; right:15%; height:2px;
+  background:rgba(3,166,74,.25);
+}
+.branch-item {
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  flex:1; max-width:230px;
+}
+
+/* ── BADGES ── */
+.badge-mock  { background:rgba(255,180,0,.2); color:rgba(255,210,80,.9); border:1px solid rgba(255,180,0,.35); }
+.badge-admin { background:rgba(255,60,60,.15); color:rgba(255,140,120,.9); border:1px solid rgba(255,60,60,.3); }
+.badge-ok    { background:rgba(3,166,74,.2);  color:rgba(100,255,150,.9); border:1px solid rgba(3,166,74,.35); }
+.badge-offline { background:rgba(255,255,255,.07); color:rgba(255,255,255,.5); border:1px solid rgba(255,255,255,.15); }
+.badge-ai    { background:rgba(160,60,255,.2); color:rgba(210,170,255,.9); border:1px solid rgba(160,60,255,.35); }
+
+/* ── LEGEND ── */
+.legend { max-width:900px; margin:60px auto 0; display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+.legend-item { display:flex; align-items:center; gap:7px; font-size:.66rem; color:rgba(255,255,255,.4); }
+.lbox { width:13px; height:13px; border-radius:3px; flex-shrink:0; }
+
+/* ── INLINE FLOW (main column) ── */
+.main-flow { display:flex; flex-direction:column; align-items:center; gap:0; width:100%; }
+</style>
+</head>
+<body>
+
+<h1>App Sostenibilidad Páramos — Flujo Técnico Detallado</h1>
+<div class="sub">Para el desarrollador · Lógica real del código · v0.8 · Junio 2026</div>
+
+<div class="canvas">
+<div class="main-flow">
+
+  <!-- ═══════════════════════════════ AUTENTICACIÓN ═══════════════════════════════ -->
+  <div style="font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);padding:3px 14px;border-radius:20px;margin-bottom:18px;">① Autenticación</div>
+
+  <div class="node n-start" style="max-width:240px;">
+    <b>Usuario abre la app</b>
+    <div class="detail">PWA instalada o browser</div>
+  </div>
+
+  <div class="col-arrow gray arrow-h"><div class="line"></div><div class="head"></div></div>
+
+  <!-- middleware check -->
+  <div class="node n-system" style="max-width:340px;">
+    <b>middleware.js — Guard de ruta</b>
+    <div class="detail">Corre en CADA request (Next.js Edge)</div>
+    <div class="detail">1. Lee cookie <span style="font-family:monospace;font-size:.65rem;background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;">mock-user-session</span></div>
+    <div class="detail">2. Si no hay mock → <code style="font-size:.6rem">supabase.auth.getUser()</code></div>
+    <div class="detail">3. Sin usuario → redirect <code style="font-size:.6rem">/login</code></div>
+  </div>
+
+  <div class="col-arrow gray arrow-h"><div class="line"></div><div class="head"></div></div>
+
+  <!-- LOGIN PAGE -->
+  <div class="node n-action" style="max-width:440px;">
+    <b>LoginPage — 2 caminos de acceso</b>
+    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+
+      <div style="flex:1;min-width:180px;background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.25);border-radius:10px;padding:10px;">
+        <div style="font-size:.65rem;font-weight:900;color:rgba(255,210,80,.9);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">🌿 Modo Prueba</div>
+        <div class="detail">Botón "Entrar a probarla" (prominente)</div>
+        <div class="detail" style="margin-top:4px;">Escribe cookie <span style="font-family:monospace;font-size:.6rem;">mock-user-session</span></div>
+        <div class="detail">+ <span style="font-family:monospace;font-size:.6rem;">localStorage['mock-user-session']</span></div>
+        <div class="detail" style="margin-top:4px;">ID hardcoded: <span style="font-family:monospace;font-size:.58rem;">e81ba52c-23df...</span></div>
+        <div class="detail">Email: <span style="font-family:monospace;font-size:.58rem;">prueba@test.local</span></div>
+        <div class="detail">Nombre: <span style="font-family:monospace;font-size:.6rem;">"Usuario Prueba"</span></div>
+        <span class="tag badge-mock">Sin Supabase Auth</span>
+      </div>
+
+      <div style="flex:1;min-width:180px;background:rgba(255,60,60,.06);border:1px solid rgba(255,60,60,.2);border-radius:10px;padding:10px;">
+        <div style="font-size:.65rem;font-weight:900;color:rgba(255,150,130,.9);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">🔐 Admin / Real</div>
+        <div class="detail">Formulario colapsable (oculto por defecto)</div>
+        <div class="detail">Email + contraseña</div>
+        <div class="detail" style="margin-top:4px;"><span style="font-family:monospace;font-size:.6rem;">supabase.auth.signInWithPassword()</span></div>
+        <div class="detail" style="margin-top:6px;color:rgba(255,150,100,.7);">Error → msg traducido</div>
+        <div class="detail" style="color:rgba(255,150,100,.7);">≥5 intentos fallidos → cooldown 30s</div>
+        <span class="tag badge-admin">Supabase Auth Real</span>
+      </div>
+    </div>
+    <div class="detail" style="margin-top:8px;padding:6px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid rgba(255,255,255,.07);">
+      ⚠️ No existe flujo de registro de usuarios. Los usuarios reales los crea el admin directamente en Supabase Dashboard.
+    </div>
+  </div>
+
+  <!-- login error path (below, as annotation) -->
+  <div style="display:flex;gap:24px;margin-top:4px;width:100%;max-width:440px;justify-content:center;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div class="col-arrow green" style="height:20px;"><div class="line"></div><div class="head"></div></div>
+      <div style="font-size:.58rem;color:rgba(100,255,150,.5);font-weight:700;text-transform:uppercase;">✓ OK → redirect /</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div class="col-arrow red" style="height:20px;"><div class="line"></div><div class="head"></div></div>
+      <div style="font-size:.58rem;color:rgba(255,130,100,.6);font-weight:700;text-transform:uppercase;">✗ Error → se muestra inline</div>
+    </div>
+  </div>
+
+  <div class="col-arrow green arrow-m"><div class="line"></div><div class="head"></div></div>
+
+  <!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
+  <div style="font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);padding:3px 14px;border-radius:20px;margin-bottom:18px;margin-top:8px;">② Dashboard</div>
+
+  <div class="node n-success" style="max-width:420px;">
+    <b>Dashboard — page.jsx</b>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+      <div style="background:rgba(0,0,0,.25);padding:6px 10px;border-radius:8px;flex:1;min-width:110px;">
+        <div style="font-size:.6rem;font-weight:700;color:rgba(100,255,150,.7);margin-bottom:3px;">Carga datos</div>
+        <div class="detail">db.productores.count()</div>
+        <div class="detail">db.evaluaciones (borrador)</div>
+        <div class="detail">db.evaluaciones (enviada)</div>
+        <span class="tag badge-offline" style="margin-top:4px;">IndexedDB primero</span>
+      </div>
+      <div style="background:rgba(0,0,0,.25);padding:6px 10px;border-radius:8px;flex:1;min-width:110px;">
+        <div style="font-size:.6rem;font-weight:700;color:rgba(100,255,150,.7);margin-bottom:3px;">Escucha sync</div>
+        <div class="detail">subscribe(syncEngine)</div>
+        <div class="detail">Recarga stats cuando isSyncing → false</div>
+      </div>
+    </div>
+    <div class="detail" style="margin-top:8px;">NavBar: Inicio · Buscar · <b>⚡ Calificar (FAB)</b> · Pendientes · Mapa</div>
+    <div class="detail" style="color:rgba(255,200,80,.6);margin-top:4px;">Modo Prueba: muestra banner "Versión de Prueba"</div>
+  </div>
+
+  <div class="col-arrow gray arrow-m"><div class="line"></div><div class="head"></div></div>
+
+  <!-- ═══════════════════════════════ NAVEGACIÓN ═══════════════════════════════ -->
+  <div style="font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);padding:3px 14px;border-radius:20px;margin-bottom:14px;margin-top:8px;">③ Navegación principal</div>
+
+  <!-- 4-branch nav -->
+  <div class="branch-wrap" style="gap:12px;">
+
+    <!-- BUSCAR -->
+    <div class="branch-item">
+      <div class="col-arrow gray arrow-h"><div class="line"></div><div class="head"></div></div>
+      <div class="node n-action" style="max-width:200px;">
+        <b>🔍 Buscar</b>
+        <div class="detail">/buscar</div>
+        <div class="detail" style="margin-top:4px;">Filtra IndexedDB local</div>
+        <div class="detail">nombre / cédula / predio</div>
+        <div class="detail" style="margin-top:4px;">→ Perfil productor</div>
+        <div class="detail">/calificacion/nueva/[id]</div>
+      </div>
+    </div>
+
+    <!-- NUEVO PRODUCTOR -->
+    <div class="branch-item">
+      <div class="col-arrow gray arrow-h"><div class="line"></div><div class="head"></div></div>
+      <div class="node n-action" style="max-width:200px;">
+        <b>➕ Nuevo Productor</b>
+        <div class="detail">/nuevo-productor</div>
+        <div class="detail" style="margin-top:4px;">Nombre · predio · sector</div>
+        <div class="detail">Captura GPS (navigator.geolocation)</div>
+        <div class="detail" style="margin-top:4px;">saveRecord('productores')</div>
+        <div class="detail">→ IndexedDB + cola sync</div>
+        <span class="tag badge-offline" style="margin-top:4px;">Offline OK</span>
+      </div>
+    </div>
+
+    <!-- MAPA -->
+    <div class="branch-item">
+      <div class="col-arrow gray arrow-h"><div class="line"></div><div class="head"></div></div>
+      <div class="node n-action" style="max-width:200px;">
+        <b>🗺️ Mapa</b>
+        <div class="detail">/mapa → Leaflet.js</div>
+        <div class="detail" style="margin-top:4px;">Todos los predios con coords</div>
+        <div class="detail">Click → /mapa/[id]</div>
+        <div class="detail">Detalle del predio</div>
+      </div>
+    </div>
+
+    <!-- EN PROCESO -->
+    <div class="branch-item">
+      <div class="col-arrow gray arrow-h"><div class="line"></div><div class="head"></div></div>
+      <div class="node n-warn" style="max-width:200px;">
+        <b>⏳ Pendientes</b>
+        <div class="detail">/en-proceso</div>
+        <div class="detail" style="margin-top:4px;">db.evaluaciones.where</div>
+        <div class="detail">estado = <b>'borrador'</b></div>
+        <div class="detail" style="margin-top:4px;">Muestra progreso</div>
+        <div class="detail">N/29 indicadores respondidos</div>
+        <div class="detail" style="margin-top:4px;">→ Click retoma evaluación</div>
+        <div class="detail">/calificacion/[id]</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-arrow green arrow-m"><div class="line"></div><div class="head"></div></div>
+
+  <!-- ═══════════════════════════════ FLUJO EVALUACIÓN ═══════════════════════════════ -->
+  <div style="font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);padding:3px 14px;border-radius:20px;margin-bottom:18px;margin-top:8px;">④ Flujo de Evaluación — El más complejo</div>
+
+  <!-- PERFIL -->
+  <div class="node n-action" style="max-width:460px;">
+    <b>Perfil del Productor — /calificacion/nueva/[productorId]</b>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:130px;background:rgba(0,0,0,.2);padding:6px 8px;border-radius:8px;">
+        <div style="font-size:.6rem;color:rgba(255,255,255,.5);margin-bottom:3px;">Carga local (inmediata)</div>
+        <div class="detail">db.productores.get(id)</div>
+        <div class="detail">db.evaluaciones (estado='enviada')</div>
+        <div class="detail">db.respuestas_indicadores</div>
+        <div class="detail" style="margin-top:3px;">→ Renderiza SIN esperar red</div>
+      </div>
+      <div style="flex:1;min-width:130px;background:rgba(0,0,0,.2);padding:6px 8px;border-radius:8px;">
+        <div style="font-size:.6rem;color:rgba(0,150,255,.6);margin-bottom:3px;">Sincroniza en background</div>
+        <div class="detail">Si navigator.onLine</div>
+        <div class="detail">→ supabase.from('evaluaciones')</div>
+        <div class="detail">→ db.evaluaciones.bulkPut()</div>
+      </div>
+    </div>
+    <div class="detail" style="margin-top:6px;">Muestra: radar histórico · historial últimas 4 evals · botón "Nueva Evaluación"</div>
+  </div>
+
+  <div class="col-arrow green arrow-h"><div class="line"></div><div class="head"></div></div>
+
+  <!-- CREAR EVALUACIÓN -->
+  <div class="node n-system" style="max-width:460px;">
+    <b>Crear evaluación en borrador</b>
+    <div class="detail" style="margin-top:4px;">saveRecord('evaluaciones', &#123; estado: 'borrador', es_prueba: esPrueba &#125;)</div>
+    <div class="detail">→ IndexedDB inmediato + cola de sync</div>
+    <div class="detail" style="color:rgba(255,200,80,.7);margin-top:4px;">⚠️ Bandera <span style="font-family:monospace">es_prueba</span> se activa si viene del modo mock</div>
+    <div class="detail">→ redirect /calificacion/[id]</div>
+  </div>
+
+  <div class="col-arrow green arrow-h"><div class="line"></div><div class="head"></div></div>
+
+  <!-- CALIFICACIÓN -->
+  <div class="node n-action" style="max-width:520px;">
+    <b>Calificación — /calificacion/[id]</b>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:150px;background:rgba(0,0,0,.25);padding:8px;border-radius:8px;">
+        <div style="font-size:.62rem;font-weight:800;color:rgba(200,180,255,.8);margin-bottom:5px;">29 Indicadores · 3 dimensiones</div>
+        <div class="detail">Cada respuesta: saveRecord('respuestas_indicadores')</div>
+        <div class="detail" style="margin-top:3px;">→ IndexedDB inmediato</div>
+        <div class="detail">Autosave cada <b>30 segundos</b> si hay cambios</div>
+        <div class="detail" style="margin-top:3px;color:rgba(255,255,255,.4);">Muestra "Guardado automático ✓"</div>
+      </div>
+      <div style="flex:1;min-width:150px;background:rgba(0,0,0,.25);padding:8px;border-radius:8px;">
+        <div style="font-size:.62rem;font-weight:800;color:rgba(200,180,255,.8);margin-bottom:5px;">3 acciones disponibles</div>
+        <div style="font-size:.63rem;background:rgba(255,200,0,.08);padding:4px 7px;border-radius:6px;margin-bottom:4px;">💾 Guardar y Salir<br><span style="opacity:.6;font-size:.6rem;">estado sigue 'borrador' → va a Pendientes</span></div>
+        <div style="font-size:.63rem;background:rgba(3,166,74,.1);padding:4px 7px;border-radius:6px;margin-bottom:4px;">✅ Finalizar<br><span style="opacity:.6;font-size:.6rem;">valida todos los 29 → estado='enviada'</span></div>
+        <div style="font-size:.63rem;background:rgba(255,60,60,.08);padding:4px 7px;border-radius:6px;">✕ Cancelar<br><span style="opacity:.6;font-size:.6rem;">confirm() → pierde cambios no guardados</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORK: guardar vs finalizar -->
+  <div style="display:flex;gap:40px;margin-top:6px;width:100%;max-width:520px;justify-content:center;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div class="col-arrow red" style="height:18px;"><div class="line"></div><div class="head"></div></div>
+      <div style="font-size:.57rem;color:rgba(255,200,80,.6);font-weight:700;text-transform:uppercase;">💾 Guardar borrador</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+      <div class="col-arrow green" style="height:18px;"><div class="line"></div><div class="head"></div></div>
+      <div style="font-size:.57rem;color:rgba(100,255,150,.6);font-weight:700;text-transform:uppercase;">✅ Finalizar</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:32px;width:100%;max-width:520px;justify-content:center;align-items:flex-start;">
+
+    <!-- PATH BORRADOR -->
+    <div style="flex:1;max-width:220px;display:flex;flex-direction:column;align-items:center;gap:0;">
+      <div class="node n-warn" style="margin-top:0;width:100%;">
+        <b>→ /en-proceso</b>
+        <div class="detail">estado = 'borrador'</div>
+        <div class="detail">Aparece en lista Pendientes</div>
+        <div class="detail">con barra de progreso N/29</div>
+        <div class="detail" style="margin-top:4px;">Click retoma en /calificacion/[id]</div>
+      </div>
+    </div>
+
+    <!-- PATH FINALIZAR -->
+    <div style="flex:1;max-width:270px;display:flex;flex-direction:column;align-items:center;gap:0;">
+      <div class="node n-system" style="width:100%;margin-top:0;">
+        <b>Validación Zod</b>
+        <div class="detail">crearSchemaEvaluacion(indicadores)</div>
+        <div class="detail">Todos los 29 deben tener valor</div>
+        <div class="detail" style="color:rgba(255,130,100,.7);">Si falla → scroll al primer error</div>
+        <div class="detail" style="color:rgba(255,130,100,.7);">ValidationBanner rojo visible</div>
+      </div>
+      <div class="col-arrow green" style="height:20px;"><div class="line"></div><div class="head"></div></div>
+      <div class="node n-success" style="width:100%;">
+        <b>saveRecord('evaluaciones')</b>
+        <div class="detail">estado: 'borrador' → <b>'enviada'</b></div>
+        <div class="detail">→ IndexedDB + cola sync</div>
+      </div>
+      <div class="col-arrow green" style="height:20px;"><div class="line"></div><div class="head"></div></div>
+      <div class="node n-telegram" style="width:100%;">
+        <b>📨 POST /api/notificar</b>
+        <div class="detail">Mensaje Telegram al chat del técnico</div>
+        <div style="font-size:.6rem;background:rgba(0,0,0,.3);padding:5px 8px;border-radius:7px;margin-top:5px;font-family:monospace;line-height:1.6;">
+          📋 Nueva calificación registrada<br>
+          👤 Productor: [nombre]<br>
+          📅 Fecha: [fecha]<br>
+          📊 Puntaje: [X.X / 5]<br>
+          🗺️ Sector: [sector]<br>
+          👨‍💼 Técnico: [nombre]
+        </div>
+        <div class="detail" style="color:rgba(255,200,80,.7);margin-top:4px;">Si es_prueba=true → mensaje marcado 🧪</div>
+        <div class="detail" style="color:rgba(255,200,80,.5);">⚠️ Se dispara solo al finalizar (no en borrador)</div>
+        <span class="tag badge-offline" style="margin-top:4px;">.catch(()=&gt;&#123;&#125;) — falla silenciosa</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-arrow green arrow-m"><div class="line"></div><div class="head"></div></div>
+
+  <!-- ═══════════════════════════════ RESULTADOS + IA ═══════════════════════════════ -->
+  <div style="font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);padding:3px 14px;border-radius:20px;margin-bottom:18px;margin-top:8px;">⑤ Resultados &amp; Diagnóstico IA</div>
+
+  <div style="display:flex;gap:16px;width:100%;max-width:620px;justify-content:center;align-items:flex-start;">
+
+    <div style="flex:1;max-width:290px;display:flex;flex-direction:column;align-items:center;gap:0;">
+      <div class="node n-success" style="width:100%;">
+        <b>📊 ResultadosEvaluacion</b>
+        <div class="detail">setShowResults(true) — misma página</div>
+        <div class="detail" style="margin-top:4px;">RadarChart (ApexCharts)</div>
+        <div class="detail">Puntaje por dimensión</div>
+        <div class="detail">Comparación con eval anterior</div>
+        <div class="detail" style="margin-top:4px;">SostenibilidadPanel → semáforo</div>
+      </div>
+    </div>
+
+    <div style="flex:1;max-width:310px;display:flex;flex-direction:column;align-items:center;gap:0;">
+      <div class="node n-ai" style="width:100%;">
+        <b>🤖 Diagnóstico IA — useDiagnostico()</b>
+        <div style="font-size:.61rem;background:rgba(0,0,0,.25);padding:6px 8px;border-radius:8px;margin-top:6px;line-height:1.6;">
+          <b style="color:rgba(210,170,255,.9);">1.</b> Lee IndexedDB local → render inmediato<br>
+          <b style="color:rgba(210,170,255,.9);">2.</b> Si online → fetch Supabase en bg<br>
+          <b style="color:rgba(210,170,255,.9);">3.</b> Si stale (&gt;7 días) → avisa al usuario<br>
+          <b style="color:rgba(210,170,255,.9);">4.</b> "Generar nuevo" → requiere internet
+        </div>
+        <div class="detail" style="margin-top:5px;">supabase.functions.invoke('generar-diagnostico')</div>
+        <div class="detail">Body: &#123; evaluacion_id, is_mock &#125;</div>
+        <div style="background:rgba(160,60,255,.1);border:1px solid rgba(160,60,255,.3);border-radius:8px;padding:6px 8px;margin-top:6px;">
+          <div style="font-size:.6rem;font-weight:800;color:rgba(210,170,255,.8);margin-bottom:4px;">Edge Function: generar-diagnostico</div>
+          <div class="detail">Modelo: Gemini 2.5 Flash</div>
+          <div class="detail">Contexto: 29 indicadores SSC Puracé</div>
+          <div class="detail">Rate limit: 10 req/min/usuario</div>
+          <div class="detail">Guarda en tabla <span style="font-family:monospace;font-size:.6rem;">diagnosticos</span></div>
+          <div class="detail" style="color:rgba(255,200,80,.6);">Si is_mock → no afecta datos reales</div>
+        </div>
+        <span class="tag badge-ai" style="margin-top:6px;">Requiere internet</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-arrow gray arrow-l"><div class="line"></div><div class="head"></div></div>
+
+  <!-- ═══════════════════════════════ SYNC ENGINE ═══════════════════════════════ -->
+  <div style="font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);padding:3px 14px;border-radius:20px;margin-bottom:18px;margin-top:8px;">⑥ Sync Engine — corre siempre en background</div>
+
+  <div class="node n-system" style="max-width:560px;">
+    <b>lib/sync-engine.js — initSyncEngine(supabase)</b>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:150px;background:rgba(0,0,0,.25);padding:7px;border-radius:8px;">
+        <div style="font-size:.61rem;font-weight:800;color:rgba(100,255,150,.7);margin-bottom:4px;">saveRecord(tabla, datos)</div>
+        <div class="detail">→ Escribe IndexedDB inmediato</div>
+        <div class="detail">→ Encola en syncQueue</div>
+        <div class="detail">→ Si online: sube a Supabase</div>
+        <div class="detail">→ Si offline: queda en cola</div>
+      </div>
+      <div style="flex:1;min-width:150px;background:rgba(0,0,0,.25);padding:7px;border-radius:8px;">
+        <div style="font-size:.61rem;font-weight:800;color:rgba(100,255,150,.7);margin-bottom:4px;">syncQueue()</div>
+        <div class="detail">Procesa cola pendiente</div>
+        <div class="detail">cuando recupera internet</div>
+        <div class="detail" style="margin-top:4px;">updatePendingCount()</div>
+        <div class="detail">→ OfflineBanner se actualiza</div>
+      </div>
+      <div style="flex:1;min-width:150px;background:rgba(0,0,0,.25);padding:7px;border-radius:8px;">
+        <div style="font-size:.61rem;font-weight:800;color:rgba(100,255,150,.7);margin-bottom:4px;">useOfflineSync()</div>
+        <div class="detail">Hook que expone</div>
+        <div class="detail">pendingCount · isSyncing</div>
+        <div class="detail" style="margin-top:4px;">OfflineBanner muestra</div>
+        <div class="detail">"N cambios pendientes"</div>
+      </div>
+    </div>
+    <div class="detail" style="margin-top:6px;padding:5px 8px;background:rgba(0,120,255,.08);border-radius:6px;border:1px solid rgba(0,120,255,.15);">
+      Tablas sincronizadas: <span style="font-family:monospace;font-size:.6rem;">productores · evaluaciones · respuestas_indicadores · diagnosticos</span>
+    </div>
+  </div>
+
+  <div class="col-arrow gray arrow-m"><div class="line"></div><div class="head"></div></div>
+
+  <!-- ADMIN -->
+  <div style="font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.08);padding:3px 14px;border-radius:20px;margin-bottom:18px;margin-top:8px;">⑦ Panel Admin</div>
+
+  <div class="node n-warn" style="max-width:440px;">
+    <b>🛡️ /admin — AdminPage</b>
+    <span class="tag badge-admin" style="margin-bottom:6px;">⚠️ Sin guard de rol en el código actual</span>
+    <div class="detail">Cualquier usuario autenticado puede acceder a /admin</div>
+    <div class="detail" style="margin-top:4px;">Muestra: lista usuarios · stats globales de evaluaciones</div>
+    <div class="detail">Lee: supabase.from('usuarios') · supabase.from('evaluaciones')</div>
+    <div class="detail" style="color:rgba(255,130,100,.7);margin-top:6px;padding:4px 8px;background:rgba(255,60,60,.06);border-radius:6px;border:1px solid rgba(255,60,60,.15);">
+      🔴 TODO: implementar verificación de rol 'admin' antes de renderizar
+    </div>
+  </div>
+
+  <div class="col-arrow gray arrow-m"><div class="line"></div><div class="head"></div></div>
+
+  <!-- END -->
+  <div class="node n-end" style="max-width:260px;margin-top:8px;">
+    <b>Cerrar sesión</b>
+    <div class="detail">supabase.auth.signOut()</div>
+    <div class="detail">+ limpia cookie mock-user-session</div>
+    <div class="detail">+ limpia localStorage mock</div>
+    <div class="detail" style="margin-top:4px;">→ middleware redirige /login</div>
+  </div>
+
+</div><!-- /main-flow -->
+</div><!-- /canvas -->
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="lbox" style="background:rgba(3,166,74,.35);border:1px solid rgba(3,166,74,.5)"></div>Acción usuario / resultado OK</div>
+  <div class="legend-item"><div class="lbox" style="background:rgba(0,120,255,.25);border:1px solid rgba(0,120,255,.4)"></div>Lógica del sistema</div>
+  <div class="legend-item"><div class="lbox" style="background:rgba(255,200,0,.12);border:1px solid rgba(255,200,0,.4)"></div>Decisión / validación</div>
+  <div class="legend-item"><div class="lbox" style="background:rgba(255,80,60,.12);border:1px solid rgba(255,80,60,.3)"></div>Estado borrador / error / advertencia</div>
+  <div class="legend-item"><div class="lbox" style="background:rgba(160,60,255,.2);border:1px solid rgba(160,60,255,.4)"></div>IA (Gemini Edge Function)</div>
+  <div class="legend-item"><div class="lbox" style="background:rgba(0,136,204,.18);border:1px solid rgba(0,136,204,.4)"></div>Notificación Telegram</div>
+  <div class="legend-item"><div class="lbox" style="background:rgba(255,255,255,.04);border:1px dotted rgba(255,255,255,.2)"></div>Funciona sin internet</div>
+</div>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 import './globals.css';
 import { Nunito_Sans } from 'next/font/google';
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 import fs from 'fs';
 import path from 'path';
 
@@ -82,7 +83,10 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className={`${nunito.variable} font-sans`}>{children}</body>
+      <body className={`${nunito.variable} font-sans`}>
+        <ServiceWorkerRegistration />
+        {children}
+      </body>
     </html>
   );
 }

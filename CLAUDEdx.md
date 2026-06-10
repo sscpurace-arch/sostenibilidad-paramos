@@ -280,11 +280,71 @@ npm run lint      # ESLint
 
 ## 13. Estado actual del proyecto
 
-- ✅ Todas las 24 correcciones de la auditoría técnica aplicadas (ver `task.md`)
-- ✅ En producción en Vercel
-- ✅ PWA instalable con iconos correctos
-- ✅ Sync offline-first funcional
-- ✅ Mapa con perímetro PNN Puracé y localización GPS
-- ✅ RadarChart con comparación multi-evaluación
-- ✅ Diagnóstico IA con Gemini 2.5 (con cache offline en IndexedDB)
-- ⚠️ Proyecto migrado a nuevo computador — verificar que `.env.local` tenga las variables correctas antes de `npm run dev`
+### Funcionando ✅
+- Todas las 24 correcciones de la auditoría técnica aplicadas (ver `task.md`)
+- Auth con Supabase (email/password), RLS activo
+- Sync offline-first (IndexedDB → Supabase) con cola de reintentos
+- Mapa con perímetro GeoJSON del PNN Puracé + localización GPS
+- RadarChart con comparación multi-evaluación
+- Diagnóstico IA con Gemini 2.5 (con cache offline en IndexedDB)
+- PWA instalable en Android (iconos correctos, service worker)
+- Panel de administración (`/admin`) — lista de usuarios + stats
+- Notificaciones Telegram al completar sync (`/api/notificar`)
+- En producción en Vercel (deploy automático desde rama `main`)
+
+### Pendiente / advertencias ⚠️
+- `GEMINI_API_KEY` **no está en `.env.local`** — el diagnóstico IA corre en modo mock. Agregar la clave real si se necesita IA en local.
+- El `.env.local` actual NO tiene `GEMINI_API_KEY`. Agregar así:
+  ```
+  GEMINI_API_KEY=AIza...tu_clave_aquí
+  ```
+- Sector Sur (Valencia, San Sebastián) de productores aún sin caracterizar territorialmente.
+
+---
+
+## 14. Conexión Supabase
+
+`.env.local` configurado correctamente con las variables del proyecto `vxtzvadknxmstdcwfwhb`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://vxtzvadknxmstdcwfwhb.supabase.co   # ✅
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...                                  # ✅
+TELEGRAM_BOT_TOKEN=8699567333:...                                      # ✅
+TELEGRAM_CHAT_ID=1494480340                                            # ✅
+```
+
+El proyecto está enlazado en `supabase/.temp/linked-project.json` (ref: `vxtzvadknxmstdcwfwhb`, nombre: "Matriz de sostenibilidad").
+
+**Edge Function de IA:** `supabase/functions/generar-diagnostico/index.ts` — se despliega separado con CLI de Supabase (`supabase functions deploy generar-diagnostico`).
+
+---
+
+## 15. Conexión Vercel
+
+- Deploy automático desde rama `main` en GitHub.
+- No hay `vercel.json` local — Vercel detecta Next.js automáticamente.
+- Variables de entorno de producción deben estar configuradas en el dashboard de Vercel (incluyendo `GEMINI_API_KEY` si se activa IA en producción).
+
+---
+
+## 16. Cómo arrancar en Windows (computador nuevo)
+
+```powershell
+# node_modules ya instalado — NO se necesita npm install si el repo se clonó correctamente
+cd "C:\Users\DIEGO\Documents\SSC PURACE\APP sostenibilidad-paramos"
+npm run dev
+# → http://localhost:3000
+```
+
+Si el `node_modules` no existe (clon limpio):
+```powershell
+npm install
+npm run dev
+```
+
+**Verificar antes de arrancar:**
+1. `.env.local` existe en la raíz (no en subcarpeta)
+2. Contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. Si necesitas IA local: agregar `GEMINI_API_KEY`
+
+El PWA/service worker solo se activa en `npm run build && npm run start` (producción). En `npm run dev` el service worker está deshabilitado intencionalmente.

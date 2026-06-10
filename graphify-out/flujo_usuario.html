@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujo de Usuario — App Sostenibilidad Páramos</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #061A10;
+    color: #fff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 48px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Layout ── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── Nodes ── */
+  .node {
+    position: relative;
+    border-radius: 16px;
+    padding: 18px 28px;
+    text-align: center;
+    z-index: 2;
+    transition: transform 0.2s;
+    cursor: default;
+  }
+  .node:hover { transform: scale(1.03); }
+
+  .node-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+  }
+  .node-sub {
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.65;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* Colour variants */
+  .node-start {
+    background: linear-gradient(135deg, #03A64A, #02802E);
+    box-shadow: 0 0 32px rgba(3,166,74,0.5);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    min-width: 180px;
+  }
+  .node-auth {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    min-width: 220px;
+  }
+  .node-home {
+    background: linear-gradient(135deg, rgba(3,166,74,0.25), rgba(2,128,46,0.15));
+    border: 1.5px solid rgba(3,166,74,0.4);
+    min-width: 260px;
+  }
+  .node-action {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.10);
+    min-width: 200px;
+  }
+  .node-key {
+    background: linear-gradient(135deg, rgba(3,166,74,0.3), rgba(0,100,200,0.15));
+    border: 1.5px solid rgba(3,166,74,0.5);
+    min-width: 240px;
+  }
+  .node-eval {
+    background: linear-gradient(135deg, rgba(0,120,200,0.25), rgba(3,166,74,0.15));
+    border: 1.5px solid rgba(100,180,255,0.4);
+    min-width: 260px;
+  }
+  .node-result {
+    background: linear-gradient(135deg, rgba(255,200,0,0.2), rgba(255,140,0,0.1));
+    border: 1.5px solid rgba(255,200,0,0.4);
+    min-width: 240px;
+  }
+  .node-ai {
+    background: linear-gradient(135deg, rgba(160,60,255,0.25), rgba(100,0,200,0.15));
+    border: 1.5px solid rgba(180,100,255,0.5);
+    min-width: 240px;
+  }
+  .node-admin {
+    background: rgba(255,80,80,0.1);
+    border: 1.5px dashed rgba(255,80,80,0.35);
+    min-width: 200px;
+  }
+  .node-offline {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px dotted rgba(255,255,255,0.2);
+    min-width: 220px;
+  }
+  .node-end {
+    background: linear-gradient(135deg, rgba(3,166,74,0.2), rgba(0,0,0,0));
+    border: 1.5px solid rgba(3,166,74,0.3);
+    border-radius: 50px;
+    min-width: 200px;
+  }
+
+  /* ── Arrows ── */
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    gap: 0;
+    margin: 0;
+  }
+  .arrow-line {
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(3,166,74,0.6), rgba(3,166,74,0.2));
+    flex: 1;
+  }
+  .arrow-short  { height: 28px; }
+  .arrow-medium { height: 44px; }
+  .arrow-long   { height: 60px; }
+
+  .arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 10px solid rgba(3,166,74,0.7);
+  }
+
+  .arrow-label {
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  /* ── Branch rows ── */
+  .branch-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+  }
+  .branch-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+    max-width: 220px;
+  }
+
+  /* Horizontal connector line above branch */
+  .branch-connector {
+    position: relative;
+    width: 100%;
+    height: 28px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .branch-connector::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 22%;
+    right: 22%;
+    height: 2px;
+    background: rgba(3,166,74,0.35);
+  }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 6px;
+  }
+  .badge-offline { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+  .badge-ai      { background: rgba(160,60,255,0.25);  color: rgba(220,180,255,0.9); }
+  .badge-admin   { background: rgba(255,80,80,0.15);   color: rgba(255,150,150,0.9); }
+  .badge-sync    { background: rgba(3,166,74,0.2);     color: rgba(100,255,150,0.9); }
+
+  /* ── Decision diamond ── */
+  .diamond-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .diamond {
+    width: 120px;
+    height: 60px;
+    background: rgba(255,200,0,0.12);
+    border: 1.5px solid rgba(255,200,0,0.4);
+    transform: rotate(0deg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: rgba(255,220,80,0.9);
+    text-align: center;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    width: 140px;
+    height: 70px;
+  }
+
+  /* ── Section dividers ── */
+  .section-tag {
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin: 12px 0;
+  }
+
+  /* ── Screen mockups inside nodes ── */
+  .screen-icons {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .screen-icon {
+    font-size: 0.65rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 4px 8px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+  .screen-icon.active {
+    background: rgba(3,166,74,0.2);
+    border-color: rgba(3,166,74,0.4);
+    color: rgba(100,255,150,0.9);
+  }
+
+  /* ── Legend ── */
+  .legend {
+    max-width: 860px;
+    margin: 60px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.45);
+  }
+  .legend-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  /* Tooltip */
+  .node[data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: rgba(255,255,255,0.8);
+    font-size: 0.65rem;
+    padding: 6px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<h1>App Sostenibilidad Páramos</h1>
+<div class="subtitle">Flujo de usuario — PNN Puracé · GEF Páramos</div>
+
+<div class="flow">
+
+  <!-- START -->
+  <div class="node node-start">
+    <div class="node-label">📱 El técnico abre la app</div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arrow-short"></div>
+    <div class="arrow-head"></div>
+  </div>
+
+  <!-- AUTH -->
+  <div class="node node-auth" data-tip="Supabase Auth">
+    <div class="node-label">🔐 Inicio de sesión</div>
+    <div class="node-sub">Correo y contraseña institucional</div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arrow-short"></div>
+    <div class="arrow-head"></div>
+    <div class="arrow-label">sesión válida</div>
+  </div>
+
+  <!-- HOME -->
+  <div class="node node-home" data-tip="Dashboard">
+    <div class="node-label">🏠 Pantalla de Inicio</div>
+    <div class="node-sub">Resumen: productores · pendientes · completadas</div>
+    <div class="screen-icons">
+      <span class="screen-icon active">Inicio</span>
+      <span class="screen-icon">Buscar</span>
+      <span class="screen-icon">⚡ Calificar</span>
+      <span class="screen-icon">Pendientes</span>
+      <span class="screen-icon">Mapa</span>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arrow-medium"></div>
+    <div class="arrow-head"></div>
+    <div class="arrow-label">elige acción</div>
+  </div>
+
+  <!-- MAIN BRANCHES -->
+  <div class="branch-connector"></div>
+  <div class="branch-row">
+
+    <!-- BRANCH A: Nuevo productor -->
+    <div class="branch-col">
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-action">
+        <div class="node-label">➕ Nuevo Productor</div>
+        <div class="node-sub">Nombre · predio · GPS · vereda</div>
+      </div>
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-offline">
+        <div class="node-label">💾 Guardado local</div>
+        <div class="node-sub">Sube automático con internet</div>
+        <span class="badge badge-offline">Offline OK</span>
+      </div>
+    </div>
+
+    <!-- BRANCH B: Buscar y calificar (main flow) -->
+    <div class="branch-col" style="max-width:280px;">
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-key">
+        <div class="node-label">🔍 Buscar Productor</div>
+        <div class="node-sub">Por nombre, cédula o predio</div>
+      </div>
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-action">
+        <div class="node-label">👤 Perfil del Productor</div>
+        <div class="node-sub">Historial de evaluaciones · ubicación</div>
+      </div>
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-eval">
+        <div class="node-label">⚡ Nueva Evaluación</div>
+        <div class="node-sub">29 indicadores · 3 dimensiones<br>Autosave cada 30 seg</div>
+        <span class="badge badge-offline">Offline OK</span>
+      </div>
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-result">
+        <div class="node-label">📊 Resultados</div>
+        <div class="node-sub">Radar · puntaje por dimensión</div>
+      </div>
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-ai">
+        <div class="node-label">🤖 Diagnóstico IA</div>
+        <div class="node-sub">Gemini analiza los 29 indicadores<br>y genera recomendaciones SSC</div>
+        <span class="badge badge-ai">Gemini 2.5 Flash</span>
+      </div>
+    </div>
+
+    <!-- BRANCH C: Mapa -->
+    <div class="branch-col">
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-action">
+        <div class="node-label">🗺️ Mapa Global</div>
+        <div class="node-sub">Todos los predios georeferenciados</div>
+      </div>
+      <div class="arrow"><div class="arrow-line arrow-short"></div><div class="arrow-head"></div></div>
+      <div class="node node-action">
+        <div class="node-label">📍 Detalle del Predio</div>
+        <div class="node-sub">Ubicación · info del productor</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MERGE BACK -->
+  <div class="arrow">
+    <div class="arrow-line arrow-long"></div>
+    <div class="arrow-head"></div>
+    <div class="arrow-label">evaluación enviada</div>
+  </div>
+
+  <!-- PENDING -->
+  <div class="node node-action" data-tip="en-proceso page">
+    <div class="node-label">⏳ Pendientes</div>
+    <div class="node-sub">Evaluaciones guardadas sin subir</div>
+    <div class="screen-icons">
+      <span class="screen-icon active">En proceso</span>
+      <span class="screen-icon">Cola de sync</span>
+    </div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arrow-short"></div>
+    <div class="arrow-head"></div>
+    <div class="arrow-label">llega internet</div>
+  </div>
+
+  <!-- SYNC -->
+  <div class="node node-offline">
+    <div class="node-label">🔄 Sincronización automática</div>
+    <div class="node-sub">Datos locales suben a Supabase en la nube<br>Notificación Telegram al completar</div>
+    <span class="badge badge-sync">Sync Engine</span>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arrow-short"></div>
+    <div class="arrow-head"></div>
+  </div>
+
+  <!-- ADMIN (optional) -->
+  <div class="node node-admin" data-tip="Solo rol Administrador">
+    <div class="node-label">🛡️ Panel Admin <span style="font-size:0.65rem;opacity:0.5">(solo admins)</span></div>
+    <div class="node-sub">Ver todos los usuarios · estadísticas globales</div>
+    <span class="badge badge-admin">Rol requerido</span>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arrow-medium"></div>
+    <div class="arrow-head"></div>
+  </div>
+
+  <!-- BASE DE DATOS -->
+  <div class="node node-home">
+    <div class="node-label">🗄️ Base de Datos</div>
+    <div class="node-sub">Vista completa de productores · filtros · exportar</div>
+  </div>
+
+  <div class="arrow">
+    <div class="arrow-line arrow-medium"></div>
+    <div class="arrow-head"></div>
+    <div class="arrow-label">sesión terminada</div>
+  </div>
+
+  <!-- END -->
+  <div class="node node-end">
+    <div class="node-label">✅ Cerrar sesión</div>
+  </div>
+
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-box" style="background:linear-gradient(135deg,#03A64A,#02802E)"></div>
+    Pantalla principal / acción clave
+  </div>
+  <div class="legend-item">
+    <div class="legend-box" style="background:rgba(0,120,200,0.35);border:1px solid rgba(100,180,255,0.4)"></div>
+    Flujo de evaluación
+  </div>
+  <div class="legend-item">
+    <div class="legend-box" style="background:rgba(160,60,255,0.3);border:1px solid rgba(180,100,255,0.5)"></div>
+    IA (Gemini)
+  </div>
+  <div class="legend-item">
+    <div class="legend-box" style="background:rgba(255,255,255,0.05);border:1px dotted rgba(255,255,255,0.2)"></div>
+    Funciona sin internet (offline)
+  </div>
+  <div class="legend-item">
+    <div class="legend-box" style="background:rgba(255,80,80,0.1);border:1px dashed rgba(255,80,80,0.35)"></div>
+    Solo rol Administrador
+  </div>
+  <div class="legend-item">
+    <div class="legend-box" style="background:rgba(255,200,0,0.15);border:1px solid rgba(255,200,0,0.4)"></div>
+    Resultados / visualización
+  </div>
+</div>
+
+</body>
+</html>

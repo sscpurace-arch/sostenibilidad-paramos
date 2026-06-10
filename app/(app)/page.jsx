@@ -4,9 +4,6 @@ import { db } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { subscribe } from '@/lib/sync-engine';
 import { useRouter } from 'next/navigation';
-import AppHeader from '@/components/AppHeader';
-
-
 function SignalIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -59,11 +56,14 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-5 pb-10">
-      {/* ═══ Header Institucional ═══ */}
-      <AppHeader 
-        title={`Hola, ${user?.nombre?.split(' ')[0] || ''}`}
-        subtitle="PNN Puracé — Sostenibilidad"
-      />
+      {/* ═══ Personalized Greeting ═══ */}
+      {user && (
+        <div className="animate-entry">
+          <h2 className="text-2xl font-black text-white drop-shadow-sm">
+            Hola, {user.nombre?.split(' ')[0] || 'Técnico'}
+          </h2>
+        </div>
+      )}
 
       {/* ═══ Hero Card — Glassmorphism ═══ */}
       <section className="card-glass p-6 relative overflow-hidden animate-entry">

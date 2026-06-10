@@ -92,7 +92,7 @@ export default function AppHeader({ title, subtitle }) {
   };
 
   return (
-    <header className="relative -mx-4 -mt-4 mb-6 overflow-visible">
+    <header className="sticky top-0 z-40 -mx-4 -mt-4 mb-6 overflow-visible">
       {/* Fondo gradiente */}
       <div className="bg-gradient-to-r from-[#028A3D] via-[#03A64A] to-[#049DD9] px-5 pt-5 pb-6">
         <div className="flex items-center justify-between">
