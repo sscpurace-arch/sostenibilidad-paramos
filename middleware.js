@@ -57,12 +57,25 @@ export async function middleware(request) {
   let user = null
   const mockCookie = request.cookies.get('mock-user-session')?.value
   if (mockCookie) {
+    // Sesión de prueba: solo válida si tiene expiración vigente. Si está
+    // corrupta o vencida, se elimina y se cae al flujo de auth real.
     try {
-      user = JSON.parse(mockCookie)
+      let parsed
+      try {
+        parsed = JSON.parse(mockCookie)
+      } catch {
+        parsed = JSON.parse(decodeURIComponent(mockCookie))
+      }
+      if (parsed?.exp && Date.now() < parsed.exp) {
+        user = parsed
+      } else {
+        response.cookies.set({ name: 'mock-user-session', value: '', path: '/', maxAge: 0 })
+      }
     } catch {
-      user = { id: 'mock-user-id', email: 'sscpurace@gmail.com' }
+      response.cookies.set({ name: 'mock-user-session', value: '', path: '/', maxAge: 0 })
     }
-  } else {
+  }
+  if (!user) {
     const { data } = await supabase.auth.getUser()
     user = data?.user
   }

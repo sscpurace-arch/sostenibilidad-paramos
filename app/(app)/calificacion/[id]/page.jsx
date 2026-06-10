@@ -149,7 +149,10 @@ export default function EvaluacionPage({ params }) {
 
     fetch('/api/notificar', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-notify-key': process.env.NEXT_PUBLIC_NOTIFY_KEY || '',
+      },
       body: JSON.stringify({
         productor: productor.nombre_completo,
         fecha: new Date(evaluacion.fecha).toLocaleDateString('es-CO'),

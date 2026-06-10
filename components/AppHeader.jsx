@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase';
+import { createClient, getMockSession, clearMockSession } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 /**
@@ -21,11 +21,11 @@ export default function AppHeader({ title, subtitle }) {
   const router = useRouter();
 
   useEffect(() => {
-    const mockSession = !!localStorage.getItem('mock-user-session');
-    setIsMock(mockSession);
+    const mockSession = getMockSession();
+    setIsMock(!!mockSession);
 
     if (mockSession) {
-      setUser({ nombre: 'Modo Prueba', email: 'prueba@test.local', rol: 'Visitante' });
+      setUser({ nombre: 'Modo Prueba', email: 'demo@purace.test', rol: 'Visitante' });
       return;
     }
 
@@ -71,8 +71,7 @@ export default function AppHeader({ title, subtitle }) {
   }, [supabase]);
 
   const handleSalirPrueba = () => {
-    localStorage.removeItem('mock-user-session');
-    document.cookie = 'mock-user-session=; path=/; max-age=0;';
+    clearMockSession();
     window.location.href = '/login';
   };
 
@@ -114,6 +113,12 @@ export default function AppHeader({ title, subtitle }) {
               <p className="text-[11px] text-white/70 font-semibold leading-tight">
                 {subtitle || 'PNN Puracé — Páramos'}
               </p>
+              {isMock && (
+                <span className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400/90 text-amber-950 text-[9px] font-black uppercase tracking-widest shadow">
+                  <span className="w-1 h-1 rounded-full bg-amber-950 animate-pulse" />
+                  Modo Prueba
+                </span>
+              )}
             </div>
           </div>
 

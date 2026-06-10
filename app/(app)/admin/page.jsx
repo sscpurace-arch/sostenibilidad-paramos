@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase';
+import { createClient, getMockSession } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import AppHeader from '@/components/AppHeader';
 
@@ -40,6 +40,9 @@ export default function AdminPage() {
 
   useEffect(() => {
     async function cargar() {
+      // 0. El modo prueba nunca tiene acceso al panel admin
+      if (getMockSession()) { router.replace('/'); return; }
+
       // 1. Verificar auth
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (!authUser) { router.replace('/login'); return; }

@@ -1,4 +1,11 @@
 export async function POST(request) {
+  // Llave compartida para evitar spam al chat de Telegram desde fuera de la app.
+  // Si NOTIFY_SECRET no está configurada, no se exige (compatibilidad local).
+  const secret = process.env.NOTIFY_SECRET;
+  if (secret && request.headers.get('x-notify-key') !== secret) {
+    return Response.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+  }
+
   const body = await request.json();
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;

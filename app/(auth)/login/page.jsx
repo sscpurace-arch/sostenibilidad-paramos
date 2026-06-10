@@ -28,11 +28,15 @@ export default function LoginPage() {
     return () => clearInterval(timer);
   }, [cooldown]);
 
+  const MOCK_SESSION_HOURS = 8;
+
   const handleMockLogin = () => {
+    const exp = Date.now() + MOCK_SESSION_HOURS * 60 * 60 * 1000;
+    const session = { id: 'e81ba52c-23df-4f4e-808d-937fd606426c', email: 'demo@purace.test', exp };
     document.cookie =
       'mock-user-session=' +
-      JSON.stringify({ id: 'e81ba52c-23df-4f4e-808d-937fd606426c', email: 'prueba@test.local' }) +
-      '; path=/; max-age=31536000;';
+      encodeURIComponent(JSON.stringify(session)) +
+      `; path=/; max-age=${MOCK_SESSION_HOURS * 3600};`;
     localStorage.setItem('mock-user-session', 'true');
     window.location.href = '/';
   };
@@ -41,6 +45,9 @@ export default function LoginPage() {
     if (cooldown > 0) return;
     setLoading(true);
     setError(null);
+    // Limpiar sesión de prueba para que no opaque la sesión real
+    document.cookie = 'mock-user-session=; path=/; max-age=0;';
+    localStorage.removeItem('mock-user-session');
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
