@@ -1,6 +1,7 @@
 ﻿'use client';
 import { useState, useEffect, useMemo } from 'react';
 import { db } from '@/lib/db-offline';
+import { prefetchDemoTiles, tilesYaDescargadas } from '@/lib/tile-prefetch';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
@@ -18,6 +19,7 @@ const MultiMap = dynamic(() => import('@/components/MultiMap'), {
 export default function MapaGlobalPage() {
   const [productores, setProductores] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tileProgress, setTileProgress] = useState(null); // { done, total }
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +34,18 @@ export default function MapaGlobalPage() {
       }
     }
     cargarDatos();
+  }, []);
+
+  // Pre-descargar teselas de la zona Puracé para uso offline (una sola vez, con conexión)
+  useEffect(() => {
+    if (!navigator.onLine || tilesYaDescargadas()) return;
+    let activo = true;
+    prefetchDemoTiles((done, total) => {
+      if (activo) setTileProgress({ done, total });
+    }).finally(() => {
+      if (activo) setTileProgress(null);
+    });
+    return () => { activo = false; };
   }, []);
 
   // Procesar productores para asignar colores por vereda
@@ -84,10 +98,17 @@ export default function MapaGlobalPage() {
 
       <div className="p-4 bg-white border-t border-gray-100 flex items-center justify-between text-[10px] text-gray-400 font-medium">
         <span>© PNN Puracé - Sostenibilidad</span>
-        <span className="flex items-center gap-1">
-          <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-          Datos sincronizados
-        </span>
+        {tileProgress ? (
+          <span className="flex items-center gap-1.5 text-[#049DD9] font-bold">
+            <span className="w-1.5 h-1.5 bg-[#049DD9] rounded-full animate-pulse"></span>
+            Descargando mapa offline… {Math.round((tileProgress.done / tileProgress.total) * 100)}%
+          </span>
+        ) : (
+          <span className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+            Datos sincronizados
+          </span>
+        )}
       </div>
     </div>
   );

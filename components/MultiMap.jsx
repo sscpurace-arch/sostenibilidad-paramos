@@ -31,6 +31,27 @@ function FixSize() {
   return null;
 }
 
+// Aviso flotante cuando no hay conexión (solo se ven las teselas descargadas)
+function OfflineNotice() {
+  const [offline, setOffline] = useState(false);
+  useEffect(() => {
+    const update = () => setOffline(!navigator.onLine);
+    update();
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    return () => {
+      window.removeEventListener('online', update);
+      window.removeEventListener('offline', update);
+    };
+  }, []);
+  if (!offline) return null;
+  return (
+    <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-black/75 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+      📡 Sin conexión — mostrando mapa descargado
+    </div>
+  );
+}
+
 export default function MultiMap({ producers }) {
   const router = useRouter();
   const [boundary, setBoundary] = useState(null);
@@ -66,7 +87,8 @@ export default function MultiMap({ producers }) {
 
   return (
     <div style={{ width: '100%', height: '100%', minHeight: '500px' }} className="relative">
-      <MapContainer 
+      <OfflineNotice />
+      <MapContainer
         center={[2.342, -76.385]} // Default Puracé area
         zoom={13} 
         scrollWheelZoom={true} 
@@ -79,13 +101,15 @@ export default function MultiMap({ producers }) {
           <LayersControl.BaseLayer checked name="Mapa de Calles">
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+              crossOrigin=""
             />
           </LayersControl.BaseLayer>
           <LayersControl.BaseLayer name="Satélite">
             <TileLayer
               attribution='&copy; Esri World Imagery'
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              crossOrigin=""
             />
           </LayersControl.BaseLayer>
         </LayersControl>
