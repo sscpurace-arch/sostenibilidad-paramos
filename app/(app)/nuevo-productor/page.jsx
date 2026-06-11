@@ -83,7 +83,7 @@ export default function NuevoProductorPage() {
         <h2 className="text-2xl font-bold">Productor Registrado</h2>
         <div className="flex flex-col gap-2 w-full">
           <button 
-            onClick={() => router.push(`/calificacion/nueva/${form.id || ''}`)}
+            onClick={() => router.push(`/calificacion/nueva?productor=${form.id || ''}`)}
             className="bg-[#03A64A] text-white py-4 rounded-xl font-bold"
           >
             Evaluar ahora

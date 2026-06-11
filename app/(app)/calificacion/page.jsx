@@ -1,11 +1,11 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
 import { crearSchemaEvaluacion } from '@/lib/validation';
 import { createClient } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import IndicadorCard from '@/components/IndicadorCard';
 import ResultadosEvaluacion from '@/components/ResultadosEvaluacion';
@@ -13,7 +13,11 @@ import EvaluacionHeader from '@/components/EvaluacionHeader';
 import EvaluacionFooter from '@/components/EvaluacionFooter';
 import ValidationBanner from '@/components/ValidationBanner';
 
-export default function EvaluacionPage({ params }) {
+// Ruta estática + parámetro por query (?id=EVAL) para funcionar sin conexión.
+function EvaluacionContent() {
+  const searchParams = useSearchParams();
+  const evalId = searchParams.get('id');
+
   const [evaluacion, setEvaluacion] = useState(null);
   const [productor, setProductor] = useState(null);
   const [indicadores, setIndicadores] = useState([]);
@@ -43,7 +47,7 @@ export default function EvaluacionPage({ params }) {
         const entries = Object.entries(detallesRef.current).filter(([_, d]) => d.valor);
         for (const [indId, det] of entries) {
           await saveRecord('respuestas_indicadores', {
-            id: det.id, evaluacion_id: params.id,
+            id: det.id, evaluacion_id: evalId,
             indicador_id: indId, valor: det.valor, observacion: det.observacion || ''
           });
         }
@@ -53,12 +57,13 @@ export default function EvaluacionPage({ params }) {
       } catch (e) { console.error('[autosave] Error:', e); }
     }, 30000);
     return () => clearInterval(interval);
-  }, [params.id]);
+  }, [evalId]);
 
   useEffect(() => {
     async function cargarDatos() {
       setLoading(true);
-      const eval_ = await db.evaluaciones.get(params.id);
+      if (!evalId) return router.push('/');
+      const eval_ = await db.evaluaciones.get(evalId);
       if (!eval_) return router.push('/');
       setEvaluacion(eval_);
 
@@ -103,7 +108,7 @@ export default function EvaluacionPage({ params }) {
     }
 
     cargarDatos();
-  }, [params.id, router, supabase]);
+  }, [evalId, router, supabase]);
 
   // ─── Handlers ───────────────────────────────────────────
   const handleScoreChange = useCallback(async (indId, score) => {
@@ -112,10 +117,10 @@ export default function EvaluacionPage({ params }) {
     dirtyRef.current = true;
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     await saveRecord('respuestas_indicadores', {
-      id: recordId, evaluacion_id: params.id, indicador_id: indId,
+      id: recordId, evaluacion_id: evalId, indicador_id: indId,
       valor: score, observacion: detalles[indId]?.observacion || ''
     });
-  }, [detalles, params.id, validationErrors]);
+  }, [detalles, evalId, validationErrors]);
 
   const handleObservationChange = useCallback(async (indId, text) => {
     const recordId = detalles[indId]?.id || crypto.randomUUID();
@@ -123,11 +128,11 @@ export default function EvaluacionPage({ params }) {
     dirtyRef.current = true;
     if (detalles[indId]?.valor) {
       await saveRecord('respuestas_indicadores', {
-        id: recordId, evaluacion_id: params.id, indicador_id: indId,
+        id: recordId, evaluacion_id: evalId, indicador_id: indId,
         valor: detalles[indId].valor, observacion: text
       });
     }
-  }, [detalles, params.id]);
+  }, [detalles, evalId]);
 
   const handleFinalizar = async () => {
     const { validate } = crearSchemaEvaluacion(indicadores);
@@ -169,7 +174,7 @@ export default function EvaluacionPage({ params }) {
   const handleGuardarSalir = async () => {
     for (const [indId, det] of Object.entries(detalles).filter(([_, d]) => d.valor)) {
       await saveRecord('respuestas_indicadores', {
-        id: det.id, evaluacion_id: params.id,
+        id: det.id, evaluacion_id: evalId,
         indicador_id: indId, valor: det.valor, observacion: det.observacion || ''
       });
     }
@@ -223,7 +228,7 @@ export default function EvaluacionPage({ params }) {
     ) : null;
     return (
       <ResultadosEvaluacion
-        evaluacionId={params.id}
+        evaluacionId={evalId}
         productor={productor} indicadores={indicadores} dimensiones={dimensiones}
         detalles={detalles} lastResults={lastResults}
         currentAvgs={currentAvgs} lastAvgs={lastAvgs}
@@ -269,5 +274,13 @@ export default function EvaluacionPage({ params }) {
       />
 
     </div>
+  );
+}
+
+export default function EvaluacionPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center text-gray-400">Cargando evaluación...</div>}>
+      <EvaluacionContent />
+    </Suspense>
   );
 }

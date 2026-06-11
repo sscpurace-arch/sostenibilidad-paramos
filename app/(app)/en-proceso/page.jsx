@@ -65,7 +65,7 @@ export default function EnProcesoPage() {
               </div>
 
               <button 
-                onClick={() => router.push(`/calificacion/${item.id}`)}
+                onClick={() => router.push(`/calificacion?id=${item.id}`)}
                 className="w-full mt-4 bg-pnn-azul/10 text-pnn-azul py-3 rounded-xl font-bold text-sm hover:bg-pnn-azul/20 transition-colors"
               >
                 Continuar Evaluación →

@@ -4,17 +4,7 @@ import { db } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { subscribe } from '@/lib/sync-engine';
 import { useRouter } from 'next/navigation';
-function SignalIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 20h.01" />
-      <path d="M7 20v-4" />
-      <path d="M12 20v-8" />
-      <path d="M17 20V8" />
-      <path d="M22 4v16" />
-    </svg>
-  );
-}
+import PrepararOffline from '@/components/PrepararOffline';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -117,20 +107,8 @@ export default function Dashboard() {
       </div>
 
 
-      {/* ═══ Offline Status Card ═══ */}
-      <section className="card-glass p-5 relative overflow-hidden animate-entry animate-entry-d2">
-        <div className="relative z-10 flex items-start gap-3">
-          <div className="icon-circle icon-circle-blue text-white shrink-0 w-10 h-10">
-            <SignalIcon />
-          </div>
-          <div>
-            <h3 className="font-bold text-white text-sm">Modo Offline Activo</h3>
-            <p className="text-xs text-white/50 leading-relaxed mt-1">
-              Puedes calificar sin señal. Los datos se guardan en tu celular y se subirán cuando tengas internet.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* ═══ Preparar / estado offline ═══ */}
+      <PrepararOffline />
     </div>
   );
 }

@@ -85,7 +85,7 @@ export default function BaseDatosPage() {
             {productores.map((p) => (
               <tr 
                 key={p.id}
-                onClick={() => router.push(`/calificacion/nueva/${p.id}`)}
+                onClick={() => router.push(`/calificacion/nueva?productor=${p.id}`)}
                 className="border-b border-gray-50 hover:bg-gray-50/50 active:bg-gray-100 transition-colors cursor-pointer"
               >
                 <td className="p-4 text-sm font-bold text-gray-800">{p.nombre_completo}</td>

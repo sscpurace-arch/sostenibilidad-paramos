@@ -1,16 +1,22 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { saveRecord, deleteRecord, deleteRecordBulk, waitForSync } from '@/lib/sync-engine';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import ProductorInfoCard from '@/components/ProductorInfoCard';
 import SostenibilidadPanel from '@/components/SostenibilidadPanel';
 import HistorialEvals from '@/components/HistorialEvals';
 import NuevaEvalForm from '@/components/NuevaEvalForm';
 
-export default function PerfilProductorPage({ params }) {
+// Ruta estática + parámetro por query (?productor=ID) para que funcione sin
+// conexión: las rutas dinámicas de App Router exigen datos del servidor y se
+// rompen offline. El id se lee en el cliente y los datos salen de IndexedDB.
+function PerfilProductorContent() {
+  const searchParams = useSearchParams();
+  const productorId = searchParams.get('productor');
+
   const [productor, setProductor] = useState(null);
   const [ultimaEval, setUltimaEval] = useState(null);
   const [todasEvals, setTodasEvals] = useState([]);
@@ -26,7 +32,8 @@ export default function PerfilProductorPage({ params }) {
 
   const cargarDatos = useCallback(async () => {
     setLoading(true);
-    const prod = await db.productores.get(params.productorId);
+    if (!productorId) return router.push('/buscar');
+    const prod = await db.productores.get(productorId);
     if (!prod) return router.push('/buscar');
     setProductor(prod);
 
@@ -39,10 +46,10 @@ export default function PerfilProductorPage({ params }) {
     // 1. CARGAR SIEMPRE PRIMERO DE INDEXEDDB (Inmediato)
     try {
       const localEvals = await db.evaluaciones
-        .where('finca_id').equals(params.productorId)
+        .where('finca_id').equals(productorId)
         .and(e => e.estado === 'enviada').reverse().sortBy('fecha');
       const limitEvals = localEvals.slice(0, 4);
-      
+
       if (limitEvals.length > 0) {
         setUltimaEval(limitEvals[0]);
         setTodasEvals(limitEvals);
@@ -64,17 +71,17 @@ export default function PerfilProductorPage({ params }) {
       try {
         const { data: evals } = await supabase
           .from('evaluaciones').select('*')
-          .eq('finca_id', params.productorId).eq('estado', 'enviada')
+          .eq('finca_id', productorId).eq('estado', 'enviada')
           .order('fecha', { ascending: false }).limit(4);
 
         if (evals && evals.length > 0) {
           // Guardar en IndexedDB para asegurar persistencia local
           await db.evaluaciones.bulkPut(evals);
-          
+
           const { data: respuestas } = await supabase
             .from('respuestas_indicadores').select('*')
             .in('evaluacion_id', evals.map(e => e.id));
-            
+
           if (respuestas && respuestas.length > 0) {
             await db.respuestas_indicadores.bulkPut(respuestas);
           }
@@ -88,7 +95,7 @@ export default function PerfilProductorPage({ params }) {
         console.error('Error sincronizando con Supabase en segundo plano:', e);
       }
     }
-  }, [params.productorId, router, supabase]);
+  }, [productorId, router, supabase]);
 
   useEffect(() => {
     cargarDatos();
@@ -103,12 +110,12 @@ export default function PerfilProductorPage({ params }) {
       userId = user.id;
     }
     const newEval = {
-      id: crypto.randomUUID(), finca_id: params.productorId, tecnico_id: userId,
+      id: crypto.randomUUID(), finca_id: productorId, tecnico_id: userId,
       estado: 'borrador', fecha: new Date(fechaNuevaEval + 'T12:00:00').toISOString(),
       es_prueba: isMock || esPrueba
     };
     await saveRecord('evaluaciones', newEval);
-    router.push(`/calificacion/${newEval.id}`);
+    router.push(`/calificacion?id=${newEval.id}`);
   };
 
   const handleEliminar = async (evalId) => {
@@ -121,23 +128,23 @@ export default function PerfilProductorPage({ params }) {
       // 2. Obtener respuestas relacionadas
       const respuestas = await db.respuestas_indicadores.where('evaluacion_id').equals(evalId).toArray();
       const respIds = respuestas.map(r => r.id);
-      
+
       // 3. Borrar en bloque (respuestas + evaluacion)
       if (respIds.length > 0) {
         await deleteRecordBulk('respuestas_indicadores', respIds);
       }
-      
+
       const diag = await db.diagnosticos?.where('evaluacion_id').equals(evalId).first();
       if (diag) await deleteRecord('diagnosticos', diag.id);
-      
+
       await deleteRecord('evaluaciones', evalId);
-      
+
       // Recargar datos localmente de forma determinista e inmediata
       await cargarDatos();
-      
-    } catch (e) { 
-      console.error('❌ Error en handleEliminar:', e); 
-      alert('Error crítico al eliminar la evaluación. Revisa la consola.'); 
+
+    } catch (e) {
+      console.error('❌ Error en handleEliminar:', e);
+      alert('Error crítico al eliminar la evaluación. Revisa la consola.');
       cargarDatos();
     }
   };
@@ -151,7 +158,7 @@ export default function PerfilProductorPage({ params }) {
         <h1 className="text-xl font-bold">Perfil del Productor</h1>
       </header>
 
-      <ProductorInfoCard productor={productor} onVerMapa={() => router.push(`/mapa/${productor.id}`)} />
+      <ProductorInfoCard productor={productor} onVerMapa={() => router.push(`/mapa/detalle?id=${productor.id}`)} />
 
       <SostenibilidadPanel
         ultimaEval={ultimaEval} todasEvals={todasEvals} radarData={radarData}
@@ -170,5 +177,13 @@ export default function PerfilProductorPage({ params }) {
         onIniciar={handleIniciar}
       />
     </div>
+  );
+}
+
+export default function PerfilProductorPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center text-gray-400">Cargando perfil...</div>}>
+      <PerfilProductorContent />
+    </Suspense>
   );
 }

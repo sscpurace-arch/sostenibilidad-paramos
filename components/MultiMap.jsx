@@ -162,7 +162,7 @@ export default function MultiMap({ producers }) {
                    <div className="text-[10px] text-gray-400">Predio: {p.nombre_predio || '-'}</div>
                 </div>
                 <button 
-                  onClick={() => router.push(`/calificacion/nueva/${p.id}`)}
+                  onClick={() => router.push(`/calificacion/nueva?productor=${p.id}`)}
                   className="w-full bg-[#03A64A] text-white py-2 rounded-lg text-xs font-bold shadow-sm active:scale-95 transition-all"
                 >
                   Ver Perfil

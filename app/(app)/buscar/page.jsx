@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/db-offline';
+import { subscribe } from '@/lib/sync-engine';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -15,6 +16,13 @@ export default function BuscarPage() {
 
   useEffect(() => {
     cargarProductores();
+    // Recargar la lista cuando la descarga/sync termine de poblar la base local
+    let prevSyncing = false;
+    const unsub = subscribe(({ isSyncing }) => {
+      if (prevSyncing && !isSyncing) cargarProductores();
+      prevSyncing = isSyncing;
+    });
+    return unsub;
   }, []);
 
   useEffect(() => {
@@ -75,7 +83,7 @@ export default function BuscarPage() {
           filtered.map(p => (
             <div 
               key={p.id}
-              onClick={() => router.push(`/calificacion/nueva/${p.id}`)}
+              onClick={() => router.push(`/calificacion/nueva?productor=${p.id}`)}
               className="card-solid cursor-pointer"
             >
               <h3 className="font-bold text-gray-800">{p.nombre_completo}</h3>

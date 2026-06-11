@@ -32,6 +32,20 @@ const serwist = new Serwist({
         cacheName: 'paginas-html',
         networkTimeoutSeconds: 3,
         plugins: [soloRespuestasLimpias, new ExpirationPlugin({ maxEntries: 32 })],
+        matchOptions: { ignoreSearch: true, ignoreVary: true },
+      }),
+    },
+    // Payloads RSC de la navegación interna de Next. Como todas las páginas
+    // son estáticas y leen sus datos de IndexedDB (el ?productor=/?id= se lee
+    // en el cliente), se sirven ignorando el query para que la navegación a
+    // calificación/mapa funcione sin conexión.
+    {
+      matcher: ({ url, request, sameOrigin }) =>
+        sameOrigin && (url.searchParams.has('_rsc') || request.headers.has('RSC')),
+      handler: new StaleWhileRevalidate({
+        cacheName: 'rsc-paginas',
+        matchOptions: { ignoreSearch: true, ignoreVary: true },
+        plugins: [new ExpirationPlugin({ maxEntries: 32 })],
       }),
     },
     // Teselas de OpenStreetMap — CacheFirst para que el mapa funcione sin conexión
