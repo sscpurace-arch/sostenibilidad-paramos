@@ -76,8 +76,19 @@ export async function middleware(request) {
     }
   }
   if (!user) {
-    const { data } = await supabase.auth.getUser()
-    user = data?.user
+    try {
+      const { data } = await supabase.auth.getUser()
+      user = data?.user
+    } catch {
+      // Error de red/Supabase: si el navegador trae cookie de sesión,
+      // dejar pasar en vez de expulsar al usuario por una falla transitoria.
+      const hasSessionCookie = request.cookies
+        .getAll()
+        .some((c) => c.name.includes('-auth-token'))
+      if (hasSessionCookie) {
+        return response
+      }
+    }
   }
 
   // Si no hay usuario y no está en /login, redirigir a /login
@@ -101,6 +112,6 @@ export const config = {
      * - favicon.ico, manifest.json (PWA)
      * - archivos estáticos: imágenes, JSON públicos (seed-data.json, etc.)
      */
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|sw\\.js|workbox-.*|api/.*|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json|js)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|sw\\.js|workbox-.*|api/.*|~offline|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json|js)$).*)',
   ],
 }

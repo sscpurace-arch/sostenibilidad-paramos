@@ -31,6 +31,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# service worker generado en build (serwist)
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker*.js
+/public/workbox-*.js
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

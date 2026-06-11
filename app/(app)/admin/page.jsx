@@ -43,7 +43,12 @@ export default function AdminPage() {
 
       // 1. Verificar auth
       const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) { router.replace('/login'); return; }
+      if (!authUser) {
+        // Sin red no se puede validar la sesión: volver al inicio en vez de
+        // expulsar a /login (que podría no estar cacheado offline).
+        router.replace(navigator.onLine ? '/login' : '/');
+        return;
+      }
 
       // 2. Verificar que es admin (por email o por rol en tabla)
       let esAdmin = authUser.email === ADMIN_EMAIL;
