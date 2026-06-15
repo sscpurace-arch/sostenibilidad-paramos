@@ -20,7 +20,10 @@ const soloRespuestasLimpias = {
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
-  skipWaiting: true,
+  // No activar la versión nueva automáticamente: queda en estado "waiting"
+  // hasta que el usuario presione "Actualizar" (ver components/UpdateBanner.jsx).
+  // En la primera instalación (sin SW previo) igual se activa de inmediato.
+  skipWaiting: false,
   clientsClaim: true,
   navigationPreload: true,
   runtimeCaching: [
@@ -95,3 +98,11 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+// Activar la versión en espera bajo demanda, cuando el cliente lo pide
+// (botón "Actualizar" en components/UpdateBanner.jsx).
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});

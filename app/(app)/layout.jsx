@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase';
 import { initSyncEngine } from '@/lib/sync-engine';
 import { prefetchDemoTiles } from '@/lib/tile-prefetch';
 import OfflineBanner from '@/components/OfflineBanner';
+import UpdateBanner from '@/components/UpdateBanner';
 import NavBar from '@/components/NavBar';
 import TopographicBg from '@/components/TopographicBg';
 import AppHeader from '@/components/AppHeader';
@@ -29,6 +30,7 @@ export default function AppLayout({ children }) {
       <TopographicBg />
 
       {/* Contenido principal */}
+      <UpdateBanner />
       <OfflineBanner />
       <main className="relative z-10 p-4 max-w-md mx-auto">
         <AppHeader />
