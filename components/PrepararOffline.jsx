@@ -66,7 +66,7 @@ export default function PrepararOffline() {
           <SignalIcon />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-white text-sm">Trabajar sin conexión</h3>
+          <h3 className="font-bold text-white text-sm">Guardar datos en celular</h3>
 
           {/* Estado: descargando */}
           {descargando ? (
@@ -84,7 +84,7 @@ export default function PrepararOffline() {
             /* Estado: listo */
             <>
               <p className="text-xs text-white/60 leading-relaxed mt-1">
-                ✓ Listo para trabajar sin conexión — {estado.totalProductores} productores y el mapa están guardados.
+                ✓ Datos guardados en tu celular. {estado.totalProductores} productores y el mapa listos para usar sin internet.
               </p>
               <p className="text-[11px] text-white/40 mt-0.5">
                 Actualizado: {fechaCorta(estado.fecha)}
