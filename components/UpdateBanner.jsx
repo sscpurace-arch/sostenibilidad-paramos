@@ -1,11 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { getState } from '@/lib/sync-engine';
 
-// Barra superior que avisa cuando hay una versión nueva de la app lista
-// (un nuevo service worker quedó "en espera"). Al presionar "Actualizar",
-// se le ordena al SW activarse y la app recarga una sola vez.
-// Los datos offline viven en IndexedDB, así que la recarga no los pierde.
 export default function UpdateBanner() {
   const [updateReady, setUpdateReady] = useState(false);
   const [applying, setApplying] = useState(false);
@@ -17,7 +12,7 @@ export default function UpdateBanner() {
     let reg;
     let interval;
 
-    // Cuando el SW nuevo toma control, recargar una sola vez.
+    // Recargar una sola vez cuando el nuevo SW toma control.
     const onControllerChange = () => {
       if (reloadingRef.current) return;
       reloadingRef.current = true;
@@ -25,40 +20,46 @@ export default function UpdateBanner() {
     };
     navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
 
-    // Marca "actualización lista" solo si es una actualización real
-    // (ya hay un SW controlando la página), no la primera instalación.
-    const markIfWaiting = (worker) => {
-      if (worker && navigator.serviceWorker.controller) {
+    // Detecta si hay una versión en espera.
+    // Solo muestra la barra si hay un SW activo previo (no la primera instalación).
+    const checkWaiting = () => {
+      if (reg?.waiting && navigator.serviceWorker.controller) {
         setUpdateReady(true);
       }
     };
 
+    // Revisar automáticamente.
     const checkForUpdate = () => {
-      if (reg) reg.update().catch(() => {});
+      if (reg) {
+        reg.update().catch(() => {});
+      }
     };
 
-    // Revisar al volver la pestaña a primer plano.
     const onVisibility = () => {
-      if (document.visibilityState === 'visible') checkForUpdate();
+      if (document.visibilityState === 'visible') {
+        checkForUpdate();
+      }
     };
 
     navigator.serviceWorker.getRegistration().then((registration) => {
       if (!registration) return;
       reg = registration;
 
-      // ¿Ya hay una versión en espera al cargar?
-      if (reg.waiting) markIfWaiting(reg.waiting);
+      // ¿Ya hay una versión en espera?
+      checkWaiting();
 
-      // Detectar nuevas versiones que se instalen mientras la app está abierta.
+      // Detectar nuevas versiones.
       reg.addEventListener('updatefound', () => {
         const nuevo = reg.installing;
         if (!nuevo) return;
         nuevo.addEventListener('statechange', () => {
-          if (nuevo.state === 'installed') markIfWaiting(reg.waiting || nuevo);
+          if (nuevo.state === 'installed') {
+            checkWaiting();
+          }
         });
       });
 
-      // Revisión automática: al montar, al volver a primer plano y cada ~30 min.
+      // Revisar al abrir, al volver a primer plano y cada 30 min.
       checkForUpdate();
       document.addEventListener('visibilitychange', onVisibility);
       interval = setInterval(checkForUpdate, 30 * 60 * 1000);
@@ -71,34 +72,29 @@ export default function UpdateBanner() {
     };
   }, []);
 
-  const aplicarActualizacion = () => {
+  const recargarUnaVez = () => {
+    if (reloadingRef.current) return;
+    reloadingRef.current = true;
+    window.location.reload();
+  };
+
+  const aplicarActualizacion = async () => {
     setApplying(true);
-    navigator.serviceWorker.getRegistration().then((reg) => {
-      const worker = reg && reg.waiting;
-      if (!worker) {
-        // No hay versión en espera (caso raro): recargar de todos modos.
-        window.location.reload();
-        return;
-      }
-      // Cortesía: si hay una sincronización en curso, esperar a que termine
-      // antes de activar (los datos están a salvo en IndexedDB de todos modos).
-      const enviar = () => worker.postMessage({ type: 'SKIP_WAITING' });
-      if (getState().isSyncing) {
-        const t = setInterval(() => {
-          if (!getState().isSyncing) {
-            clearInterval(t);
-            enviar();
-          }
-        }, 500);
-        // Tope de seguridad: aplicar pasados 8 s aunque siga "sincronizando".
-        setTimeout(() => {
-          clearInterval(t);
-          enviar();
-        }, 8000);
-      } else {
-        enviar();
-      }
-    });
+    const registration = await navigator.serviceWorker.getRegistration();
+    const waiting = registration?.waiting;
+
+    if (waiting) {
+      // Cuando la versión nueva quede activa, recargar.
+      waiting.addEventListener('statechange', () => {
+        if (waiting.state === 'activated') recargarUnaVez();
+      });
+      // Pedirle al service worker que active la versión nueva.
+      waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+
+    // Red de seguridad: pase lo que pase, recargar en máximo 2.5 s.
+    // (La versión nueva ya quedó activa con el mensaje de arriba.)
+    setTimeout(recargarUnaVez, 2500);
   };
 
   if (!updateReady) return null;
