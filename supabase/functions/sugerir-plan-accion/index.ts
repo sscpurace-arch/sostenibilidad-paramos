@@ -4,7 +4,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-const GEMINI_MODEL = "gemini-1.5-flash";
+const GEMINI_MODEL = "gemini-2.5-flash";
 const MOCK_USER_ID = "e81ba52c-23df-4f4e-808d-937fd606426c";
 
 const corsHeaders = {
@@ -91,11 +91,12 @@ REGLAS PARA LAS METAS:
 - El plazo_meses debe ser un número entero entre 3 y 12
 - Tono técnico pero claro para técnicos de campo de PNN Puracé
 
+IMPORTANTE: Devuelve EXACTAMENTE un plan por cada indicador listado, en EL MISMO ORDEN en que aparecen arriba (el primer plan corresponde al primer indicador, y así sucesivamente).
+
 Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código):
 {
   "planes": [
     {
-      "indicador_id": <número entero del id del indicador>,
       "meta": "<1 oración: qué se va a lograr, cuánto, para cuándo — de forma SMART>",
       "unidad": "<qué se mide: árboles, %, metros, litros, etc.>",
       "plazo_meses": <número entero 3-12>,
@@ -141,7 +142,19 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código):
       return jsonResponse({ success: false, error: "El modelo no generó planes" }, 502);
     }
 
-    return jsonResponse({ success: true, planes: resultJson.planes });
+    // El modelo no es confiable asignando ids → re-asignar por posición desde el
+    // orden enviado. Así cada plan se ancla al indicador correcto pase lo que pase.
+    const planes = resultJson.planes
+      .slice(0, indicadores_debiles.length)
+      .map((p: any, i: number) => ({
+        indicador_id: indicadores_debiles[i].id,
+        meta: p.meta || "",
+        unidad: p.unidad || "",
+        plazo_meses: typeof p.plazo_meses === "number" ? p.plazo_meses : null,
+        acciones_clave: Array.isArray(p.acciones_clave) ? p.acciones_clave : [],
+      }));
+
+    return jsonResponse({ success: true, planes });
 
   } catch (err: any) {
     console.error("Error no controlado en sugerir-plan-accion:", err);
