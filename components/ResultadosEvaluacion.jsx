@@ -42,8 +42,8 @@ export default function ResultadosEvaluacion({
         </button>
       </div>
 
-      {/* Tab: Resultados */}
-      {tab === 'resultados' && (
+      {/* Tab: Resultados — se mantiene montado (display:contents/none) para no perder estado al alternar */}
+      <div className={tab === 'resultados' ? 'contents' : 'hidden'}>
         <>
           {/* Radar y Promedios */}
           <div className="bg-gray-50 rounded-2xl p-4 mb-6 border border-gray-100">
@@ -146,17 +146,17 @@ export default function ResultadosEvaluacion({
             Ver Plan de Acción →
           </button>
         </>
-      )}
+      </div>
 
-      {/* Tab: Plan de Acción */}
-      {tab === 'plan' && (
+      {/* Tab: Plan de Acción — montado siempre; el form persiste al alternar de pestaña */}
+      <div className={tab === 'plan' ? 'contents' : 'hidden'}>
         <PlanAccionSMART
           indicadores={indicadores}
           detalles={detalles}
           evaluacionId={evaluacionId}
           productor={productor}
         />
-      )}
+      </div>
 
       <button
         onClick={onVolver}

@@ -1,10 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { usePlanAccion } from '@/lib/hooks/usePlanAccion';
 import { DIMENSION_COLORS } from '@/lib/db-offline';
 
-const SCORE_COLOR = (s) => s <= 1 ? '#DC2626' : s <= 2 ? '#EA580C' : '#D97706';
-const SCORE_LABEL = (s) => s <= 1 ? 'Muy bajo' : s <= 2 ? 'Bajo' : 'Regular';
+const SCORE_COLOR = (s) => s <= 1 ? '#DC2626' : s <= 2 ? '#EA580C' : s <= 3 ? '#D97706' : '#65A30D';
+const SCORE_LABEL = (s) => s <= 1 ? 'Muy bajo' : s <= 2 ? 'Bajo' : s <= 3 ? 'Regular' : 'Aceptable';
 
 // Calcula fecha ISO (yyyy-mm-dd) a partir de hoy + N meses
 function fechaDesdeMeses(meses) {
@@ -13,37 +13,94 @@ function fechaDesdeMeses(meses) {
   return d.toISOString().split('T')[0];
 }
 
-export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, productor }) {
-  const indicadoresDebiles = [...indicadores]
-    .filter(i => detalles[i.id]?.valor)
-    .sort((a, b) => (detalles[a.id]?.valor || 0) - (detalles[b.id]?.valor || 0))
-    .slice(0, 5);
+const AUTOSAVE_MS = 700;
 
-  const { planes, isLoading, isLoadingIA, error, setError, sugerirConIA, guardarPlan, planGuardado } =
+export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, productor }) {
+  // Indicadores respondidos, ordenados de menor a mayor puntaje
+  const ordenadosPorScore = useMemo(() => (
+    [...indicadores]
+      .filter(i => detalles[i.id]?.valor)
+      .sort((a, b) => (detalles[a.id]?.valor || 0) - (detalles[b.id]?.valor || 0))
+  ), [indicadores, detalles]);
+
+  const top5Ids = useMemo(() => ordenadosPorScore.slice(0, 5).map(i => i.id), [ordenadosPorScore]);
+
+  const { planes, isLoading, isLoadingIA, error, setError, savingState, sugerirConIA, guardarPlan, eliminarPlan } =
     usePlanAccion(evaluacionId);
 
-  // Estado local del formulario: { [indicadorId]: { meta, plazo, notas, sugerida_por_ia } }
-  const [form, setForm] = useState({});
-  const [guardando, setGuardando] = useState(false);
+  // Indicadores en el plan: top-5 por defecto + los que el técnico agregue/tengan plan guardado
+  const [seleccionados, setSeleccionados] = useState([]);
+  const [form, setForm] = useState({}); // { [id]: { meta, plazo, notas, sugerida_por_ia } }
   const [iaSugerencias, setIaSugerencias] = useState({}); // { [id]: { unidad, acciones_clave } }
+  const [mostrarSelector, setMostrarSelector] = useState(false);
+  const inicializado = useRef(false);
+  const timers = useRef({});
 
-  // Inicializar form con planes guardados al cargar
+  // Inicialización ÚNICA cuando terminó de cargar: form + selección desde lo guardado.
   useEffect(() => {
-    if (!isLoading && Object.keys(planes).length > 0) {
-      const init = {};
-      Object.entries(planes).forEach(([indId, p]) => {
-        init[indId] = { meta: p.meta, plazo: p.plazo, notas: p.notas, sugerida_por_ia: p.sugerida_por_ia };
+    if (isLoading || inicializado.current) return;
+    const init = {};
+    Object.entries(planes).forEach(([indId, p]) => {
+      init[indId] = { meta: p.meta, plazo: p.plazo, notas: p.notas, sugerida_por_ia: p.sugerida_por_ia };
+    });
+    setForm(init);
+    const guardadosIds = Object.keys(planes).map(Number);
+    setSeleccionados([...new Set([...top5Ids, ...guardadosIds])]);
+    inicializado.current = true;
+  }, [isLoading, planes, top5Ids]);
+
+  useEffect(() => () => Object.values(timers.current).forEach(clearTimeout), []);
+
+  const programarGuardado = (indId) => {
+    clearTimeout(timers.current[indId]);
+    timers.current[indId] = setTimeout(() => {
+      setForm(prev => {
+        const data = prev[indId];
+        if (data?.meta?.trim()) guardarPlan(indId, data);
+        return prev;
       });
-      setForm(init);
-    }
-  }, [isLoading, planes]);
+    }, AUTOSAVE_MS);
+  };
 
   const handleField = (indId, field, value) => {
-    setForm(prev => ({ ...prev, [indId]: { ...prev[indId], [field]: value } }));
+    setForm(prev => {
+      const cur = prev[indId] || {};
+      const next = { ...cur, [field]: value };
+      // Si el técnico edita la meta a mano, deja de contar como sugerencia de IA
+      if (field === 'meta') next.sugerida_por_ia = false;
+      return { ...prev, [indId]: next };
+    });
+    programarGuardado(indId);
+  };
+
+  const guardarAhora = (indId) => {
+    clearTimeout(timers.current[indId]);
+    const data = form[indId];
+    if (data?.meta?.trim()) guardarPlan(indId, data);
+  };
+
+  const agregarIndicador = (indId) => {
+    const id = Number(indId);
+    if (!seleccionados.includes(id)) setSeleccionados(prev => [...prev, id]);
+    setMostrarSelector(false);
+  };
+
+  const quitarIndicador = async (indId) => {
+    const id = Number(indId);
+    const tieneMeta = !!form[id]?.meta?.trim();
+    if (tieneMeta && !window.confirm('Este indicador tiene una meta. ¿Quitarlo del plan y borrarla?')) return;
+    clearTimeout(timers.current[id]);
+    setSeleccionados(prev => prev.filter(x => x !== id));
+    setForm(prev => { const n = { ...prev }; delete n[id]; return n; });
+    setIaSugerencias(prev => { const n = { ...prev }; delete n[id]; return n; });
+    await eliminarPlan(id);
   };
 
   const handleSugerirIA = async () => {
-    const payload = indicadoresDebiles.map(i => ({
+    const indsPlan = seleccionados
+      .map(id => indicadores.find(i => i.id === id))
+      .filter(Boolean);
+    const payload = indsPlan.map(i => ({
       id: i.id,
       nombre: i.nombre,
       descripcion: i.descripcion,
@@ -58,15 +115,16 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
     setForm(prev => {
       const next = { ...prev };
       sugerencias.forEach(s => {
-        const id = String(s.indicador_id);
-        // Solo pre-rellenar si el técnico no ha escrito nada
-        if (!next[id]?.meta) {
+        const id = Number(s.indicador_id);
+        // Solo pre-rellenar si el técnico no ha escrito su propia meta
+        if (!next[id]?.meta?.trim()) {
           next[id] = {
             ...next[id],
             meta: s.meta || '',
             plazo: s.plazo_meses ? fechaDesdeMeses(s.plazo_meses) : next[id]?.plazo || '',
             sugerida_por_ia: true,
           };
+          if (s.meta?.trim()) guardarPlan(id, next[id]);
         }
         if (s.unidad || s.acciones_clave) {
           extras[id] = { unidad: s.unidad, acciones_clave: s.acciones_clave || [] };
@@ -74,25 +132,15 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
       });
       return next;
     });
-    setIaSugerencias(extras);
+    setIaSugerencias(prev => ({ ...prev, ...extras }));
   };
 
-  const handleGuardar = async () => {
-    setGuardando(true);
-    try {
-      for (const ind of indicadoresDebiles) {
-        const data = form[ind.id];
-        if (data?.meta?.trim()) {
-          await guardarPlan(ind.id, data);
-        }
-      }
-    } finally {
-      setGuardando(false);
-    }
-  };
+  const indsSeleccionados = seleccionados
+    .map(id => indicadores.find(i => i.id === id))
+    .filter(Boolean);
 
-  const planesGuardadosCount = indicadoresDebiles.filter(i => planes[i.id]?.meta).length;
-  const formConMeta = indicadoresDebiles.filter(i => form[i.id]?.meta?.trim()).length;
+  const disponiblesParaAgregar = ordenadosPorScore.filter(i => !seleccionados.includes(i.id));
+  const conMeta = seleccionados.filter(id => form[id]?.meta?.trim()).length;
 
   if (isLoading) {
     return <div className="text-center py-12 text-gray-400 text-sm">Cargando plan...</div>;
@@ -101,20 +149,25 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
   return (
     <div className="flex flex-col gap-4 pb-6">
 
-      {/* Header explicativo */}
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
-        <p className="text-xs text-amber-800 font-medium leading-relaxed">
-          <span className="font-black">5 indicadores más débiles</span> identificados automáticamente.
-          Define una meta SMART para cada uno — o usa IA para sugerir metas.
+      {/* Header explicativo + estado de guardado */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start justify-between gap-3">
+        <p className="text-xs text-amber-800 font-medium leading-relaxed flex-1">
+          <span className="font-black">Indicadores prioritarios</span> (los más bajos, marcados automáticamente).
+          Define una meta SMART para cada uno — o usa IA para sugerirlas. Puedes agregar o quitar indicadores.
         </p>
+        {savingState !== 'idle' && (
+          <span className={`text-[10px] font-bold whitespace-nowrap mt-0.5 ${savingState === 'saved' ? 'text-green-600' : 'text-amber-600'}`}>
+            {savingState === 'saving' ? 'Guardando…' : 'Guardado ✓'}
+          </span>
+        )}
       </div>
 
       {/* Botón Sugerir con IA */}
       <button
         onClick={handleSugerirIA}
-        disabled={isLoadingIA}
+        disabled={isLoadingIA || indsSeleccionados.length === 0}
         className={`w-full py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-md ${
-          isLoadingIA
+          isLoadingIA || indsSeleccionados.length === 0
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
             : 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white active:scale-95'
         }`}
@@ -135,7 +188,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
       )}
 
       {/* Tarjetas por indicador */}
-      {indicadoresDebiles.map((ind, idx) => {
+      {indsSeleccionados.map((ind, idx) => {
         const score = detalles[ind.id]?.valor || 0;
         const color = DIMENSION_COLORS[ind.dimension] || '#666';
         const scoreColor = SCORE_COLOR(score);
@@ -162,10 +215,17 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
                     {score}/5 — {SCORE_LABEL(score)}
                   </span>
                   {guardado && (
-                    <span className="ml-auto text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">✓ guardado</span>
+                    <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">✓</span>
                   )}
                 </div>
               </div>
+              <button
+                onClick={() => quitarIndicador(ind.id)}
+                className="text-gray-300 hover:text-red-400 text-lg leading-none px-1 flex-shrink-0"
+                aria-label="Quitar indicador del plan"
+              >
+                ✕
+              </button>
             </div>
 
             {/* Sugerencia IA — unidad + acciones */}
@@ -190,7 +250,6 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
 
             {/* Formulario SMART */}
             <div className="px-4 py-3 flex flex-col gap-3">
-              {/* Meta */}
               <div>
                 <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest block mb-1">
                   Meta SMART *
@@ -198,7 +257,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
                 <textarea
                   value={f.meta || ''}
                   onChange={e => handleField(ind.id, 'meta', e.target.value)}
-                  placeholder={`¿Qué se va a lograr? (ej: Plantar 30 árboles nativos en potreros antes de diciembre)`}
+                  onBlur={() => guardarAhora(ind.id)}
+                  placeholder="¿Qué se va a lograr, cuánto y para cuándo? (ej: Plantar 30 árboles nativos en potreros en 6 meses)"
                   rows={2}
                   className="w-full text-sm text-gray-700 border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-gray-300"
                 />
@@ -207,7 +267,6 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
                 )}
               </div>
 
-              {/* Plazo */}
               <div>
                 <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest block mb-1">
                   Plazo objetivo
@@ -216,11 +275,11 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
                   type="date"
                   value={f.plazo || ''}
                   onChange={e => handleField(ind.id, 'plazo', e.target.value)}
+                  onBlur={() => guardarAhora(ind.id)}
                   className="w-full text-sm text-gray-700 border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 />
               </div>
 
-              {/* Notas opcionales */}
               <div>
                 <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest block mb-1">
                   Notas / observaciones
@@ -229,6 +288,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
                   type="text"
                   value={f.notas || ''}
                   onChange={e => handleField(ind.id, 'notas', e.target.value)}
+                  onBlur={() => guardarAhora(ind.id)}
                   placeholder="Observaciones adicionales (opcional)"
                   className="w-full text-sm text-gray-700 border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-gray-300"
                 />
@@ -238,33 +298,54 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
         );
       })}
 
-      {/* Botón Guardar */}
-      <button
-        onClick={handleGuardar}
-        disabled={guardando || formConMeta === 0}
-        className={`w-full py-4 rounded-2xl font-bold text-base shadow-lg transition-all ${
-          guardando || formConMeta === 0
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'bg-[#03A64A] text-white active:scale-95'
-        }`}
-      >
-        {guardando ? 'Guardando...' : `Guardar plan (${formConMeta} indicador${formConMeta !== 1 ? 'es' : ''})`}
-      </button>
-
-      {planGuardado && (
-        <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-center animate-in fade-in duration-300">
-          <p className="text-sm font-bold text-green-700">✓ Plan guardado exitosamente</p>
-          <p className="text-xs text-green-600 mt-0.5">
-            {planesGuardadosCount} de 5 indicadores con meta definida
-          </p>
-        </div>
+      {/* Agregar otro indicador */}
+      {disponiblesParaAgregar.length > 0 && (
+        mostrarSelector ? (
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-3">
+            <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Agregar indicador</p>
+            <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
+              {disponiblesParaAgregar.map(i => {
+                const sc = detalles[i.id]?.valor || 0;
+                return (
+                  <button
+                    key={i.id}
+                    onClick={() => agregarIndicador(i.id)}
+                    className="flex items-center gap-2 text-left px-3 py-2 rounded-xl hover:bg-gray-50 active:bg-gray-100"
+                  >
+                    <span
+                      className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-black flex-shrink-0"
+                      style={{ backgroundColor: SCORE_COLOR(sc) }}
+                    >
+                      {sc}
+                    </span>
+                    <span className="text-sm text-gray-700 flex-1 leading-tight">{i.nombre}</span>
+                    <span className="text-[10px] font-bold uppercase" style={{ color: DIMENSION_COLORS[i.dimension] || '#666' }}>
+                      {i.dimension}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <button onClick={() => setMostrarSelector(false)} className="w-full text-xs text-gray-400 font-bold mt-2 py-1">
+              Cancelar
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setMostrarSelector(true)}
+            className="w-full border-2 border-dashed border-gray-300 text-gray-500 py-3 rounded-2xl font-bold text-sm active:scale-95 transition-all"
+          >
+            + Agregar otro indicador
+          </button>
+        )
       )}
 
-      {planesGuardadosCount > 0 && !planGuardado && (
-        <p className="text-center text-xs text-gray-400">
-          {planesGuardadosCount} de 5 indicadores con meta guardada
-        </p>
-      )}
+      {/* Resumen — el guardado es automático */}
+      <p className="text-center text-xs text-gray-400 mt-1">
+        {conMeta > 0
+          ? `${conMeta} de ${indsSeleccionados.length} indicadores con meta definida · se guarda automáticamente`
+          : 'Define al menos una meta para empezar el plan'}
+      </p>
     </div>
   );
 }
