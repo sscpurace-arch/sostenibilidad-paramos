@@ -4,7 +4,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-const GEMINI_MODEL = "gemini-1.5-flash";
+const GEMINI_MODEL = "gemini-2.5-flash";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       userId = user.id;
     }
 
-    // ─── Rate limit: 10 req/min por usuario ─────────────
+    // ─── Rate limit: 40 req/min por usuario ─────────────
     const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
     const { count } = await supabase
       .from("rate_limits")
@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
       .eq("user_id", userId)
       .eq("endpoint", "generar-diagnostico")
       .gt("called_at", oneMinuteAgo);
-    if (count !== null && count >= 10) return jsonResponse({ success: false, error: "Rate limit" }, 429);
+    if (count !== null && count >= 40) return jsonResponse({ success: false, error: "Rate limit" }, 429);
     await supabase.from("rate_limits").insert({ user_id: userId, endpoint: "generar-diagnostico" });
 
     // ─── Cargar datos en paralelo ────────────────────────
