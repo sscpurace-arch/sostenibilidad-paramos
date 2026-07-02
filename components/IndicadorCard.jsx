@@ -1,24 +1,27 @@
 ﻿'use client';
 import { useState } from 'react';
 
+const NIVEL_COLOR = { 1: '#DC2626', 2: '#EA580C', 3: '#D97706', 4: '#65A30D', 5: '#03A64A' };
+
 /**
  * IndicadorCard — Tarjeta de calificación por indicador
- * 
+ *
  * Features:
  * - Rango dinámico desde indicador.rango_min / rango_max
- * - Descripción expandible
+ * - Criterios de calificación expandibles (pregunta guía + los 5 niveles oficiales)
  * - Error inline con var(--color-danger)
  * - Validación visual al intentar finalizar (via prop `showError`)
  */
-export default function IndicadorCard({ 
-  indicador, 
-  score, 
-  onScoreChange, 
-  observation, 
+export default function IndicadorCard({
+  indicador,
+  score,
+  onScoreChange,
+  observation,
   onObservationChange,
   showError = false  // true cuando se intenta finalizar sin calificar
 }) {
   const [expanded, setExpanded] = useState(false);
+  const tieneNiveles = Array.isArray(indicador.niveles) && indicador.niveles.length > 0;
 
   const min = indicador.rango_min ?? 1;
   const max = indicador.rango_max ?? 5;
@@ -48,21 +51,50 @@ export default function IndicadorCard({
         )}
       </div>
 
-      {/* Descripción expandible */}
-      {indicador.descripcion && (
+      {/* Ayuda para calificar: pregunta guía + los 5 niveles oficiales (si ya están cargados) */}
+      {(indicador.descripcion || tieneNiveles) && (
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
           className="text-[11px] text-blue-500 hover:text-blue-700 mb-2 flex items-center gap-1 py-2 -my-1 pr-3"
         >
           <span className={`transition-transform duration-200 inline-block ${expanded ? 'rotate-90' : ''}`}>▶</span>
-          {expanded ? 'Ocultar descripción' : 'Ver descripción'}
+          {expanded ? 'Ocultar ayuda' : (tieneNiveles ? '¿Cómo califico esto?' : 'Ver descripción')}
         </button>
       )}
-      {expanded && indicador.descripcion && (
-        <p className="text-xs text-gray-500 mb-3 p-2 bg-blue-50/50 rounded-lg border border-blue-100 leading-relaxed">
-          {indicador.descripcion}
-        </p>
+      {expanded && (
+        tieneNiveles ? (
+          <div className="mb-3 p-3 bg-blue-50/50 rounded-lg border border-blue-100 flex flex-col gap-2">
+            {indicador.pregunta_guia && (
+              <p className="text-xs text-blue-900 font-medium leading-relaxed">{indicador.pregunta_guia}</p>
+            )}
+            <div className="flex flex-col gap-1.5">
+              {[...indicador.niveles].sort((a, b) => b.valor - a.valor).map(n => (
+                <div
+                  key={n.valor}
+                  className={`flex items-start gap-2 text-xs rounded-md px-1.5 py-1 ${score === n.valor ? 'bg-white ring-1 ring-blue-200' : ''}`}
+                >
+                  <span
+                    className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-black mt-0.5"
+                    style={{ backgroundColor: NIVEL_COLOR[n.valor] || '#666' }}
+                  >
+                    {n.valor}
+                  </span>
+                  <span className={`leading-snug ${score === n.valor ? 'text-gray-800 font-medium' : 'text-gray-500'}`}>{n.texto}</span>
+                </div>
+              ))}
+            </div>
+            {indicador.nota_criterio && (
+              <p className="text-[10px] text-blue-400 italic leading-relaxed border-t border-blue-100 pt-1.5 mt-0.5">
+                {indicador.nota_criterio}
+              </p>
+            )}
+          </div>
+        ) : indicador.descripcion && (
+          <p className="text-xs text-gray-500 mb-3 p-2 bg-blue-50/50 rounded-lg border border-blue-100 leading-relaxed">
+            {indicador.descripcion}
+          </p>
+        )
       )}
 
       {/* Botones de score — rango dinámico */}

@@ -96,7 +96,7 @@ export default function ResultadosEvaluacion({
                 }`}
               >
                 {isLoading ? (
-                  <><span className="animate-spin text-xl">✨</span> Analizando con Gemini...</>
+                  <><span className="animate-spin text-xl">✨</span> Analizando...</>
                 ) : (
                   <><span>✨</span> Generar Diagnóstico con IA</>
                 )}
@@ -111,7 +111,6 @@ export default function ResultadosEvaluacion({
                 <div className="flex items-center gap-2 mb-4 mt-2">
                   <span className="text-2xl">✨</span>
                   <h3 className="font-bold text-blue-900">Diagnóstico Inteligente</h3>
-                  <span className="ml-auto bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Gemini 2.5</span>
                 </div>
                 <p className="text-sm text-blue-800 leading-relaxed mb-6 italic">
                   &ldquo;{diagnostico.texto}&rdquo;

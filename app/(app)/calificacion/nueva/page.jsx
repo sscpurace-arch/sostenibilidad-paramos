@@ -26,6 +26,10 @@ function PerfilProductorContent() {
   const [loading, setLoading] = useState(true);
   const [fechaNuevaEval, setFechaNuevaEval] = useState(new Date().toISOString().split('T')[0]);
   const [esPrueba, setEsPrueba] = useState(false);
+  const [receptorEsOtro, setReceptorEsOtro] = useState(false);
+  const [receptorNombre, setReceptorNombre] = useState('');
+  const [receptorCedula, setReceptorCedula] = useState('');
+  const [receptorParentesco, setReceptorParentesco] = useState('');
 
   const router = useRouter();
   const supabase = createClient();
@@ -112,7 +116,11 @@ function PerfilProductorContent() {
     const newEval = {
       id: crypto.randomUUID(), finca_id: productorId, tecnico_id: userId,
       estado: 'borrador', fecha: new Date(fechaNuevaEval + 'T12:00:00').toISOString(),
-      es_prueba: isMock || esPrueba
+      es_prueba: isMock || esPrueba,
+      receptor_es_otro: receptorEsOtro,
+      receptor_nombre: receptorEsOtro ? receptorNombre.trim() : '',
+      receptor_cedula: receptorEsOtro ? receptorCedula.trim() : '',
+      receptor_parentesco: receptorEsOtro ? receptorParentesco.trim() : '',
     };
     await saveRecord('evaluaciones', newEval);
     router.push(`/calificacion?id=${newEval.id}`);
@@ -174,6 +182,10 @@ function PerfilProductorContent() {
       <NuevaEvalForm
         fecha={fechaNuevaEval} onFechaChange={setFechaNuevaEval}
         esPrueba={esPrueba} onEsPruebaChange={setEsPrueba}
+        receptorEsOtro={receptorEsOtro} onReceptorEsOtroChange={setReceptorEsOtro}
+        receptorNombre={receptorNombre} onReceptorNombreChange={setReceptorNombre}
+        receptorCedula={receptorCedula} onReceptorCedulaChange={setReceptorCedula}
+        receptorParentesco={receptorParentesco} onReceptorParentescoChange={setReceptorParentesco}
         onIniciar={handleIniciar}
       />
     </div>

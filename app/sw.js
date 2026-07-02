@@ -81,6 +81,14 @@ const serwist = new Serwist({
         plugins: [new ExpirationPlugin({ maxEntries: 4 })],
       }),
     },
+    // Guía de calificación en PDF — CacheFirst para poder descargarla en campo sin señal
+    {
+      matcher: /\/docs\/.*\.pdf$/i,
+      handler: new CacheFirst({
+        cacheName: 'guias-pdf',
+        plugins: [new ExpirationPlugin({ maxEntries: 5 })],
+      }),
+    },
     // Reglas por defecto de Serwist para Next.js:
     // _next/static, payloads RSC (?_rsc=), imágenes, fuentes, etc.
     ...defaultCache,
