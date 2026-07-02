@@ -6,11 +6,14 @@ import { DIMENSION_COLORS } from '@/lib/db-offline';
 const SCORE_COLOR = (s) => s <= 1 ? '#DC2626' : s <= 2 ? '#EA580C' : s <= 3 ? '#D97706' : '#65A30D';
 const SCORE_LABEL = (s) => s <= 1 ? 'Muy bajo' : s <= 2 ? 'Bajo' : s <= 3 ? 'Regular' : 'Aceptable';
 
-// Calcula fecha ISO (yyyy-mm-dd) a partir de hoy + N meses
+// Calcula fecha (yyyy-mm-dd) a partir de hoy + N meses, en hora LOCAL
+// (toISOString es UTC: en Colombia después de las 7pm daría el día siguiente).
 function fechaDesdeMeses(meses) {
   const d = new Date();
   d.setMonth(d.getMonth() + meses);
-  return d.toISOString().split('T')[0];
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
 const AUTOSAVE_MS = 700;
@@ -35,6 +38,10 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
   const [mostrarSelector, setMostrarSelector] = useState(false);
   const inicializado = useRef(false);
   const timers = useRef({});
+  // Espejo del form para leerlo desde timers/async sin closures viejos
+  // (y sin efectos secundarios dentro de updaters de setForm, que deben ser puros).
+  const formRef = useRef(form);
+  formRef.current = form;
 
   // Inicialización ÚNICA cuando terminó de cargar: form + selección desde lo guardado.
   useEffect(() => {
@@ -54,11 +61,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
   const programarGuardado = (indId) => {
     clearTimeout(timers.current[indId]);
     timers.current[indId] = setTimeout(() => {
-      setForm(prev => {
-        const data = prev[indId];
-        if (data?.meta?.trim()) guardarPlan(indId, data);
-        return prev;
-      });
+      const data = formRef.current[indId];
+      if (data?.meta?.trim()) guardarPlan(indId, data);
     }, AUTOSAVE_MS);
   };
 
@@ -76,7 +80,11 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
   const guardarAhora = (indId) => {
     clearTimeout(timers.current[indId]);
     const data = form[indId];
-    if (data?.meta?.trim()) guardarPlan(indId, data);
+    if (!data?.meta?.trim()) return;
+    // Si no cambió nada desde el último guardado, no encolar otro sync
+    const p = planes[indId];
+    if (p && p.meta === data.meta && (p.plazo || '') === (data.plazo || '') && (p.notas || '') === (data.notas || '')) return;
+    guardarPlan(indId, data);
   };
 
   const agregarIndicador = (indId) => {
@@ -111,27 +119,26 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
     const sugerencias = await sugerirConIA(payload, productor);
     if (!sugerencias) return;
 
+    // Se calcula fuera de setForm: los updaters deben ser puros (sin guardados dentro).
+    const next = { ...formRef.current };
     const extras = {};
-    setForm(prev => {
-      const next = { ...prev };
-      sugerencias.forEach(s => {
-        const id = Number(s.indicador_id);
-        // Solo pre-rellenar si el técnico no ha escrito su propia meta
-        if (!next[id]?.meta?.trim()) {
-          next[id] = {
-            ...next[id],
-            meta: s.meta || '',
-            plazo: s.plazo_meses ? fechaDesdeMeses(s.plazo_meses) : next[id]?.plazo || '',
-            sugerida_por_ia: true,
-          };
-          if (s.meta?.trim()) guardarPlan(id, next[id]);
-        }
-        if (s.unidad || s.acciones_clave) {
-          extras[id] = { unidad: s.unidad, acciones_clave: s.acciones_clave || [] };
-        }
-      });
-      return next;
+    sugerencias.forEach(s => {
+      const id = Number(s.indicador_id);
+      // Solo pre-rellenar si el técnico no ha escrito su propia meta
+      if (!next[id]?.meta?.trim()) {
+        next[id] = {
+          ...next[id],
+          meta: s.meta || '',
+          plazo: s.plazo_meses ? fechaDesdeMeses(s.plazo_meses) : next[id]?.plazo || '',
+          sugerida_por_ia: true,
+        };
+        if (s.meta?.trim()) guardarPlan(id, next[id]);
+      }
+      if (s.unidad || s.acciones_clave) {
+        extras[id] = { unidad: s.unidad, acciones_clave: s.acciones_clave || [] };
+      }
     });
+    setForm(next);
     setIaSugerencias(prev => ({ ...prev, ...extras }));
   };
 

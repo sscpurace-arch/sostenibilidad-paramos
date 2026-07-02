@@ -39,6 +39,10 @@ Deno.serve(async (req) => {
     if (!evaluacion_id || !indicadores_debiles?.length) {
       return jsonResponse({ success: false, error: "evaluacion_id e indicadores_debiles son requeridos" }, 400);
     }
+    // La evaluación tiene 29 indicadores como máximo — acota el tamaño del prompt (y el costo)
+    if (indicadores_debiles.length > 29) {
+      return jsonResponse({ success: false, error: "Demasiados indicadores (máx. 29)" }, 400);
+    }
 
     // ─── Auth: validar JWT en modo real (evita abuso del LLM público) ───
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -105,11 +109,12 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código):
   ]
 }`;
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+    // Key en header, no en URL: las URLs quedan en logs de proxies/gateways
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
     const geminiResponse = await fetch(geminiUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_API_KEY },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { responseMimeType: "application/json" },

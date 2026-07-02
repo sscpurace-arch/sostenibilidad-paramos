@@ -223,13 +223,14 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO
     // ─── Llamar a Gemini ─────────────────────────────────
     let resultJson;
     try {
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+      // Key en header, no en URL: las URLs quedan en logs de proxies/gateways
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
       console.log(`Llamando Gemini con modelo: ${GEMINI_MODEL}`);
 
       const geminiResponse = await fetch(geminiUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_API_KEY },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: { responseMimeType: "application/json" },

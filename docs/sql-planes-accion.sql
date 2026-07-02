@@ -15,6 +15,14 @@ create table if not exists planes_accion (
 -- Índices para las consultas habituales
 create index if not exists planes_accion_evaluacion_idx on planes_accion(evaluacion_id);
 
+-- Defensa contra duplicados: un solo plan por indicador por evaluación.
+-- Si la tabla ya tiene datos, verificar duplicados ANTES de correr esto:
+--   select evaluacion_id, indicador_id, count(*) from planes_accion
+--   group by 1, 2 having count(*) > 1;
+-- (si hay, conservar el de updated_at más reciente y borrar el resto)
+create unique index if not exists planes_accion_eval_ind_uniq
+  on planes_accion(evaluacion_id, indicador_id);
+
 -- RLS: igual que las demás tablas del proyecto
 alter table planes_accion enable row level security;
 
