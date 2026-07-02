@@ -1,7 +1,12 @@
 ﻿'use client';
 import { useState } from 'react';
+import CalculadoraLeche from '@/components/CalculadoraLeche';
 
 const NIVEL_COLOR = { 1: '#DC2626', 2: '#EA580C', 3: '#D97706', 4: '#65A30D', 5: '#03A64A' };
+
+// Indicador 22 (litros leche/ha/año): en vez de pedirle la cuenta al técnico,
+// la app la hace con datos fáciles de preguntar en campo.
+const INDICADOR_LECHE = 22;
 
 /**
  * IndicadorCard — Tarjeta de calificación por indicador
@@ -95,6 +100,16 @@ export default function IndicadorCard({
             {indicador.descripcion}
           </p>
         )
+      )}
+
+      {/* Calculadora de leche: solo para el indicador 22 */}
+      {indicador.id === INDICADOR_LECHE && (
+        <CalculadoraLeche
+          onAplicar={(puntaje, resumen) => {
+            onScoreChange(puntaje);
+            onObservationChange(resumen);
+          }}
+        />
       )}
 
       {/* Botones de score — rango dinámico */}
