@@ -22,7 +22,7 @@ export default function NuevaEvalForm({
             type="date"
             value={fecha}
             onChange={(e) => onFechaChange(e.target.value)}
-            className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:border-[#03A64A] outline-none transition-colors"
+            className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-sm text-gray-800 focus:border-[#03A64A] outline-none transition-colors"
           />
         </div>
 
@@ -61,7 +61,7 @@ export default function NuevaEvalForm({
                 value={receptorNombre}
                 onChange={(e) => onReceptorNombreChange(e.target.value)}
                 placeholder="Nombre de quien recibe la visita"
-                className="w-full bg-white border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:border-[#03A64A] outline-none transition-colors"
+                className="w-full bg-white border-2 border-gray-100 rounded-xl px-4 py-3 text-sm text-gray-800 focus:border-[#03A64A] outline-none transition-colors"
               />
             </div>
             <div>
@@ -71,7 +71,7 @@ export default function NuevaEvalForm({
                 value={receptorCedula}
                 onChange={(e) => onReceptorCedulaChange(e.target.value)}
                 placeholder="Número de cédula"
-                className="w-full bg-white border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:border-[#03A64A] outline-none transition-colors"
+                className="w-full bg-white border-2 border-gray-100 rounded-xl px-4 py-3 text-sm text-gray-800 focus:border-[#03A64A] outline-none transition-colors"
               />
             </div>
             <div>
@@ -81,7 +81,7 @@ export default function NuevaEvalForm({
                 value={receptorParentesco}
                 onChange={(e) => onReceptorParentescoChange(e.target.value)}
                 placeholder="Ej: hijo, esposa, administrador, vecino..."
-                className="w-full bg-white border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:border-[#03A64A] outline-none transition-colors"
+                className="w-full bg-white border-2 border-gray-100 rounded-xl px-4 py-3 text-sm text-gray-800 focus:border-[#03A64A] outline-none transition-colors"
               />
             </div>
           </div>

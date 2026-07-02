@@ -72,15 +72,19 @@ body {
   min-height: 100vh;
 }
 
-/* Global Input Text Color for Contrast — Dark Theme */
-/* Blanco por defecto; campos sobre fondo claro deben usar text-gray-900 explícito */
+/* Contraste global de campos de texto.
+   OSCURO por defecto: casi todos los formularios van sobre tarjetas blancas.
+   Los campos sobre fondo oscuro (login) declaran text-white explícito,
+   que gana sobre esta regla. Antes era al revés (blanco por defecto) y
+   cualquier campo nuevo sin color explícito quedaba invisible. */
 input, textarea, select {
-  color: #FFFFFF;
+  color: #1F2937;
 }
 
-/* Placeholder contrast */
+/* Placeholder contrast (gris medio: legible sobre blanco; el login usa
+   placeholder-white/20 explícito que gana sobre esta regla) */
 ::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: #9CA3AF;
   opacity: 1;
 }
 
