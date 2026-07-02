@@ -83,17 +83,19 @@ Deno.serve(async (req) => {
 PRODUCTOR: ${productor?.nombre || "productor de páramo"}
 UBICACIÓN: ${ubicacion}
 
-Los siguientes indicadores de sostenibilidad tienen los puntajes más bajos en la evaluación. Para cada uno, debes proponer una meta SMART (Específica, Medible, Alcanzable, Relevante, con Tiempo definido) adaptada a la realidad de un pequeño productor rural del Cauca.
+Los siguientes indicadores de sostenibilidad tienen los puntajes más bajos en la evaluación. Para cada uno, debes proponer una meta SMART completa, desglosada en sus 5 componentes, adaptada a la realidad de un pequeño productor rural del Cauca.
 
 INDICADORES PRIORITARIOS A MEJORAR:
 ${listaIndicadores}
 
-REGLAS PARA LAS METAS:
-- Deben ser observables en campo (sin laboratorio, sin equipos especiales)
-- Deben ser alcanzables con recursos locales del Cauca en 6–12 meses
-- La unidad de medida debe ser concreta y verificable (árboles, metros, kilogramos, %)
-- El plazo_meses debe ser un número entero entre 3 y 12
-- Tono técnico pero claro para técnicos de campo de PNN Puracé
+REGLAS PARA CADA COMPONENTE SMART:
+- especifico: qué se va a hacer exactamente, en una oración clara (ej: "Sembrar árboles nativos en la ronda hídrica del nacimiento principal")
+- medible: la cantidad y unidad concreta y verificable en campo, sin laboratorio ni equipos especiales (ej: "30 árboles sembrados y vivos" o "80% de las aguas residuales con tratamiento")
+- alcanzable: en 1 frase corta, por qué es realizable con los recursos que normalmente tiene un productor del Cauca (mano de obra familiar, materiales locales, apoyo técnico de PNN)
+- relevante: en 1 frase corta, por qué esta meta importa para la conservación del páramo o la producción de la finca
+- plazo_meses: número entero entre 3 y 12
+
+Tono técnico pero claro, para técnicos de campo y productores de PNN Puracé.
 
 IMPORTANTE: Devuelve EXACTAMENTE un plan por cada indicador listado, en EL MISMO ORDEN en que aparecen arriba (el primer plan corresponde al primer indicador, y así sucesivamente).
 
@@ -101,10 +103,11 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código):
 {
   "planes": [
     {
-      "meta": "<1 oración: qué se va a lograr, cuánto, para cuándo — de forma SMART>",
-      "unidad": "<qué se mide: árboles, %, metros, litros, etc.>",
-      "plazo_meses": <número entero 3-12>,
-      "acciones_clave": ["<acción 1 concreta>", "<acción 2 concreta>"]
+      "especifico": "<qué se va a hacer>",
+      "medible": "<cantidad y unidad verificable>",
+      "alcanzable": "<por qué es realizable>",
+      "relevante": "<por qué importa>",
+      "plazo_meses": <número entero 3-12>
     }
   ]
 }`;
@@ -153,10 +156,11 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código):
       .slice(0, indicadores_debiles.length)
       .map((p: any, i: number) => ({
         indicador_id: indicadores_debiles[i].id,
-        meta: p.meta || "",
-        unidad: p.unidad || "",
+        especifico: p.especifico || "",
+        medible: p.medible || "",
+        alcanzable: p.alcanzable || "",
+        relevante: p.relevante || "",
         plazo_meses: typeof p.plazo_meses === "number" ? p.plazo_meses : null,
-        acciones_clave: Array.isArray(p.acciones_clave) ? p.acciones_clave : [],
       }));
 
     return jsonResponse({ success: true, planes });

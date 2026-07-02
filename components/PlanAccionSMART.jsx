@@ -6,6 +6,14 @@ import { DIMENSION_COLORS } from '@/lib/db-offline';
 const SCORE_COLOR = (s) => s <= 1 ? '#DC2626' : s <= 2 ? '#EA580C' : s <= 3 ? '#D97706' : '#65A30D';
 const SCORE_LABEL = (s) => s <= 1 ? 'Muy bajo' : s <= 2 ? 'Bajo' : s <= 3 ? 'Regular' : 'Aceptable';
 
+// Los 4 campos SMART que se editan como texto (Tiempo usa el campo de fecha aparte)
+const CAMPOS_SMART = [
+  { key: 'especifico', letra: 'E', label: 'Específico', placeholder: '¿Qué se va a hacer exactamente?' },
+  { key: 'medible', letra: 'M', label: 'Medible', placeholder: 'Cantidad y unidad verificable (ej: 30 árboles sembrados)' },
+  { key: 'alcanzable', letra: 'A', label: 'Alcanzable', placeholder: '¿Por qué es realizable con los recursos del productor?' },
+  { key: 'relevante', letra: 'R', label: 'Relevante', placeholder: '¿Por qué importa esta meta?' },
+];
+
 // Calcula fecha (yyyy-mm-dd) a partir de hoy + N meses, en hora LOCAL
 // (toISOString es UTC: en Colombia después de las 7pm daría el día siguiente).
 function fechaDesdeMeses(meses) {
@@ -33,8 +41,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
 
   // Indicadores en el plan: top-5 por defecto + los que el técnico agregue/tengan plan guardado
   const [seleccionados, setSeleccionados] = useState([]);
-  const [form, setForm] = useState({}); // { [id]: { meta, plazo, notas, sugerida_por_ia } }
-  const [iaSugerencias, setIaSugerencias] = useState({}); // { [id]: { unidad, acciones_clave } }
+  const [form, setForm] = useState({}); // { [id]: { especifico, medible, alcanzable, relevante, plazo, notas, sugerida_por_ia } }
   const [mostrarSelector, setMostrarSelector] = useState(false);
   const inicializado = useRef(false);
   const timers = useRef({});
@@ -48,7 +55,10 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
     if (isLoading || inicializado.current) return;
     const init = {};
     Object.entries(planes).forEach(([indId, p]) => {
-      init[indId] = { meta: p.meta, plazo: p.plazo, notas: p.notas, sugerida_por_ia: p.sugerida_por_ia };
+      init[indId] = {
+        especifico: p.especifico, medible: p.medible, alcanzable: p.alcanzable, relevante: p.relevante,
+        plazo: p.plazo, notas: p.notas, sugerida_por_ia: p.sugerida_por_ia,
+      };
     });
     setForm(init);
     const guardadosIds = Object.keys(planes).map(Number);
@@ -62,7 +72,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
     clearTimeout(timers.current[indId]);
     timers.current[indId] = setTimeout(() => {
       const data = formRef.current[indId];
-      if (data?.meta?.trim()) guardarPlan(indId, data);
+      if (data?.especifico?.trim()) guardarPlan(indId, data);
     }, AUTOSAVE_MS);
   };
 
@@ -70,20 +80,23 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
     setForm(prev => {
       const cur = prev[indId] || {};
       const next = { ...cur, [field]: value };
-      // Si el técnico edita la meta a mano, deja de contar como sugerencia de IA
-      if (field === 'meta') next.sugerida_por_ia = false;
+      // Si el técnico edita cualquier campo SMART a mano, deja de contar como sugerencia de IA
+      if (CAMPOS_SMART.some(c => c.key === field)) next.sugerida_por_ia = false;
       return { ...prev, [indId]: next };
     });
     programarGuardado(indId);
   };
 
+  const camposIguales = (a, b) => CAMPOS_SMART.every(c => (a?.[c.key] || '') === (b?.[c.key] || ''))
+    && (a?.plazo || '') === (b?.plazo || '') && (a?.notas || '') === (b?.notas || '');
+
   const guardarAhora = (indId) => {
     clearTimeout(timers.current[indId]);
     const data = form[indId];
-    if (!data?.meta?.trim()) return;
+    if (!data?.especifico?.trim()) return;
     // Si no cambió nada desde el último guardado, no encolar otro sync
     const p = planes[indId];
-    if (p && p.meta === data.meta && (p.plazo || '') === (data.plazo || '') && (p.notas || '') === (data.notas || '')) return;
+    if (p && camposIguales(p, data)) return;
     guardarPlan(indId, data);
   };
 
@@ -95,12 +108,11 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
 
   const quitarIndicador = async (indId) => {
     const id = Number(indId);
-    const tieneMeta = !!form[id]?.meta?.trim();
-    if (tieneMeta && !window.confirm('Este indicador tiene una meta. ¿Quitarlo del plan y borrarla?')) return;
+    const tieneMeta = !!form[id]?.especifico?.trim();
+    if (tieneMeta && !window.confirm('Este indicador tiene una meta SMART definida. ¿Quitarlo del plan y borrarla?')) return;
     clearTimeout(timers.current[id]);
     setSeleccionados(prev => prev.filter(x => x !== id));
     setForm(prev => { const n = { ...prev }; delete n[id]; return n; });
-    setIaSugerencias(prev => { const n = { ...prev }; delete n[id]; return n; });
     await eliminarPlan(id);
   };
 
@@ -121,25 +133,23 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
 
     // Se calcula fuera de setForm: los updaters deben ser puros (sin guardados dentro).
     const next = { ...formRef.current };
-    const extras = {};
     sugerencias.forEach(s => {
       const id = Number(s.indicador_id);
-      // Solo pre-rellenar si el técnico no ha escrito su propia meta
-      if (!next[id]?.meta?.trim()) {
+      // Solo pre-rellenar si el técnico no ha escrito ya su propio plan
+      if (!next[id]?.especifico?.trim()) {
         next[id] = {
           ...next[id],
-          meta: s.meta || '',
+          especifico: s.especifico || '',
+          medible: s.medible || '',
+          alcanzable: s.alcanzable || '',
+          relevante: s.relevante || '',
           plazo: s.plazo_meses ? fechaDesdeMeses(s.plazo_meses) : next[id]?.plazo || '',
           sugerida_por_ia: true,
         };
-        if (s.meta?.trim()) guardarPlan(id, next[id]);
-      }
-      if (s.unidad || s.acciones_clave) {
-        extras[id] = { unidad: s.unidad, acciones_clave: s.acciones_clave || [] };
+        if (s.especifico?.trim()) guardarPlan(id, next[id]);
       }
     });
     setForm(next);
-    setIaSugerencias(prev => ({ ...prev, ...extras }));
   };
 
   const indsSeleccionados = seleccionados
@@ -147,7 +157,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
     .filter(Boolean);
 
   const disponiblesParaAgregar = ordenadosPorScore.filter(i => !seleccionados.includes(i.id));
-  const conMeta = seleccionados.filter(id => form[id]?.meta?.trim()).length;
+  const conMeta = seleccionados.filter(id => form[id]?.especifico?.trim()).length;
 
   if (isLoading) {
     return <div className="text-center py-12 text-gray-400 text-sm">Cargando plan...</div>;
@@ -160,7 +170,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start justify-between gap-3">
         <p className="text-xs text-amber-800 font-medium leading-relaxed flex-1">
           <span className="font-black">Indicadores prioritarios</span> (los más bajos, marcados automáticamente).
-          Define una meta SMART para cada uno — o usa IA para sugerirlas. Puedes agregar o quitar indicadores.
+          Llena el cuadro SMART para cada uno — o usa IA para sugerirlo. Puedes agregar, quitar y editar todo.
         </p>
         {savingState !== 'idle' && (
           <span className={`text-[10px] font-bold whitespace-nowrap mt-0.5 ${savingState === 'saved' ? 'text-green-600' : 'text-amber-600'}`}>
@@ -182,7 +192,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
         {isLoadingIA ? (
           <><span className="animate-spin text-lg">✨</span> Generando sugerencias...</>
         ) : (
-          <><span>✨</span> Sugerir metas con IA</>
+          <><span>✨</span> Sugerir metas SMART con IA</>
         )}
       </button>
 
@@ -200,8 +210,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
         const color = DIMENSION_COLORS[ind.dimension] || '#666';
         const scoreColor = SCORE_COLOR(score);
         const f = form[ind.id] || {};
-        const extra = iaSugerencias[ind.id];
-        const guardado = !!planes[ind.id]?.meta;
+        const guardado = !!planes[ind.id]?.especifico;
 
         return (
           <div key={ind.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -235,48 +244,40 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
               </button>
             </div>
 
-            {/* Sugerencia IA — unidad + acciones */}
-            {extra && (
-              <div className="bg-indigo-50 px-4 py-2.5 border-b border-indigo-100">
-                {extra.unidad && (
-                  <p className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider mb-1">
-                    Unidad: {extra.unidad}
-                  </p>
-                )}
-                {extra.acciones_clave?.length > 0 && (
-                  <ul className="space-y-0.5">
-                    {extra.acciones_clave.map((a, i) => (
-                      <li key={i} className="text-[11px] text-indigo-800 flex gap-1.5">
-                        <span className="text-indigo-400 font-bold">•</span>{a}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+            {f.sugerida_por_ia && f.especifico && (
+              <div className="bg-indigo-50 px-4 py-2 border-b border-indigo-100">
+                <p className="text-[10px] text-indigo-600 font-bold">✨ Sugerido por IA — revísalo con el productor y edita lo que haga falta</p>
               </div>
             )}
 
-            {/* Formulario SMART */}
+            {/* Cuadro SMART */}
             <div className="px-4 py-3 flex flex-col gap-3">
-              <div>
-                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest block mb-1">
-                  Meta SMART *
-                </label>
-                <textarea
-                  value={f.meta || ''}
-                  onChange={e => handleField(ind.id, 'meta', e.target.value)}
-                  onBlur={() => guardarAhora(ind.id)}
-                  placeholder="¿Qué se va a lograr, cuánto y para cuándo? (ej: Plantar 30 árboles nativos en potreros en 6 meses)"
-                  rows={2}
-                  className="w-full text-sm text-gray-700 border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-gray-300"
-                />
-                {f.sugerida_por_ia && f.meta && (
-                  <p className="text-[10px] text-indigo-500 mt-0.5">✨ Sugerida por IA — puedes editarla</p>
-                )}
-              </div>
+              {CAMPOS_SMART.map(campo => (
+                <div key={campo.key}>
+                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest flex items-center gap-1.5 mb-1">
+                    <span
+                      className="w-4 h-4 rounded flex items-center justify-center text-white text-[9px] font-black"
+                      style={{ backgroundColor: '#6366F1' }}
+                    >
+                      {campo.letra}
+                    </span>
+                    {campo.label} {campo.key === 'especifico' && '*'}
+                  </label>
+                  <textarea
+                    value={f[campo.key] || ''}
+                    onChange={e => handleField(ind.id, campo.key, e.target.value)}
+                    onBlur={() => guardarAhora(ind.id)}
+                    placeholder={campo.placeholder}
+                    rows={2}
+                    className="w-full text-sm text-gray-700 border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-gray-300"
+                  />
+                </div>
+              ))}
 
               <div>
-                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest block mb-1">
-                  Plazo objetivo
+                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest flex items-center gap-1.5 mb-1">
+                  <span className="w-4 h-4 rounded flex items-center justify-center text-white text-[9px] font-black" style={{ backgroundColor: '#6366F1' }}>T</span>
+                  Tiempo — plazo objetivo
                 </label>
                 <input
                   type="date"
@@ -350,8 +351,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
       {/* Resumen — el guardado es automático */}
       <p className="text-center text-xs text-gray-400 mt-1">
         {conMeta > 0
-          ? `${conMeta} de ${indsSeleccionados.length} indicadores con meta definida · se guarda automáticamente`
-          : 'Define al menos una meta para empezar el plan'}
+          ? `${conMeta} de ${indsSeleccionados.length} indicadores con meta SMART definida · se guarda automáticamente`
+          : 'Define al menos una meta SMART para empezar el plan'}
       </p>
     </div>
   );
