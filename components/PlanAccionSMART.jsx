@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { usePlanAccion } from '@/lib/hooks/usePlanAccion';
 import { DIMENSION_COLORS } from '@/lib/db-offline';
+import { descargarPlanAccionPdf } from '@/lib/pdf-plan-accion';
 
 const SCORE_COLOR = (s) => s <= 1 ? '#DC2626' : s <= 2 ? '#EA580C' : s <= 3 ? '#D97706' : '#65A30D';
 const SCORE_LABEL = (s) => s <= 1 ? 'Muy bajo' : s <= 2 ? 'Bajo' : s <= 3 ? 'Regular' : 'Aceptable';
@@ -26,7 +27,8 @@ function fechaDesdeMeses(meses) {
 
 const AUTOSAVE_MS = 700;
 
-export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, productor }) {
+export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, evaluacion, productor }) {
+  const [descargandoPdf, setDescargandoPdf] = useState(false);
   // Indicadores respondidos, ordenados de menor a mayor puntaje
   const ordenadosPorScore = useMemo(() => (
     [...indicadores]
@@ -158,6 +160,17 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
 
   const disponiblesParaAgregar = ordenadosPorScore.filter(i => !seleccionados.includes(i.id));
   const conMeta = seleccionados.filter(id => form[id]?.especifico?.trim()).length;
+
+  const handleDescargarPdf = async () => {
+    setDescargandoPdf(true);
+    try {
+      await descargarPlanAccionPdf({ planes, indicadores, detalles, productor, evaluacion });
+    } catch (e) {
+      console.error('Error generando PDF del plan de acción:', e);
+    } finally {
+      setDescargandoPdf(false);
+    }
+  };
 
   if (isLoading) {
     return <div className="text-center py-12 text-gray-400 text-sm">Cargando plan...</div>;
@@ -346,6 +359,17 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, p
             + Agregar otro indicador
           </button>
         )
+      )}
+
+      {/* Exportar a PDF — solo tiene sentido si ya hay algo que entregar */}
+      {conMeta > 0 && (
+        <button
+          onClick={handleDescargarPdf}
+          disabled={descargandoPdf}
+          className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-white border-2 border-[#03A64A] text-[#03A64A] active:scale-95 transition-all disabled:opacity-50"
+        >
+          {descargandoPdf ? 'Generando PDF...' : (<><span>📄</span> Descargar plan de acción en PDF</>)}
+        </button>
       )}
 
       {/* Resumen — el guardado es automático */}

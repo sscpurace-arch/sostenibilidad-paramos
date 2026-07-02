@@ -185,6 +185,7 @@ export default function ResultadosEvaluacion({
           indicadores={indicadores}
           detalles={detalles}
           evaluacionId={evaluacionId}
+          evaluacion={evaluacion}
           productor={productor}
         />
       </div>
