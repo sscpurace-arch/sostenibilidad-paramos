@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ success: false, error: "JSON inválido en request" }, 400);
     }
 
-    const { evaluacion_id, is_mock } = body;
+    const { evaluacion_id, is_mock, datos_locales } = body;
     if (!evaluacion_id) {
       return jsonResponse({ success: false, error: "evaluacion_id requerido" }, 400);
     }
@@ -83,67 +83,84 @@ Deno.serve(async (req) => {
     if (count !== null && count >= 40) return jsonResponse({ success: false, error: "Rate limit" }, 429);
     await supabase.from("rate_limits").insert({ user_id: userId, endpoint: "generar-diagnostico" });
 
-    // ─── Cargar datos en paralelo ────────────────────────
-    let evaluacion, indicadores;
+    // ─── Cargar indicadores (tabla global, existe siempre) ───
+    let indicadores;
     try {
-      const [evalRes, indRes] = await Promise.all([
-        supabase.from("evaluaciones").select("*").eq("id", evaluacion_id).single(),
-        supabase.from("indicadores").select("id, nombre, descripcion, dimension").order("orden"),
-      ]);
-
-      if (evalRes.error) throw new Error(`Error cargando evaluación: ${evalRes.error.message}`);
+      const indRes = await supabase.from("indicadores").select("id, nombre, descripcion, dimension").order("orden");
       if (indRes.error) throw new Error(`Error cargando indicadores: ${indRes.error.message}`);
-
-      evaluacion = evalRes.data;
       indicadores = indRes.data;
     } catch (err: any) {
-      console.error("Error cargando datos:", err);
+      console.error("Error cargando indicadores:", err);
       return jsonResponse({ success: false, error: err.message || "Error cargando datos" }, 500);
     }
 
-    if (!evaluacion) {
-      console.warn(`Evaluación ${evaluacion_id} no encontrada`);
-      return jsonResponse({ success: false, error: "Evaluación no encontrada" }, 404);
-    }
-
-    let productor, respuestas;
-    try {
-      const [prodRes, respRes] = await Promise.all([
-        supabase.from("productores").select("*").eq("id", evaluacion.finca_id).single(),
-        supabase.from("respuestas_indicadores")
-          .select("valor, observacion, indicador_id")
-          .eq("evaluacion_id", evaluacion_id),
-      ]);
-
-      if (prodRes.error) throw new Error(`Error cargando productor: ${prodRes.error.message}`);
-      if (respRes.error) throw new Error(`Error cargando respuestas: ${respRes.error.message}`);
-
-      productor = prodRes.data;
-      respuestas = respRes.data;
-    } catch (err: any) {
-      console.error("Error cargando productor/respuestas:", err);
-      return jsonResponse({ success: false, error: err.message || "Error cargando datos" }, 500);
-    }
-
-    // ─── Buscar evaluación anterior para comparar ────────
-    const { data: evalAnterior } = await supabase
-      .from("evaluaciones")
-      .select("id")
-      .eq("finca_id", evaluacion.finca_id)
-      .eq("estado", "enviada")
-      .eq("es_prueba", false)
-      .neq("id", evaluacion_id)
-      .order("fecha", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
+    let evaluacion, productor, respuestas;
     let respuestasPrevias: { valor: number; indicador_id: number }[] = [];
-    if (evalAnterior?.id) {
-      const { data: prev } = await supabase
-        .from("respuestas_indicadores")
-        .select("valor, indicador_id")
-        .eq("evaluacion_id", evalAnterior.id);
-      respuestasPrevias = prev || [];
+
+    if (is_mock && datos_locales) {
+      // ─── Modo prueba: la evaluación vive solo en el celular (es_prueba
+      // nunca se sincroniza a Supabase) → los datos vienen en el request ───
+      productor = datos_locales.productor || {};
+      respuestas = Array.isArray(datos_locales.respuestas)
+        ? datos_locales.respuestas.slice(0, 40)
+        : [];
+      if (!respuestas.length) {
+        return jsonResponse({ success: false, error: "datos_locales.respuestas requerido en modo prueba" }, 400);
+      }
+      evaluacion = { fecha: datos_locales.fecha || new Date().toISOString(), finca_id: null };
+    } else {
+      // ─── Modo real: cargar datos desde Supabase ────────────
+      try {
+        const evalRes = await supabase.from("evaluaciones").select("*").eq("id", evaluacion_id).single();
+        if (evalRes.error) throw new Error(`Error cargando evaluación: ${evalRes.error.message}`);
+        evaluacion = evalRes.data;
+      } catch (err: any) {
+        console.error("Error cargando datos:", err);
+        return jsonResponse({ success: false, error: err.message || "Error cargando datos" }, 500);
+      }
+
+      if (!evaluacion) {
+        console.warn(`Evaluación ${evaluacion_id} no encontrada`);
+        return jsonResponse({ success: false, error: "Evaluación no encontrada" }, 404);
+      }
+
+      try {
+        const [prodRes, respRes] = await Promise.all([
+          supabase.from("productores").select("*").eq("id", evaluacion.finca_id).single(),
+          supabase.from("respuestas_indicadores")
+            .select("valor, observacion, indicador_id")
+            .eq("evaluacion_id", evaluacion_id),
+        ]);
+
+        if (prodRes.error) throw new Error(`Error cargando productor: ${prodRes.error.message}`);
+        if (respRes.error) throw new Error(`Error cargando respuestas: ${respRes.error.message}`);
+
+        productor = prodRes.data;
+        respuestas = respRes.data;
+      } catch (err: any) {
+        console.error("Error cargando productor/respuestas:", err);
+        return jsonResponse({ success: false, error: err.message || "Error cargando datos" }, 500);
+      }
+
+      // ─── Buscar evaluación anterior para comparar ────────
+      const { data: evalAnterior } = await supabase
+        .from("evaluaciones")
+        .select("id")
+        .eq("finca_id", evaluacion.finca_id)
+        .eq("estado", "enviada")
+        .eq("es_prueba", false)
+        .neq("id", evaluacion_id)
+        .order("fecha", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (evalAnterior?.id) {
+        const { data: prev } = await supabase
+          .from("respuestas_indicadores")
+          .select("valor, indicador_id")
+          .eq("evaluacion_id", evalAnterior.id);
+        respuestasPrevias = prev || [];
+      }
     }
 
     // ─── Combinar respuestas con nombres e indicadores ───
@@ -280,6 +297,26 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO
     } catch (err: any) {
       console.error("Error general en Gemini:", err);
       return jsonResponse({ success: false, error: err.message || "Error llamando Gemini" }, 502);
+    }
+
+    // ─── Modo prueba: no guardar en BD (la evaluación no existe allá);
+    // devolver el diagnóstico completo para que el cliente lo guarde local ───
+    if (is_mock && datos_locales) {
+      return jsonResponse({
+        success: true,
+        diagnostico: {
+          evaluacion_id,
+          texto: resultJson.diagnostico_texto || "Sin texto",
+          recomendaciones: {
+            fortalezas: resultJson.fortalezas || [],
+            debilidades: resultJson.debilidades || [],
+            acciones: resultJson.recomendaciones || [],
+          },
+          score_global: resultJson.score_global || 0,
+          modelo: GEMINI_MODEL,
+          fecha: new Date().toISOString(),
+        },
+      });
     }
 
     // ─── Guardar en BD ───────────────────────────────────

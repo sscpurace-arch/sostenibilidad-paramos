@@ -178,7 +178,7 @@ export default function MultiMap({ producers }) {
         <div className="sticky top-0 bg-white/95 p-3 border-b pb-1">
           <h4 className="text-[10px] font-black uppercase text-gray-400 mb-2">Veredas</h4>
           {selectedVeredas.length > 0 && (
-            <button onClick={() => setSelectedVeredas([])} className="text-[10px] font-bold text-[#03A64A] hover:underline text-left">
+            <button onClick={() => setSelectedVeredas([])} className="text-[10px] font-bold text-[#03A64A] hover:underline text-left py-1.5">
               ✕ Mostrar todas
             </button>
           )}
@@ -192,7 +192,7 @@ export default function MultiMap({ producers }) {
               <button
                 key={vereda}
                 onClick={() => setSelectedVeredas(isSelected ? selectedVeredas.filter(v => v !== vereda) : [...selectedVeredas, vereda])}
-                className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-all ${isSelected ? 'bg-green-50 ring-1 ring-green-200' : 'hover:bg-gray-50'}`}
+                className={`flex items-center gap-2 px-1.5 py-2 rounded cursor-pointer transition-all ${isSelected ? 'bg-green-50 ring-1 ring-green-200' : 'hover:bg-gray-50'}`}
               >
                 <span className={`w-3.5 h-3.5 rounded-full border shadow-sm transition-all ${isSelected ? 'ring-2 ring-offset-1 ring-green-500' : 'border-white'}`} style={{ backgroundColor: prod?.color || '#03A64A' }}></span>
                 <span className="text-[11px] text-gray-700 font-bold leading-tight">{vereda} ({count})</span>

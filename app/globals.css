@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════════
+   MÓVIL: iOS Safari hace zoom automático al enfocar
+   campos con letra < 16px. Forzar 16px en celular
+   evita el zoom molesto al escribir en formularios.
+   ══════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════
    LEAFLET MAP OVERRIDES
    ══════════════════════════════════════════════ */
 .leaflet-container {

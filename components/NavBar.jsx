@@ -75,9 +75,10 @@ export default function NavBar() {
             <IconCalificar size={38} />
           </div>
           
-          {/* Efectos de pulsación */}
-          <div className="absolute inset-0 rounded-full animate-ping bg-pnn-verde/30 -z-10" />
-          <div className="absolute inset-0 rounded-full animate-pulse bg-pnn-verde/20 -z-10 scale-125" />
+          {/* Efectos de pulsación — pointer-events-none: al expandirse por fuera del
+              círculo capturaban los taps de botones cercanos (ej. "Enviar calificación") */}
+          <div className="absolute inset-0 rounded-full animate-ping bg-pnn-verde/30 -z-10 pointer-events-none" />
+          <div className="absolute inset-0 rounded-full animate-pulse bg-pnn-verde/20 -z-10 scale-125 pointer-events-none" />
         </Link>
 
         {/* Letrero Curvo: Calificar indicadores - Máxima proximidad al círculo */}

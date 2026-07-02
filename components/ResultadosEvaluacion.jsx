@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import RadarChart from '@/components/RadarChart';
 import PlanAccionSMART from '@/components/PlanAccionSMART';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
@@ -17,9 +18,18 @@ export default function ResultadosEvaluacion({
 }) {
   const [tab, setTab] = useState('resultados');
   const { diagnostico, isLoading, isStale, error: errorIA, generarNuevo } = useDiagnostico(evaluacionId);
+  // Portal a document.body: dentro de <main> (relative z-10) el overlay queda
+  // ATRAPADO bajo el navbar (z-40) — los taps de "Finalizar" caían en los links del menú.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  return (
-    <div className="fixed inset-0 bg-white z-50 p-6 flex flex-col overflow-y-auto">
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 bg-white z-[60] flex flex-col">
+      {/* Contenido scrolleable; el botón Finalizar vive en un pie fijo siempre visible */}
+      <div className="flex-1 overflow-y-auto p-6 pb-4">
+      <div className="max-w-xl mx-auto flex flex-col">
       <div className="text-center mb-4">
         <div className="w-12 h-12 bg-green-100 text-[#03A64A] rounded-full flex items-center justify-center text-2xl mx-auto mb-2">✓</div>
         <h1 className="text-xl font-bold text-gray-800">Evaluación Completada</h1>
@@ -79,7 +89,7 @@ export default function ResultadosEvaluacion({
           <div className="mb-6">
             {!diagnostico ? (
               <button
-                onClick={generarNuevo}
+                onClick={() => generarNuevo({ productor, detalles })}
                 disabled={isLoading}
                 className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${
                   isLoading ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white active:scale-95'
@@ -131,7 +141,7 @@ export default function ResultadosEvaluacion({
             {errorIA && (
               <div className="mt-3 flex flex-col items-center gap-2">
                 <p className="text-center text-xs text-red-500 font-medium">⚠️ {errorIA}</p>
-                <button onClick={generarNuevo} disabled={isLoading} className="text-xs font-bold text-blue-600 underline hover:no-underline disabled:opacity-50">
+                <button onClick={() => generarNuevo({ productor, detalles })} disabled={isLoading} className="text-xs font-bold text-blue-600 underline hover:no-underline disabled:opacity-50">
                   Reintentar
                 </button>
               </div>
@@ -158,12 +168,22 @@ export default function ResultadosEvaluacion({
         />
       </div>
 
-      <button
-        onClick={onVolver}
-        className="w-full bg-gray-800 text-white py-4 rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-all mt-auto"
+      </div>
+      </div>
+
+      {/* Pie fijo: siempre alcanzable, con margen para la barra del navegador móvil */}
+      <div
+        className="flex-shrink-0 px-6 pt-3 bg-white border-t border-gray-100"
+        style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
       >
-        Finalizar y Salir
-      </button>
-    </div>
+        <button
+          onClick={onVolver}
+          className="w-full max-w-xl mx-auto block bg-gray-800 text-white py-4 rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-all"
+        >
+          Finalizar y Salir
+        </button>
+      </div>
+    </div>,
+    document.body
   );
 }

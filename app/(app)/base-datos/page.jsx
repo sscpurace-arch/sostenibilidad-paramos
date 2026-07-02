@@ -44,7 +44,8 @@ export default function BaseDatosPage() {
   if (loading) return <div className="p-10 text-center text-gray-400">Cargando base de datos...</div>;
 
   return (
-    <div className="flex flex-col gap-4 pb-20 max-w-full overflow-hidden">
+    // En desktop la tabla se sale de la columna móvil (448px) y usa el ancho real de la pantalla
+    <div className="flex flex-col gap-4 pb-20 max-w-full overflow-hidden md:max-w-none md:w-[min(90vw,1024px)] md:relative md:left-1/2 md:-translate-x-1/2">
       <header className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <button onClick={() => router.back()} className="text-gray-500 p-2">←</button>
