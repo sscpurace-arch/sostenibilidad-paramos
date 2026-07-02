@@ -1,0 +1,1227 @@
+{
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.claude\\launch.json": {
+    "mtime": 1781103741.389816,
+    "ast_hash": "482f7ce5ef49df05ca3fa4444bd5ba1a",
+    "semantic_hash": "482f7ce5ef49df05ca3fa4444bd5ba1a"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.claude\\settings.json": {
+    "mtime": 1781101169.427732,
+    "ast_hash": "5544c7299aba98479e29d108f238b0fd",
+    "semantic_hash": "5544c7299aba98479e29d108f238b0fd"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.claude\\settings.local.json": {
+    "mtime": 1782177242.459425,
+    "ast_hash": "4a9842d6cfa8e18a2e34f14f6c67bfbd",
+    "semantic_hash": "4a9842d6cfa8e18a2e34f14f6c67bfbd"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.eslintrc.json": {
+    "mtime": 1776829752.824,
+    "ast_hash": "9b8be5ef96ddd69ecd1ddc1554c61a88",
+    "semantic_hash": "9b8be5ef96ddd69ecd1ddc1554c61a88"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\app-build-manifest.json": {
+    "mtime": 1780348695.6264062,
+    "ast_hash": "936eaa2bbd5450120a42dea7d43d1659",
+    "semantic_hash": "936eaa2bbd5450120a42dea7d43d1659"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\build-manifest.json": {
+    "mtime": 1780348695.6254392,
+    "ast_hash": "9cb6afb2be56767e85f623122637a919",
+    "semantic_hash": "9cb6afb2be56767e85f623122637a919"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\package.json": {
+    "mtime": 1780343907.373588,
+    "ast_hash": "a6b7eb31b5dcf3835a90ea0d201f21e3",
+    "semantic_hash": "a6b7eb31b5dcf3835a90ea0d201f21e3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\react-loadable-manifest.json": {
+    "mtime": 1780348695.5844378,
+    "ast_hash": "96a02993eae601ee55321f8739fb36f7",
+    "semantic_hash": "96a02993eae601ee55321f8739fb36f7"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app-paths-manifest.json": {
+    "mtime": 1780348691.1113918,
+    "ast_hash": "2ec6b90526c45d0c26dcfb82a240ef65",
+    "semantic_hash": "2ec6b90526c45d0c26dcfb82a240ef65"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\buscar\\page.js": {
+    "mtime": 1780348559.8034797,
+    "ast_hash": "475b878ddd2557594288d6e54605c413",
+    "semantic_hash": "475b878ddd2557594288d6e54605c413"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\buscar\\page_client-reference-manifest.js": {
+    "mtime": 1780348695.7064357,
+    "ast_hash": "cdb2f839ee57e737ddce9cfd2f393ee7",
+    "semantic_hash": "cdb2f839ee57e737ddce9cfd2f393ee7"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\calificacion\\[id]\\page.js": {
+    "mtime": 1780348691.1594214,
+    "ast_hash": "b17a679bbd6a261594d6bdbf93a3d59f",
+    "semantic_hash": "b17a679bbd6a261594d6bdbf93a3d59f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\calificacion\\[id]\\page_client-reference-manifest.js": {
+    "mtime": 1780348695.7134387,
+    "ast_hash": "6c730d8fb9476b47cb11f2a52209b5d2",
+    "semantic_hash": "6c730d8fb9476b47cb11f2a52209b5d2"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\en-proceso\\page.js": {
+    "mtime": 1780348559.8024764,
+    "ast_hash": "16ee0d640dcdaaa4a701bde7f0369e18",
+    "semantic_hash": "16ee0d640dcdaaa4a701bde7f0369e18"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\en-proceso\\page_client-reference-manifest.js": {
+    "mtime": 1780348695.7064357,
+    "ast_hash": "cd24a950d9aebb9dcf7b0abd47f8058f",
+    "semantic_hash": "cd24a950d9aebb9dcf7b0abd47f8058f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\page.js": {
+    "mtime": 1780348559.8024764,
+    "ast_hash": "3f825ee8702ac980f1f4fba6f94766ef",
+    "semantic_hash": "3f825ee8702ac980f1f4fba6f94766ef"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(app)\\page_client-reference-manifest.js": {
+    "mtime": 1780348695.7034364,
+    "ast_hash": "b6b3f8286467f18871a41821c4304e9b",
+    "semantic_hash": "b6b3f8286467f18871a41821c4304e9b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(auth)\\login\\page.js": {
+    "mtime": 1780348559.8024764,
+    "ast_hash": "b31034e64a9d0e53c0dee70104c8361c",
+    "semantic_hash": "b31034e64a9d0e53c0dee70104c8361c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\(auth)\\login\\page_client-reference-manifest.js": {
+    "mtime": 1780348695.7034364,
+    "ast_hash": "f09885a8d39eabe743239ddcaf52d989",
+    "semantic_hash": "f09885a8d39eabe743239ddcaf52d989"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\_not-found\\page.js": {
+    "mtime": 1780347883.885842,
+    "ast_hash": "bf044764f25bc1a80b89549c85a215bf",
+    "semantic_hash": "bf044764f25bc1a80b89549c85a215bf"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\_not-found\\page_client-reference-manifest.js": {
+    "mtime": 1780347882.9647076,
+    "ast_hash": "40d938c150c79cfe9d3059f6e06dc940",
+    "semantic_hash": "40d938c150c79cfe9d3059f6e06dc940"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\app\\favicon.ico\\route.js": {
+    "mtime": 1780344137.5901911,
+    "ast_hash": "c047b2e57175ff63dd07ff8ebe27cab0",
+    "semantic_hash": "c047b2e57175ff63dd07ff8ebe27cab0"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\edge-runtime-webpack.js": {
+    "mtime": 1780347530.2255538,
+    "ast_hash": "acfd77106fef92f5bc1e3a6c29fc072a",
+    "semantic_hash": "acfd77106fef92f5bc1e3a6c29fc072a"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\interception-route-rewrite-manifest.js": {
+    "mtime": 1780347530.2265217,
+    "ast_hash": "2deb9feee2c80698c754f18a02766889",
+    "semantic_hash": "2deb9feee2c80698c754f18a02766889"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\middleware-build-manifest.js": {
+    "mtime": 1780348695.6284077,
+    "ast_hash": "bbc5b5443a06ed383d19c7d003e8bd5f",
+    "semantic_hash": "bbc5b5443a06ed383d19c7d003e8bd5f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\middleware-manifest.json": {
+    "mtime": 1780347530.2275517,
+    "ast_hash": "0cf04cddf013612c50a8a32124a68ba0",
+    "semantic_hash": "0cf04cddf013612c50a8a32124a68ba0"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\middleware-react-loadable-manifest.js": {
+    "mtime": 1780348695.6264062,
+    "ast_hash": "61742268e8e9e05870633e2a19743f52",
+    "semantic_hash": "61742268e8e9e05870633e2a19743f52"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\middleware.js": {
+    "mtime": 1780347530.2265217,
+    "ast_hash": "5a45bd542f4e0cf8e7c786c192d349c1",
+    "semantic_hash": "5a45bd542f4e0cf8e7c786c192d349c1"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\next-font-manifest.js": {
+    "mtime": 1780348695.6394377,
+    "ast_hash": "f7097bf7c93c1cbb4c118491ca6d2b04",
+    "semantic_hash": "f7097bf7c93c1cbb4c118491ca6d2b04"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\next-font-manifest.json": {
+    "mtime": 1780348695.701403,
+    "ast_hash": "d51420cd4aa5d37d6719849cf36d0d6f",
+    "semantic_hash": "d51420cd4aa5d37d6719849cf36d0d6f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\pages-manifest.json": {
+    "mtime": 1780348691.1094172,
+    "ast_hash": "99914b932bd37a50b983c5e7c90ae93b",
+    "semantic_hash": "99914b932bd37a50b983c5e7c90ae93b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\server-reference-manifest.js": {
+    "mtime": 1780348691.1184225,
+    "ast_hash": "85f1dc4d97acb4772e6cfbe57b54e554",
+    "semantic_hash": "85f1dc4d97acb4772e6cfbe57b54e554"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\server-reference-manifest.json": {
+    "mtime": 1780348691.1404161,
+    "ast_hash": "bf78f8ccdf53916c5c95d41df492af74",
+    "semantic_hash": "bf78f8ccdf53916c5c95d41df492af74"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\static\\webpack\\15af311020b0e810.edge-runtime-webpack.hot-update.json": {
+    "mtime": 1780347530.2485528,
+    "ast_hash": "87f56963a43ed06b06fc72dc3aac9134",
+    "semantic_hash": "87f56963a43ed06b06fc72dc3aac9134"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\static\\webpack\\633457081244afec._.hot-update.json": {
+    "mtime": 1780343911.4716241,
+    "ast_hash": "777077caf8fd96cfb711faacdcbf6a47",
+    "semantic_hash": "777077caf8fd96cfb711faacdcbf6a47"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\static\\webpack\\edge-runtime-webpack.15af311020b0e810.hot-update.js": {
+    "mtime": 1780347530.2485528,
+    "ast_hash": "a62e5c526bb57e6a928e5f4b77c4b882",
+    "semantic_hash": "a62e5c526bb57e6a928e5f4b77c4b882"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\static\\webpack\\middleware.15af311020b0e810.hot-update.js": {
+    "mtime": 1780347530.2345529,
+    "ast_hash": "9c4012817ff9804f958da9652495fa38",
+    "semantic_hash": "9c4012817ff9804f958da9652495fa38"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\@supabase.js": {
+    "mtime": 1780343916.8875215,
+    "ast_hash": "31ffe4109f3343a818340ce2510b7815",
+    "semantic_hash": "31ffe4109f3343a818340ce2510b7815"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\@swc.js": {
+    "mtime": 1780343916.8855524,
+    "ast_hash": "bc3cc95a17fd90c1973b74f761e4f618",
+    "semantic_hash": "bc3cc95a17fd90c1973b74f761e4f618"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\cookie.js": {
+    "mtime": 1780343916.8875215,
+    "ast_hash": "4ad60d8a8c0f3c57803ff6f8f42ce1f6",
+    "semantic_hash": "4ad60d8a8c0f3c57803ff6f8f42ce1f6"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\dexie.js": {
+    "mtime": 1780344132.529718,
+    "ast_hash": "93b6e2f0369473810937a6dc7e8f55be",
+    "semantic_hash": "93b6e2f0369473810937a6dc7e8f55be"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\iceberg-js.js": {
+    "mtime": 1780343916.889581,
+    "ast_hash": "ec629d69b63faed10e2ba1b2fd7f22bb",
+    "semantic_hash": "ec629d69b63faed10e2ba1b2fd7f22bb"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\next.js": {
+    "mtime": 1780348691.1184225,
+    "ast_hash": "4ed446b7b101522f8923ce268b3ca1d8",
+    "semantic_hash": "4ed446b7b101522f8923ce268b3ca1d8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\tslib.js": {
+    "mtime": 1780343916.8875215,
+    "ast_hash": "bafe03e94a6b08b1c535f95743358b91",
+    "semantic_hash": "bafe03e94a6b08b1c535f95743358b91"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\vendor-chunks\\zod.js": {
+    "mtime": 1780348691.1394167,
+    "ast_hash": "14c8f324b6ef0d7e790fd8b211bb49cf",
+    "semantic_hash": "14c8f324b6ef0d7e790fd8b211bb49cf"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\server\\webpack-runtime.js": {
+    "mtime": 1780348691.1013913,
+    "ast_hash": "a3733b26bb0581bbdfcb89da94ec8107",
+    "semantic_hash": "a3733b26bb0581bbdfcb89da94ec8107"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\_app-pages-browser_node_modules_react-apexcharts_dist_react-apexcharts_esm_js.js": {
+    "mtime": 1780348695.630438,
+    "ast_hash": "9b3d243444d15a499720321a8c644ad2",
+    "semantic_hash": "9b3d243444d15a499720321a8c644ad2"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app-pages-internals.js": {
+    "mtime": 1780343921.9284513,
+    "ast_hash": "d15025910215bda091a13252b40733cc",
+    "semantic_hash": "d15025910215bda091a13252b40733cc"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\(app)\\buscar\\page.js": {
+    "mtime": 1780347040.034591,
+    "ast_hash": "d4bf4b0bb0427a248ba96b210c0e4f18",
+    "semantic_hash": "d4bf4b0bb0427a248ba96b210c0e4f18"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\(app)\\calificacion\\[id]\\page.js": {
+    "mtime": 1780348695.699438,
+    "ast_hash": "6e08237bc9563575f0372a6650c28a4b",
+    "semantic_hash": "6e08237bc9563575f0372a6650c28a4b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\(app)\\en-proceso\\page.js": {
+    "mtime": 1780347009.3141942,
+    "ast_hash": "46c8ccb64666f725f7c7940f3b214640",
+    "semantic_hash": "46c8ccb64666f725f7c7940f3b214640"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\(app)\\layout.js": {
+    "mtime": 1780348559.2585104,
+    "ast_hash": "a64ff10b4af997c06f50578a1219e95c",
+    "semantic_hash": "a64ff10b4af997c06f50578a1219e95c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\(app)\\page.js": {
+    "mtime": 1780344133.558722,
+    "ast_hash": "6d1c2a1e6f68a273716e66e24d7cbb02",
+    "semantic_hash": "6d1c2a1e6f68a273716e66e24d7cbb02"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\(auth)\\login\\page.js": {
+    "mtime": 1780343921.9793928,
+    "ast_hash": "c898c25949407c1dc0e132ee04670be7",
+    "semantic_hash": "c898c25949407c1dc0e132ee04670be7"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\_not-found\\page.js": {
+    "mtime": 1780347882.9187071,
+    "ast_hash": "921dfbb6d5376054b6a6f830211b1975",
+    "semantic_hash": "921dfbb6d5376054b6a6f830211b1975"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\app\\layout.js": {
+    "mtime": 1780348695.5844378,
+    "ast_hash": "693c4be83baba1b4366784e04d887dd2",
+    "semantic_hash": "693c4be83baba1b4366784e04d887dd2"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\main-app.js": {
+    "mtime": 1780343921.9324229,
+    "ast_hash": "07461ef7450ca399c5b93de67a13656e",
+    "semantic_hash": "07461ef7450ca399c5b93de67a13656e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\polyfills.js": {
+    "mtime": 1780343909.283439,
+    "ast_hash": "846118c33b2c0e922d7b3a7676f81f6f",
+    "semantic_hash": "846118c33b2c0e922d7b3a7676f81f6f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\chunks\\webpack.js": {
+    "mtime": 1780348695.5844378,
+    "ast_hash": "a2e66a82dda6cb83a37aa8d2b570dfde",
+    "semantic_hash": "a2e66a82dda6cb83a37aa8d2b570dfde"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\development\\_buildManifest.js": {
+    "mtime": 1780348695.627405,
+    "ast_hash": "ffa3aabb229020bfdacb6f27acadcf31",
+    "semantic_hash": "ffa3aabb229020bfdacb6f27acadcf31"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\development\\_ssgManifest.js": {
+    "mtime": 1780348695.627405,
+    "ast_hash": "abee47769bf307639ace4945f9cfd4ff",
+    "semantic_hash": "abee47769bf307639ace4945f9cfd4ff"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\0b4ddbb88e100fde.webpack.hot-update.json": {
+    "mtime": 1780343923.12465,
+    "ast_hash": "81a5bb6b8b785fd9c5a8314d6b094e36",
+    "semantic_hash": "81a5bb6b8b785fd9c5a8314d6b094e36"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\10e17d77c5a09083.webpack.hot-update.json": {
+    "mtime": 1780347882.9177082,
+    "ast_hash": "81a5bb6b8b785fd9c5a8314d6b094e36",
+    "semantic_hash": "81a5bb6b8b785fd9c5a8314d6b094e36"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\4e61ee04ecefaf2c.webpack.hot-update.json": {
+    "mtime": 1780348695.633409,
+    "ast_hash": "81a5bb6b8b785fd9c5a8314d6b094e36",
+    "semantic_hash": "81a5bb6b8b785fd9c5a8314d6b094e36"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\5223f1eb26be7f2b.webpack.hot-update.json": {
+    "mtime": 1780348559.2604773,
+    "ast_hash": "2aa287898ea1c1c48c69029e39b758b4",
+    "semantic_hash": "2aa287898ea1c1c48c69029e39b758b4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\633457081244afec._.hot-update.json": {
+    "mtime": 1780343921.933424,
+    "ast_hash": "777077caf8fd96cfb711faacdcbf6a47",
+    "semantic_hash": "777077caf8fd96cfb711faacdcbf6a47"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\918addd4d6723119.webpack.hot-update.json": {
+    "mtime": 1780347009.3151937,
+    "ast_hash": "81a5bb6b8b785fd9c5a8314d6b094e36",
+    "semantic_hash": "81a5bb6b8b785fd9c5a8314d6b094e36"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\app\\(app)\\layout.5223f1eb26be7f2b.hot-update.js": {
+    "mtime": 1780348559.2604773,
+    "ast_hash": "d856240c46a6fbaae7aa3836bfdb0dc2",
+    "semantic_hash": "d856240c46a6fbaae7aa3836bfdb0dc2"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\app\\layout.0b4ddbb88e100fde.hot-update.js": {
+    "mtime": 1780343923.12465,
+    "ast_hash": "b484788474a15998d6e4fa228631402a",
+    "semantic_hash": "b484788474a15998d6e4fa228631402a"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\app\\layout.10e17d77c5a09083.hot-update.js": {
+    "mtime": 1780347882.9187071,
+    "ast_hash": "0fd279613587f5e5aa34258222300f90",
+    "semantic_hash": "0fd279613587f5e5aa34258222300f90"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\app\\layout.4e61ee04ecefaf2c.hot-update.js": {
+    "mtime": 1780348695.627405,
+    "ast_hash": "04dccdd4ac6e47a7e39af355c22c2cde",
+    "semantic_hash": "04dccdd4ac6e47a7e39af355c22c2cde"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\app\\layout.5223f1eb26be7f2b.hot-update.js": {
+    "mtime": 1780348559.2604773,
+    "ast_hash": "5b1da8c931ba26b89103596cfacc3fde",
+    "semantic_hash": "5b1da8c931ba26b89103596cfacc3fde"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\app\\layout.918addd4d6723119.hot-update.js": {
+    "mtime": 1780347009.3121958,
+    "ast_hash": "9c945730d6636ca4af676938f85cb3da",
+    "semantic_hash": "9c945730d6636ca4af676938f85cb3da"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\e159ae579b8781ff.webpack.hot-update.json": {
+    "mtime": 1780347040.0326195,
+    "ast_hash": "b6662f151c2ad42831b98053a318d32e",
+    "semantic_hash": "b6662f151c2ad42831b98053a318d32e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\e46491fbb9258fbf.webpack.hot-update.json": {
+    "mtime": 1780344133.5547135,
+    "ast_hash": "b6662f151c2ad42831b98053a318d32e",
+    "semantic_hash": "b6662f151c2ad42831b98053a318d32e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\webpack.0b4ddbb88e100fde.hot-update.js": {
+    "mtime": 1780343923.12465,
+    "ast_hash": "b41b303bebe72e0c1dd11ab1c3e43ebd",
+    "semantic_hash": "b41b303bebe72e0c1dd11ab1c3e43ebd"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\webpack.10e17d77c5a09083.hot-update.js": {
+    "mtime": 1780347882.9337096,
+    "ast_hash": "fe83babfce044d76b32d5e31b1d85e7b",
+    "semantic_hash": "fe83babfce044d76b32d5e31b1d85e7b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\webpack.4e61ee04ecefaf2c.hot-update.js": {
+    "mtime": 1780348695.6284077,
+    "ast_hash": "7f3a77a59ac6fbacc7b231fcc2507259",
+    "semantic_hash": "7f3a77a59ac6fbacc7b231fcc2507259"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\webpack.5223f1eb26be7f2b.hot-update.js": {
+    "mtime": 1780348559.2604773,
+    "ast_hash": "e6d7fc329bc405ad7594ea1e840cf230",
+    "semantic_hash": "e6d7fc329bc405ad7594ea1e840cf230"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\webpack.918addd4d6723119.hot-update.js": {
+    "mtime": 1780347009.3211915,
+    "ast_hash": "62a051f85d6031ff256921fe15bb05b0",
+    "semantic_hash": "62a051f85d6031ff256921fe15bb05b0"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\webpack.e159ae579b8781ff.hot-update.js": {
+    "mtime": 1780347040.0326195,
+    "ast_hash": "9dcf94712df73bb94d0bda5ea80225ad",
+    "semantic_hash": "9dcf94712df73bb94d0bda5ea80225ad"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\static\\webpack\\webpack.e46491fbb9258fbf.hot-update.js": {
+    "mtime": 1780344133.5547135,
+    "ast_hash": "0d8c4989cc0d56caa505a8711a4da809",
+    "semantic_hash": "0d8c4989cc0d56caa505a8711a4da809"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\app\\(app)\\buscar\\page.ts": {
+    "mtime": 1780348691.1364183,
+    "ast_hash": "d7036a016aea659f13e05c857b31c686",
+    "semantic_hash": "d7036a016aea659f13e05c857b31c686"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\app\\(app)\\calificacion\\[id]\\page.ts": {
+    "mtime": 1780348691.1594214,
+    "ast_hash": "4e669714860b6a8c9ebf2675d3d67cc3",
+    "semantic_hash": "4e669714860b6a8c9ebf2675d3d67cc3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\app\\(app)\\en-proceso\\page.ts": {
+    "mtime": 1780348691.1353583,
+    "ast_hash": "6af3f7cd7de2572c5b40b642369dbabe",
+    "semantic_hash": "6af3f7cd7de2572c5b40b642369dbabe"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\app\\(app)\\layout.ts": {
+    "mtime": 1780348691.137417,
+    "ast_hash": "79adaa75b68d5e7dc36e42555ca7b4bd",
+    "semantic_hash": "79adaa75b68d5e7dc36e42555ca7b4bd"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\app\\(app)\\page.ts": {
+    "mtime": 1780348691.1353583,
+    "ast_hash": "ea6faeae3b4c3f2189355d123e4a94d9",
+    "semantic_hash": "ea6faeae3b4c3f2189355d123e4a94d9"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\app\\(auth)\\login\\page.ts": {
+    "mtime": 1780348691.1343908,
+    "ast_hash": "f83b8305103b66e4ed66b7ffd252ba1d",
+    "semantic_hash": "f83b8305103b66e4ed66b7ffd252ba1d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\app\\layout.ts": {
+    "mtime": 1780348691.137417,
+    "ast_hash": "1dc3ae73ae93995d34ea0b3be08fe3c6",
+    "semantic_hash": "1dc3ae73ae93995d34ea0b3be08fe3c6"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\types\\package.json": {
+    "mtime": 1780348691.137417,
+    "ast_hash": "b305354b5d3207dc798e87449005a1de",
+    "semantic_hash": "b305354b5d3207dc798e87449005a1de"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.vercel\\project.json": {
+    "mtime": 1780353140.4826646,
+    "ast_hash": "3758adfb658d1cd63236a8f02ec197c9",
+    "semantic_hash": "3758adfb658d1cd63236a8f02ec197c9"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\admin\\page.jsx": {
+    "mtime": 1781148382.7116895,
+    "ast_hash": "1a1934a54aefa503183fa8496016a7a4",
+    "semantic_hash": "1a1934a54aefa503183fa8496016a7a4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\base-datos\\page.jsx": {
+    "mtime": 1781194483.0954435,
+    "ast_hash": "fd400b9d7e8fab87560e02188ae7c36e",
+    "semantic_hash": "fd400b9d7e8fab87560e02188ae7c36e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\buscar\\page.jsx": {
+    "mtime": 1781194468.8951986,
+    "ast_hash": "a3c99f12b010ce638e6822520719b4e4",
+    "semantic_hash": "a3c99f12b010ce638e6822520719b4e4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\calificacion\\nueva\\page.jsx": {
+    "mtime": 1781194424.0306158,
+    "ast_hash": "010aafb1297c4b335bc13620f14812f4",
+    "semantic_hash": "010aafb1297c4b335bc13620f14812f4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\calificacion\\page.jsx": {
+    "mtime": 1781194391.2578008,
+    "ast_hash": "57d241e0b9e639b6f53a8c5d2b9c4f7e",
+    "semantic_hash": "57d241e0b9e639b6f53a8c5d2b9c4f7e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\en-proceso\\page.jsx": {
+    "mtime": 1781194484.546383,
+    "ast_hash": "f0450a55ed129f8912b6347352372843",
+    "semantic_hash": "f0450a55ed129f8912b6347352372843"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\layout.jsx": {
+    "mtime": 1781536634.7797391,
+    "ast_hash": "10d19a04c9129c7777c9a2763e774347",
+    "semantic_hash": "10d19a04c9129c7777c9a2763e774347"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\mapa\\detalle\\page.jsx": {
+    "mtime": 1781194414.3026252,
+    "ast_hash": "26af4d9140a8b148fd9ab2a5bef5967b",
+    "semantic_hash": "26af4d9140a8b148fd9ab2a5bef5967b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\mapa\\page.jsx": {
+    "mtime": 1781111854.720891,
+    "ast_hash": "d8f0cfe3843a36a031382cd810f4beb0",
+    "semantic_hash": "d8f0cfe3843a36a031382cd810f4beb0"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\nuevo-productor\\page.jsx": {
+    "mtime": 1781194485.9948242,
+    "ast_hash": "19b6fa16d5ccfcd43ab0d833cd19f232",
+    "semantic_hash": "19b6fa16d5ccfcd43ab0d833cd19f232"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(app)\\page.jsx": {
+    "mtime": 1781552375.0204215,
+    "ast_hash": "fbc0552af3e3d76e1d849e8bf4d7ae4f",
+    "semantic_hash": "fbc0552af3e3d76e1d849e8bf4d7ae4f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\(auth)\\login\\page.jsx": {
+    "mtime": 1781111854.7216225,
+    "ast_hash": "3525c44b993d6d24bb10837b4bec9383",
+    "semantic_hash": "3525c44b993d6d24bb10837b4bec9383"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\api\\notificar\\route.js": {
+    "mtime": 1781111854.7226334,
+    "ast_hash": "2ebb28e376f07e9008c9166335f6fbf3",
+    "semantic_hash": "2ebb28e376f07e9008c9166335f6fbf3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\layout.js": {
+    "mtime": 1781148392.5316212,
+    "ast_hash": "e7626377310ab85984d30a796febd70c",
+    "semantic_hash": "e7626377310ab85984d30a796febd70c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\sw.js": {
+    "mtime": 1781536605.0884573,
+    "ast_hash": "21355c995bd03a72e49e547a0f0ac05b",
+    "semantic_hash": "21355c995bd03a72e49e547a0f0ac05b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\app\\~offline\\page.jsx": {
+    "mtime": 1781148342.5731199,
+    "ast_hash": "da31208c382545b2b66e366ee40e9390",
+    "semantic_hash": "da31208c382545b2b66e366ee40e9390"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\base-datos\\page.jsx": {
+    "mtime": 1779767324.5073538,
+    "ast_hash": "60c5a27e8702fb8ce39c8cbcefcd1ac3",
+    "semantic_hash": "60c5a27e8702fb8ce39c8cbcefcd1ac3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\buscar\\page.jsx": {
+    "mtime": 1779767324.509354,
+    "ast_hash": "fa36d60d4f728cb8cbdea8d088eb04f8",
+    "semantic_hash": "fa36d60d4f728cb8cbdea8d088eb04f8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\calificacion\\[id]\\page.jsx": {
+    "mtime": 1779767324.5113761,
+    "ast_hash": "dc3279cf2641d8ef577c5aa4e391e1fe",
+    "semantic_hash": "dc3279cf2641d8ef577c5aa4e391e1fe"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\calificacion\\nueva\\[productorId]\\page.jsx": {
+    "mtime": 1779767324.5143783,
+    "ast_hash": "fc48e31b7939c7c8b3b7d75dfbccacbf",
+    "semantic_hash": "fc48e31b7939c7c8b3b7d75dfbccacbf"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\en-proceso\\page.jsx": {
+    "mtime": 1779767324.5173776,
+    "ast_hash": "e82b98437a02919094148d0f7c7edb70",
+    "semantic_hash": "e82b98437a02919094148d0f7c7edb70"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\layout.jsx": {
+    "mtime": 1779767324.518376,
+    "ast_hash": "2ff3651659f70b95babcb5edff35870e",
+    "semantic_hash": "2ff3651659f70b95babcb5edff35870e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\mapa\\[id]\\page.jsx": {
+    "mtime": 1779767324.5233533,
+    "ast_hash": "fd6e197e98e17ea71a64a2a44f7361fe",
+    "semantic_hash": "fd6e197e98e17ea71a64a2a44f7361fe"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\mapa\\page.jsx": {
+    "mtime": 1779767324.5243788,
+    "ast_hash": "c722d24669032ea50bf795c7dcf2e68f",
+    "semantic_hash": "c722d24669032ea50bf795c7dcf2e68f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\nuevo-productor\\page.jsx": {
+    "mtime": 1779767324.5263538,
+    "ast_hash": "714ceb1f41d55dceb1c1d4c21ebf87fb",
+    "semantic_hash": "714ceb1f41d55dceb1c1d4c21ebf87fb"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(app)\\page.jsx": {
+    "mtime": 1779767324.5273695,
+    "ast_hash": "53e496cd5260d2792a01a09bd6511bf3",
+    "semantic_hash": "53e496cd5260d2792a01a09bd6511bf3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\(auth)\\login\\page.jsx": {
+    "mtime": 1779767324.5293775,
+    "ast_hash": "a3018535585ac4e8f45a69ba0f38fff6",
+    "semantic_hash": "a3018535585ac4e8f45a69ba0f38fff6"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\app\\layout.js": {
+    "mtime": 1779767324.5403771,
+    "ast_hash": "9288b6c752371eceb11a4497b29bc8a3",
+    "semantic_hash": "9288b6c752371eceb11a4497b29bc8a3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\AppHeader.jsx": {
+    "mtime": 1779767324.5433772,
+    "ast_hash": "3a85d78e1a4bb7b9d78fe8c4aa34562f",
+    "semantic_hash": "3a85d78e1a4bb7b9d78fe8c4aa34562f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\EvaluacionFooter.jsx": {
+    "mtime": 1779767324.545354,
+    "ast_hash": "bd04ed9d95e4d7f7f42ea2800226952d",
+    "semantic_hash": "bd04ed9d95e4d7f7f42ea2800226952d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\EvaluacionHeader.jsx": {
+    "mtime": 1779767324.5483532,
+    "ast_hash": "9d117fded24037a3cd23805e59538907",
+    "semantic_hash": "9d117fded24037a3cd23805e59538907"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\HistorialEvals.jsx": {
+    "mtime": 1779767324.5493765,
+    "ast_hash": "2d7ace806e4eb3525b76992fc8535c5c",
+    "semantic_hash": "2d7ace806e4eb3525b76992fc8535c5c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\IndicadorCard.jsx": {
+    "mtime": 1779767324.5503757,
+    "ast_hash": "b30215174371fd7d05b82d3dca172ef4",
+    "semantic_hash": "b30215174371fd7d05b82d3dca172ef4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\Map.jsx": {
+    "mtime": 1779767324.5513792,
+    "ast_hash": "33ddc959b3eff292b7d88bfe5a2906f1",
+    "semantic_hash": "33ddc959b3eff292b7d88bfe5a2906f1"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\MultiMap.jsx": {
+    "mtime": 1779767324.5523796,
+    "ast_hash": "adc35b136760277cbd48cca674dfaf42",
+    "semantic_hash": "adc35b136760277cbd48cca674dfaf42"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\NavBar.jsx": {
+    "mtime": 1779767324.5573776,
+    "ast_hash": "4dda8664c233a56074c0768b0734c906",
+    "semantic_hash": "4dda8664c233a56074c0768b0734c906"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\NuevaEvalForm.jsx": {
+    "mtime": 1779767324.5593772,
+    "ast_hash": "a70133682c6686c44df91e21d4337ff9",
+    "semantic_hash": "a70133682c6686c44df91e21d4337ff9"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\OfflineBanner.jsx": {
+    "mtime": 1779767324.5606277,
+    "ast_hash": "54636639bf9897170895c3ee5d1c6142",
+    "semantic_hash": "54636639bf9897170895c3ee5d1c6142"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\ProductorInfoCard.jsx": {
+    "mtime": 1779767324.5616708,
+    "ast_hash": "9ebc2e905a4f0b91ec8b7257b5df8256",
+    "semantic_hash": "9ebc2e905a4f0b91ec8b7257b5df8256"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\RadarChart.jsx": {
+    "mtime": 1779767324.5627024,
+    "ast_hash": "a43a45e5c3591869ce5fbaf39f8247a0",
+    "semantic_hash": "a43a45e5c3591869ce5fbaf39f8247a0"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\ResultadosEvaluacion.jsx": {
+    "mtime": 1779767324.5637038,
+    "ast_hash": "93c2e633ab4f358117148ab484a31fac",
+    "semantic_hash": "93c2e633ab4f358117148ab484a31fac"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\SostenibilidadPanel.jsx": {
+    "mtime": 1779767324.5657022,
+    "ast_hash": "a75bf902e9b935aef07d34dd44ab875b",
+    "semantic_hash": "a75bf902e9b935aef07d34dd44ab875b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\TopographicBg.jsx": {
+    "mtime": 1779767324.5677013,
+    "ast_hash": "23fd5d0ac3d56a5b89de071cb7c9856c",
+    "semantic_hash": "23fd5d0ac3d56a5b89de071cb7c9856c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\ValidationBanner.jsx": {
+    "mtime": 1779767324.568702,
+    "ast_hash": "9b79201183ff9891ece681b9fbe47cc4",
+    "semantic_hash": "9b79201183ff9891ece681b9fbe47cc4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\Watermark.jsx": {
+    "mtime": 1779767324.5726726,
+    "ast_hash": "ae5a798a1af8edb58fd2583a4da3dd22",
+    "semantic_hash": "ae5a798a1af8edb58fd2583a4da3dd22"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\icons\\IconBuscar.jsx": {
+    "mtime": 1779767324.5756757,
+    "ast_hash": "ca7b18f491ffeb4e27a3c2d6fc2fcb64",
+    "semantic_hash": "ca7b18f491ffeb4e27a3c2d6fc2fcb64"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\icons\\IconCalificar.jsx": {
+    "mtime": 1779767324.5776675,
+    "ast_hash": "4f5901913d243f4193876ff1e553c6cf",
+    "semantic_hash": "4f5901913d243f4193876ff1e553c6cf"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\icons\\IconInicio.jsx": {
+    "mtime": 1779767324.5797017,
+    "ast_hash": "9eaec755297f848b39da8eb7d2eb5ad4",
+    "semantic_hash": "9eaec755297f848b39da8eb7d2eb5ad4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\icons\\IconMapa.jsx": {
+    "mtime": 1779767324.581662,
+    "ast_hash": "30668cd8b218cc71f51f56e56ecd94d6",
+    "semantic_hash": "30668cd8b218cc71f51f56e56ecd94d6"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\icons\\IconNuevo.jsx": {
+    "mtime": 1779767324.5836432,
+    "ast_hash": "650f0955d1fdc5d5582a81fa2e293697",
+    "semantic_hash": "650f0955d1fdc5d5582a81fa2e293697"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\components\\icons\\IconProceso.jsx": {
+    "mtime": 1779767324.5856705,
+    "ast_hash": "0f33aac38e7de0175489ae1e089107f8",
+    "semantic_hash": "0f33aac38e7de0175489ae1e089107f8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\jsconfig.json": {
+    "mtime": 1779767324.589676,
+    "ast_hash": "9ae5be88a4ee800190cf34ba5b4d9d89",
+    "semantic_hash": "9ae5be88a4ee800190cf34ba5b4d9d89"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\lib\\database.types.ts": {
+    "mtime": 1779767324.5926733,
+    "ast_hash": "2efb2f22617243d5c076df05d66753ae",
+    "semantic_hash": "2efb2f22617243d5c076df05d66753ae"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\lib\\db-offline.js": {
+    "mtime": 1779767324.5936713,
+    "ast_hash": "f14896e0264bdf9478374391cea6d775",
+    "semantic_hash": "f14896e0264bdf9478374391cea6d775"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\lib\\hooks\\useDiagnostico.js": {
+    "mtime": 1779767324.595703,
+    "ast_hash": "ed709ddc37a9754830aa9e6f3878b274",
+    "semantic_hash": "ed709ddc37a9754830aa9e6f3878b274"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\lib\\hooks\\useOfflineSync.js": {
+    "mtime": 1779767324.597703,
+    "ast_hash": "f7d0362ed432ec8722e45f6946e5201b",
+    "semantic_hash": "f7d0362ed432ec8722e45f6946e5201b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\lib\\supabase.js": {
+    "mtime": 1779767324.5987017,
+    "ast_hash": "0cfb2aac39de689870f9a24f39e4de6e",
+    "semantic_hash": "0cfb2aac39de689870f9a24f39e4de6e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\lib\\sync-engine.js": {
+    "mtime": 1779767324.5997024,
+    "ast_hash": "c8011742fc078bfb19f836b27299d2aa",
+    "semantic_hash": "c8011742fc078bfb19f836b27299d2aa"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\lib\\validation.js": {
+    "mtime": 1779767324.6007042,
+    "ast_hash": "74432c8e3509811e098b73af3caafca1",
+    "semantic_hash": "74432c8e3509811e098b73af3caafca1"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\middleware.js": {
+    "mtime": 1779767324.6027038,
+    "ast_hash": "c8ecf9f7c732f832b46f16108f53a275",
+    "semantic_hash": "c8ecf9f7c732f832b46f16108f53a275"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\next.config.js": {
+    "mtime": 1779767324.6066756,
+    "ast_hash": "97611f724cc5f49cc601533a8c90943a",
+    "semantic_hash": "97611f724cc5f49cc601533a8c90943a"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\package.json": {
+    "mtime": 1779767324.6079204,
+    "ast_hash": "693b97f964a6e83f2ea63cab31092b61",
+    "semantic_hash": "693b97f964a6e83f2ea63cab31092b61"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\postcss.config.mjs": {
+    "mtime": 1779767324.6089659,
+    "ast_hash": "3507368dae6e94b0070b0a10efa15a05",
+    "semantic_hash": "3507368dae6e94b0070b0a10efa15a05"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\manifest.json": {
+    "mtime": 1779767324.6949496,
+    "ast_hash": "d69240452f04e9d88e2f8882de538e6d",
+    "semantic_hash": "d69240452f04e9d88e2f8882de538e6d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\purace-boundary.json": {
+    "mtime": 1779767324.709883,
+    "ast_hash": "fc614143b35e8d24073f360b6b4c56a9",
+    "semantic_hash": "fc614143b35e8d24073f360b6b4c56a9"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\sw.js": {
+    "mtime": 1779767324.7108822,
+    "ast_hash": "caebf9ed06cbfaa763cbbbf8d28f7419",
+    "semantic_hash": "caebf9ed06cbfaa763cbbbf8d28f7419"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\workbox-4754cb34.js": {
+    "mtime": 1779767324.7129116,
+    "ast_hash": "e3156c7afff103a282810e9ba436d119",
+    "semantic_hash": "e3156c7afff103a282810e9ba436d119"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\tailwind.config.js": {
+    "mtime": 1779767324.8132591,
+    "ast_hash": "56e4acdb9022ad02ce216f9e4680687f",
+    "semantic_hash": "56e4acdb9022ad02ce216f9e4680687f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\AppHeader.jsx": {
+    "mtime": 1781111854.723633,
+    "ast_hash": "dd239d5c8299d5c45a04998152cf6fcc",
+    "semantic_hash": "dd239d5c8299d5c45a04998152cf6fcc"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\EvaluacionFooter.jsx": {
+    "mtime": 1777677133.1,
+    "ast_hash": "1aa3071d2b79545929dfc0f1475c01eb",
+    "semantic_hash": "1aa3071d2b79545929dfc0f1475c01eb"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\EvaluacionHeader.jsx": {
+    "mtime": 1781111854.7246327,
+    "ast_hash": "53cfc0e09e84d05481d45ff1b2140a6c",
+    "semantic_hash": "53cfc0e09e84d05481d45ff1b2140a6c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\HistorialEvals.jsx": {
+    "mtime": 1777514260.142,
+    "ast_hash": "8fe9d284b7de770475335b79daeb1f78",
+    "semantic_hash": "8fe9d284b7de770475335b79daeb1f78"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\IndicadorCard.jsx": {
+    "mtime": 1781111854.7246327,
+    "ast_hash": "299e69abf14eb81c185221877a624b27",
+    "semantic_hash": "299e69abf14eb81c185221877a624b27"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\Map.jsx": {
+    "mtime": 1781111854.7256327,
+    "ast_hash": "84c0a2595673cd09d9e0a6d57e789c3f",
+    "semantic_hash": "84c0a2595673cd09d9e0a6d57e789c3f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\MultiMap.jsx": {
+    "mtime": 1781194554.902728,
+    "ast_hash": "bd704232def6055c4e6ab48df171fbf5",
+    "semantic_hash": "bd704232def6055c4e6ab48df171fbf5"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\NavBar.jsx": {
+    "mtime": 1777676166.247,
+    "ast_hash": "c017c3ff7086e4c1c005334524f2e65e",
+    "semantic_hash": "c017c3ff7086e4c1c005334524f2e65e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\NuevaEvalForm.jsx": {
+    "mtime": 1777569756.972,
+    "ast_hash": "6b81b91c25e0c31b6c52e98e51e1a222",
+    "semantic_hash": "6b81b91c25e0c31b6c52e98e51e1a222"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\OfflineBanner.jsx": {
+    "mtime": 1781111854.7266333,
+    "ast_hash": "8b0ad964ae3b1c30c74f49985ad05aca",
+    "semantic_hash": "8b0ad964ae3b1c30c74f49985ad05aca"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\PlanAccionSMART.jsx": {
+    "mtime": 1782960619.3401816,
+    "ast_hash": "e1ae850920ec38e06e0fdaca274547f5",
+    "semantic_hash": "e1ae850920ec38e06e0fdaca274547f5"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\PrepararOffline.jsx": {
+    "mtime": 1781553291.947009,
+    "ast_hash": "f336f281dc5008872d0ec51c6028b678",
+    "semantic_hash": "f336f281dc5008872d0ec51c6028b678"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\ProductorInfoCard.jsx": {
+    "mtime": 1781111854.7266333,
+    "ast_hash": "cc0f1dba9726d60199eafb3b301f8014",
+    "semantic_hash": "cc0f1dba9726d60199eafb3b301f8014"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\RadarChart.jsx": {
+    "mtime": 1780336597.6335058,
+    "ast_hash": "6bb152ff00838406e2f4da0a8276db04",
+    "semantic_hash": "6bb152ff00838406e2f4da0a8276db04"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\ResultadosEvaluacion.jsx": {
+    "mtime": 1782179019.8637824,
+    "ast_hash": "90fec1b189a8555ac5eb980bf831afec",
+    "semantic_hash": "90fec1b189a8555ac5eb980bf831afec"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\SostenibilidadPanel.jsx": {
+    "mtime": 1781111854.7276328,
+    "ast_hash": "7196df2c47636cf4d810386c6e9d83c2",
+    "semantic_hash": "7196df2c47636cf4d810386c6e9d83c2"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\TopographicBg.jsx": {
+    "mtime": 1777651137.489,
+    "ast_hash": "ae4c657e30db340d8e0ba3c7ad04919c",
+    "semantic_hash": "ae4c657e30db340d8e0ba3c7ad04919c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\UpdateBanner.jsx": {
+    "mtime": 1781546903.304188,
+    "ast_hash": "9913ec5bff0f1fc01ab9962a24512e36",
+    "semantic_hash": "9913ec5bff0f1fc01ab9962a24512e36"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\ValidationBanner.jsx": {
+    "mtime": 1777497901.091,
+    "ast_hash": "9b3bb0769d63995a0275254eaf0448b3",
+    "semantic_hash": "9b3bb0769d63995a0275254eaf0448b3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\Watermark.jsx": {
+    "mtime": 1777569907.176,
+    "ast_hash": "3230eb89671dd13d6fafbdc7ec9a4f3b",
+    "semantic_hash": "3230eb89671dd13d6fafbdc7ec9a4f3b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\icons\\IconBuscar.jsx": {
+    "mtime": 1777635294.124,
+    "ast_hash": "b1d1b52b21276c8a806bc88afacab155",
+    "semantic_hash": "b1d1b52b21276c8a806bc88afacab155"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\icons\\IconCalificar.jsx": {
+    "mtime": 1777673888.935,
+    "ast_hash": "082cf552259218afbfc71bf2899c02aa",
+    "semantic_hash": "082cf552259218afbfc71bf2899c02aa"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\icons\\IconInicio.jsx": {
+    "mtime": 1777612099.276,
+    "ast_hash": "a1893dbc99ee70b47f886a31e8f7c62d",
+    "semantic_hash": "a1893dbc99ee70b47f886a31e8f7c62d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\icons\\IconMapa.jsx": {
+    "mtime": 1777635490.709,
+    "ast_hash": "f9d6c4c207c05424eaa0cc744bc68eb1",
+    "semantic_hash": "f9d6c4c207c05424eaa0cc744bc68eb1"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\icons\\IconNuevo.jsx": {
+    "mtime": 1777659618.91,
+    "ast_hash": "7614e23e3ddafacd5af690735a8d8cbd",
+    "semantic_hash": "7614e23e3ddafacd5af690735a8d8cbd"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\components\\icons\\IconProceso.jsx": {
+    "mtime": 1777635595.038,
+    "ast_hash": "188630b908faf9b30e5ec32ffb4462eb",
+    "semantic_hash": "188630b908faf9b30e5ec32ffb4462eb"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\jsconfig.json": {
+    "mtime": 1776829858.994,
+    "ast_hash": "21306b44064ae42bbbd715b1986abaf8",
+    "semantic_hash": "21306b44064ae42bbbd715b1986abaf8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\data-prefetch.js": {
+    "mtime": 1781194841.337629,
+    "ast_hash": "18def9b0fd4d367be53e86a5725e5ef2",
+    "semantic_hash": "18def9b0fd4d367be53e86a5725e5ef2"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\database.types.ts": {
+    "mtime": 1777485232.626,
+    "ast_hash": "2efb2f22617243d5c076df05d66753ae",
+    "semantic_hash": "2efb2f22617243d5c076df05d66753ae"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\db-offline.js": {
+    "mtime": 1782177597.2457883,
+    "ast_hash": "f4a9cd6e87c2b16567aa833d45bdd011",
+    "semantic_hash": "f4a9cd6e87c2b16567aa833d45bdd011"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\hooks\\useDiagnostico.js": {
+    "mtime": 1781386275.7507377,
+    "ast_hash": "25d0e4cc59f35ef5b43cbc6dd5a51681",
+    "semantic_hash": "25d0e4cc59f35ef5b43cbc6dd5a51681"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\hooks\\useOfflineSync.js": {
+    "mtime": 1777495973.049,
+    "ast_hash": "5a7ace97f09e7fe36a0fdf2bd041c1bd",
+    "semantic_hash": "5a7ace97f09e7fe36a0fdf2bd041c1bd"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\hooks\\usePlanAccion.js": {
+    "mtime": 1782960575.2538736,
+    "ast_hash": "4e29423cb8037e383643de341d0d7a8e",
+    "semantic_hash": "4e29423cb8037e383643de341d0d7a8e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\supabase.js": {
+    "mtime": 1781148370.0921578,
+    "ast_hash": "6b5329761a4390ce070059ffe2ebaded",
+    "semantic_hash": "6b5329761a4390ce070059ffe2ebaded"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\sync-engine.js": {
+    "mtime": 1781555064.249979,
+    "ast_hash": "f9ad892467849411dda5aafebed5ddba",
+    "semantic_hash": "f9ad892467849411dda5aafebed5ddba"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\tile-prefetch.js": {
+    "mtime": 1781111854.7396328,
+    "ast_hash": "77c5e6c8551f8ba10a71bdc1465e7cb1",
+    "semantic_hash": "77c5e6c8551f8ba10a71bdc1465e7cb1"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\lib\\validation.js": {
+    "mtime": 1777497256.501,
+    "ast_hash": "bef1ad504a61dd2f9dac06fa906f1982",
+    "semantic_hash": "bef1ad504a61dd2f9dac06fa906f1982"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\middleware.js": {
+    "mtime": 1781148353.7990844,
+    "ast_hash": "d15a30e23b4eca99b4b8ad0d2b8305e8",
+    "semantic_hash": "d15a30e23b4eca99b4b8ad0d2b8305e8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\next.config.js": {
+    "mtime": 1781148705.7881384,
+    "ast_hash": "2d9514b8f7148f5e47fe01d6458df134",
+    "semantic_hash": "2d9514b8f7148f5e47fe01d6458df134"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\package.json": {
+    "mtime": 1781148314.3607953,
+    "ast_hash": "704bf5d1319b28ab91c8f7c360b211fc",
+    "semantic_hash": "704bf5d1319b28ab91c8f7c360b211fc"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\postcss.config.mjs": {
+    "mtime": 1776829753.025,
+    "ast_hash": "b7941c02b947e17ae32f67ae7e664ec8",
+    "semantic_hash": "b7941c02b947e17ae32f67ae7e664ec8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\manifest.json": {
+    "mtime": 1781111854.7406332,
+    "ast_hash": "7dd65c02e1b2630dccce6cc7e62577be",
+    "semantic_hash": "7dd65c02e1b2630dccce6cc7e62577be"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\purace-boundary.json": {
+    "mtime": 1777558659.016,
+    "ast_hash": "fc614143b35e8d24073f360b6b4c56a9",
+    "semantic_hash": "fc614143b35e8d24073f360b6b4c56a9"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\seed-data.json": {
+    "mtime": 1781528912.2840266,
+    "ast_hash": "7de86cc98f3cafe10e2f8f015aa8a28e",
+    "semantic_hash": "7de86cc98f3cafe10e2f8f015aa8a28e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\sw.js": {
+    "mtime": 1782960688.7381992,
+    "ast_hash": "dd8d23ead29b51d0394cdc3e240bb9fd",
+    "semantic_hash": "dd8d23ead29b51d0394cdc3e240bb9fd"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\supabase\\.temp\\linked-project.json": {
+    "mtime": 1781387895.717422,
+    "ast_hash": "e837116606f49cfd27254cc851d2d6b7",
+    "semantic_hash": "e837116606f49cfd27254cc851d2d6b7"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\supabase\\functions\\generar-diagnostico\\index.ts": {
+    "mtime": 1782960645.5020754,
+    "ast_hash": "2677a40634997eb1876de731838098b5",
+    "semantic_hash": "2677a40634997eb1876de731838098b5"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\supabase\\functions\\sugerir-plan-accion\\index.ts": {
+    "mtime": 1782960632.686752,
+    "ast_hash": "93606286ab03fb3444b38d48ce9c1986",
+    "semantic_hash": "93606286ab03fb3444b38d48ce9c1986"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\tailwind.config.js": {
+    "mtime": 1777651121.144,
+    "ast_hash": "48c8be65aadafb4f7d21b171da2a649b",
+    "semantic_hash": "48c8be65aadafb4f7d21b171da2a649b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.agent\\rules\\graphify.md": {
+    "mtime": 1778256412.346,
+    "ast_hash": "9a4dc15a30e372a06b3720a9e892cfab",
+    "semantic_hash": "9a4dc15a30e372a06b3720a9e892cfab"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.agent\\workflows\\graphify.md": {
+    "mtime": 1778256412.348,
+    "ast_hash": "713ac584c14a6920dc0602b637713bc4",
+    "semantic_hash": "713ac584c14a6920dc0602b637713bc4"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.antigravity\\rules.md": {
+    "mtime": 1776829426.06,
+    "ast_hash": "99364159a204d0378e13aba8ceebc9a7",
+    "semantic_hash": "99364159a204d0378e13aba8ceebc9a7"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.claude-ref\\CONFIGURACION-EDGE-FUNCTIONS.md": {
+    "mtime": 1781386288.2699478,
+    "ast_hash": "041210a26d676f1bdd0bcb0f39115b7f",
+    "semantic_hash": "041210a26d676f1bdd0bcb0f39115b7f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.github\\workflows\\keep_alive.yml": {
+    "mtime": 1778879306.208,
+    "ast_hash": "c57cbd5f701c2ce70e1038fb9536774b",
+    "semantic_hash": "c57cbd5f701c2ce70e1038fb9536774b"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.vercel\\README.txt": {
+    "mtime": 1780353140.484637,
+    "ast_hash": "2b13c79d37d6ed82a3255b83b6815034",
+    "semantic_hash": "2b13c79d37d6ed82a3255b83b6815034"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\CLAUDEdx.md": {
+    "mtime": 1781111854.716774,
+    "ast_hash": "6693e4e4491ed5facc433256ce6fcd51",
+    "semantic_hash": "6693e4e4491ed5facc433256ce6fcd51"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\README.md": {
+    "mtime": 1778879553.449,
+    "ast_hash": "9aeaaf539b5907fcd8eb6cc60db4000a",
+    "semantic_hash": "9aeaaf539b5907fcd8eb6cc60db4000a"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\audit_report.md": {
+    "mtime": 1779767324.4963768,
+    "ast_hash": "9ae17314f66dbe416866bbf63702950f",
+    "semantic_hash": "9ae17314f66dbe416866bbf63702950f"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\README.md": {
+    "mtime": 1779767324.4993773,
+    "ast_hash": "e472eb6f5e4e09a8974a2f8644c40dd5",
+    "semantic_hash": "e472eb6f5e4e09a8974a2f8644c40dd5"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\guia_agente_supabase_keepalive.md": {
+    "mtime": 1778883532.61,
+    "ast_hash": "cac0a6214cfc94720c0c5240ad419c8c",
+    "semantic_hash": "cac0a6214cfc94720c0c5240ad419c8c"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\health_dashboard.html": {
+    "mtime": 1779767324.820331,
+    "ast_hash": "90741bd60ebb1919cc362e6990a36dc8",
+    "semantic_hash": "90741bd60ebb1919cc362e6990a36dc8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\skills\\escritura-santiago\\PROHIBIDO.md": {
+    "mtime": 1782314826.1312327,
+    "ast_hash": "da544d1750e86fda11295075264903b8",
+    "semantic_hash": "da544d1750e86fda11295075264903b8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\skills\\escritura-santiago\\SKILL.md": {
+    "mtime": 1782314699.5636106,
+    "ast_hash": "f567d39eabbc8492e826dc856e069b13",
+    "semantic_hash": "f567d39eabbc8492e826dc856e069b13"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\skills\\escritura-santiago\\SOBRE-SANTIAGO.md": {
+    "mtime": 1782314839.9553792,
+    "ast_hash": "58cf82e9d60001c7541d12e3638512a0",
+    "semantic_hash": "58cf82e9d60001c7541d12e3638512a0"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\skills\\escritura-santiago\\VOZ-SANTIAGO.md": {
+    "mtime": 1782314867.584158,
+    "ast_hash": "aa1b5af4413b1daa928f6938763f4331",
+    "semantic_hash": "aa1b5af4413b1daa928f6938763f4331"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\task.md": {
+    "mtime": 1779767324.8483348,
+    "ast_hash": "056e59f14d60fe98ee55231e9a150831",
+    "semantic_hash": "056e59f14d60fe98ee55231e9a150831"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\walkthrough.md": {
+    "mtime": 1779767324.849336,
+    "ast_hash": "502e406df01be52fcb8ca9c5571ea3c8",
+    "semantic_hash": "502e406df01be52fcb8ca9c5571ea3c8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\cache\\images\\3sLGz3Yx7Nc9Ww8Gaa9JkLjbinxff0HnVy2HFZOqptI=\\60.1779876360338.gByjoP9g7BLu5yn0tgKb9TeOm11bljvnOWtQMWysO7I=.webp": {
+    "mtime": 1779876300.4011335,
+    "ast_hash": "786207681c3a2ea63e8bd373baf5cc5e",
+    "semantic_hash": "786207681c3a2ea63e8bd373baf5cc5e"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\cache\\images\\4zWbqvhFSmCmrI5hBYboMLvGEZh6vcspNtY746AMvIE=\\60.1780348841823.1oG6ZxMEq0VpyhXXIEWh-5Fjnxl+Ww3ARzHwZJyKmnE=.webp": {
+    "mtime": 1780348781.8292732,
+    "ast_hash": "6bf8d802d74d54717c35ab82ee238005",
+    "semantic_hash": "6bf8d802d74d54717c35ab82ee238005"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\cache\\images\\BGi7u46vZd-QIGBCuSTlHgC5DDifCRkQjQ880ESCHEk=\\60.1780348841757.2eIJYOrTXS-yL9PgE7LkmQaUNHGFQSqm2YKIEaxj2oA=.webp": {
+    "mtime": 1780348781.7732723,
+    "ast_hash": "cb1e28512cc898d1ec5ad0ebd6dd7dd7",
+    "semantic_hash": "cb1e28512cc898d1ec5ad0ebd6dd7dd7"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\cache\\images\\PAI-h7TJgXHR-ZtBjoApvZw9-96-m20zy5wJsJRXjw4=\\60.1780348435024.Qjll0Kra6MurxQpxndUnJAG4aNwASY5T-wRlrFscqkg=.webp": {
+    "mtime": 1780348375.0288937,
+    "ast_hash": "58d09121d19eaadeba0417969cd78cd3",
+    "semantic_hash": "58d09121d19eaadeba0417969cd78cd3"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\cache\\images\\VfFPVtmZvZDQ3rWzmGl6EwLArD+4SJEqOwzlUzVpAms=\\60.1780348435272.gDlxGZD8d1qJBEgJ0IqITudO83Yinm0VnzmvzgWh4Oc=.webp": {
+    "mtime": 1780348375.2768064,
+    "ast_hash": "ba9be310d5770991c5b2deeadb11396d",
+    "semantic_hash": "ba9be310d5770991c5b2deeadb11396d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\.next_dev\\cache\\images\\o5CUJFHLrM6k6ITTrjj7cXZHV71geFcADbE9PxudVn8=\\60.1779876360418.gkiMZbBkgiSxY1ImM9I2t9FXevCWqolHQqz8Id5Gsrk=.webp": {
+    "mtime": 1779876300.4341314,
+    "ast_hash": "8b24d4426a2580d39dcf97643ff8dc98",
+    "semantic_hash": "8b24d4426a2580d39dcf97643ff8dc98"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\icons\\icon-nuevo-test.svg": {
+    "mtime": 1779767324.6672876,
+    "ast_hash": "60fb10ee993b60bc77d044ddd558d7bf",
+    "semantic_hash": "60fb10ee993b60bc77d044ddd558d7bf"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\images\\logo-pnn-nacional.png": {
+    "mtime": 1779767324.6759467,
+    "ast_hash": "196979e0047aa4ae1d53ca886e60a5b9",
+    "semantic_hash": "196979e0047aa4ae1d53ca886e60a5b9"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\images\\logo-pnn.png": {
+    "mtime": 1779767324.6809154,
+    "ast_hash": "655edcb3fa8239ba6c930acf91bc349a",
+    "semantic_hash": "655edcb3fa8239ba6c930acf91bc349a"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\backup_v2\\public\\images\\logo-purace.png": {
+    "mtime": 1779767324.692948,
+    "ast_hash": "fdbb225524913c260a1945c55848955d",
+    "semantic_hash": "fdbb225524913c260a1945c55848955d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\icon-192x192.png": {
+    "mtime": 1779767324.831302,
+    "ast_hash": "fdbb225524913c260a1945c55848955d",
+    "semantic_hash": "fdbb225524913c260a1945c55848955d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\icon-512x512.png": {
+    "mtime": 1779767324.8403,
+    "ast_hash": "fdbb225524913c260a1945c55848955d",
+    "semantic_hash": "fdbb225524913c260a1945c55848955d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\icons\\icon-nuevo-test.svg": {
+    "mtime": 1777657686.578,
+    "ast_hash": "cd597000db2b023f55d6229670f7b275",
+    "semantic_hash": "cd597000db2b023f55d6229670f7b275"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\images\\logo-pnn-nacional.png": {
+    "mtime": 1777567996.368,
+    "ast_hash": "196979e0047aa4ae1d53ca886e60a5b9",
+    "semantic_hash": "196979e0047aa4ae1d53ca886e60a5b9"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\images\\logo-pnn.png": {
+    "mtime": 1728910046.0,
+    "ast_hash": "655edcb3fa8239ba6c930acf91bc349a",
+    "semantic_hash": "655edcb3fa8239ba6c930acf91bc349a"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\images\\logo-purace.png": {
+    "mtime": 1777564464.959,
+    "ast_hash": "fdbb225524913c260a1945c55848955d",
+    "semantic_hash": "fdbb225524913c260a1945c55848955d"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\images\\marker-icon-2x.png": {
+    "mtime": 1779767324.8423061,
+    "ast_hash": "401d815dc206b8dc1b17cd0e37695975",
+    "semantic_hash": "401d815dc206b8dc1b17cd0e37695975"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\images\\marker-icon.png": {
+    "mtime": 1779767324.8433032,
+    "ast_hash": "2273e3d8ad9264b7daa5bdbf8e6b47f8",
+    "semantic_hash": "2273e3d8ad9264b7daa5bdbf8e6b47f8"
+  },
+  "C:\\Users\\DIEGO\\Documents\\SSC PURACE\\APP sostenibilidad-paramos\\public\\images\\marker-shadow.png": {
+    "mtime": 1779767324.8443036,
+    "ast_hash": "44a526eed258222515aa21eaffd14a96",
+    "semantic_hash": "44a526eed258222515aa21eaffd14a96"
+  }
+}
