@@ -229,6 +229,7 @@ function EvaluacionContent() {
     return (
       <ResultadosEvaluacion
         evaluacionId={evalId}
+        evaluacion={evaluacion}
         productor={productor} indicadores={indicadores} dimensiones={dimensiones}
         detalles={detalles} lastResults={lastResults}
         currentAvgs={currentAvgs} lastAvgs={lastAvgs}

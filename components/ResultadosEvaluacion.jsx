@@ -4,9 +4,11 @@ import { createPortal } from 'react-dom';
 import RadarChart from '@/components/RadarChart';
 import PlanAccionSMART from '@/components/PlanAccionSMART';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
+import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
 
 export default function ResultadosEvaluacion({
   evaluacionId,
+  evaluacion,
   productor,
   indicadores,
   dimensiones,
@@ -17,7 +19,19 @@ export default function ResultadosEvaluacion({
   onVolver
 }) {
   const [tab, setTab] = useState('resultados');
+  const [descargandoPdf, setDescargandoPdf] = useState(false);
   const { diagnostico, isLoading, isStale, error: errorIA, generarNuevo } = useDiagnostico(evaluacionId);
+
+  const handleDescargarPdf = async () => {
+    setDescargandoPdf(true);
+    try {
+      await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion });
+    } catch (e) {
+      console.error('Error generando PDF del diagnóstico:', e);
+    } finally {
+      setDescargandoPdf(false);
+    }
+  };
   // Portal a document.body: dentro de <main> (relative z-10) el overlay queda
   // ATRAPADO bajo el navbar (z-40) — los taps de "Finalizar" caían en los links del menú.
   const [mounted, setMounted] = useState(false);
@@ -135,6 +149,14 @@ export default function ResultadosEvaluacion({
                     </ul>
                   </div>
                 </div>
+
+                <button
+                  onClick={handleDescargarPdf}
+                  disabled={descargandoPdf}
+                  className="w-full mt-5 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-white border-2 border-blue-200 text-blue-700 active:scale-95 transition-all disabled:opacity-50"
+                >
+                  {descargandoPdf ? 'Generando PDF...' : (<><span>📄</span> Descargar PDF para el productor</>)}
+                </button>
               </div>
             )}
             {errorIA && (
