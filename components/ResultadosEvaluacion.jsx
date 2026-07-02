@@ -1,10 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import RadarChart from '@/components/RadarChart';
 import PlanAccionSMART from '@/components/PlanAccionSMART';
+import FirmaDigital from '@/components/FirmaDigital';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
 import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
+import { saveRecord } from '@/lib/sync-engine';
 
 export default function ResultadosEvaluacion({
   evaluacionId,
@@ -20,7 +22,20 @@ export default function ResultadosEvaluacion({
 }) {
   const [tab, setTab] = useState('resultados');
   const [descargandoPdf, setDescargandoPdf] = useState(false);
+  const [firmaTecnico, setFirmaTecnico] = useState(evaluacion?.firma_tecnico || '');
+  const [firmaProductor, setFirmaProductor] = useState(evaluacion?.firma_productor || '');
   const { diagnostico, isLoading, isStale, error: errorIA, generarNuevo } = useDiagnostico(evaluacionId);
+  // Espejo: si firmaTecnico se guarda y luego firmaProductor, el segundo guardado
+  // no debe pisar el primero con el `evaluacion` prop (que nunca se refresca aquí).
+  const firmasRef = useRef({ firma_tecnico: evaluacion?.firma_tecnico || '', firma_productor: evaluacion?.firma_productor || '' });
+
+  const guardarFirma = async (campo, dataUrl) => {
+    firmasRef.current = { ...firmasRef.current, [campo]: dataUrl };
+    if (campo === 'firma_tecnico') setFirmaTecnico(dataUrl);
+    else setFirmaProductor(dataUrl);
+    if (!evaluacion) return;
+    await saveRecord('evaluaciones', { ...evaluacion, ...firmasRef.current });
+  };
 
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
@@ -124,20 +139,61 @@ export default function ResultadosEvaluacion({
                 )}
                 <div className="flex items-center gap-2 mb-4 mt-2">
                   <span className="text-2xl">✨</span>
-                  <h3 className="font-bold text-blue-900">Diagnóstico Inteligente</h3>
+                  <h3 className="font-bold text-blue-900 flex-1">Diagnóstico Inteligente</h3>
+                  {diagnostico.score_global > 0 && (
+                    <div className="text-center bg-white rounded-xl px-3 py-1.5 border border-blue-100 shadow-sm">
+                      <p className="text-lg font-black text-blue-700 leading-none">{Number(diagnostico.score_global).toFixed(1)}</p>
+                      <p className="text-[8px] text-blue-400 font-bold uppercase tracking-wider leading-none mt-0.5">/ 5</p>
+                    </div>
+                  )}
                 </div>
+
+                {/* Comparación visual con la evaluación anterior — por dimensión */}
+                {lastAvgs && (
+                  <div className="bg-white/70 rounded-xl p-3 mb-4 border border-blue-100">
+                    <h4 className="text-[10px] font-black uppercase text-blue-400 mb-2 tracking-widest">Evolución desde la visita anterior</h4>
+                    <div className="grid grid-cols-3 gap-2">
+                      {dimensiones.map(d => {
+                        const actual = parseFloat(currentAvgs[d.nombre]) || 0;
+                        const anterior = parseFloat(lastAvgs[d.nombre]) || 0;
+                        const diff = actual - anterior;
+                        const signo = diff > 0.05 ? '↑' : diff < -0.05 ? '↓' : '→';
+                        const color = diff > 0.05 ? '#16A34A' : diff < -0.05 ? '#DC2626' : '#9CA3AF';
+                        return (
+                          <div key={d.nombre} className="text-center">
+                            <p className="text-[8px] uppercase font-bold text-gray-400 truncate">{d.nombre.split(' ')[0].substring(0, 6)}</p>
+                            <p className="text-xs font-black" style={{ color }}>
+                              {signo} {Math.abs(diff).toFixed(1)}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 <p className="text-sm text-blue-800 leading-relaxed mb-6 italic">
                   &ldquo;{diagnostico.texto}&rdquo;
                 </p>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-[10px] font-black uppercase text-blue-400 mb-2 tracking-widest">Fortalezas</h4>
+                    <h4 className="text-[10px] font-black uppercase text-green-600 mb-2 tracking-widest">Fortalezas</h4>
                     <div className="flex flex-wrap gap-2">
                       {diagnostico.recomendaciones.fortalezas.map((f, i) => (
                         <span key={i} className="text-[11px] bg-white text-green-700 px-3 py-1 rounded-full border border-green-100 font-medium">✓ {f}</span>
                       ))}
                     </div>
                   </div>
+                  {diagnostico.recomendaciones.debilidades?.length > 0 && (
+                    <div>
+                      <h4 className="text-[10px] font-black uppercase text-orange-500 mb-2 tracking-widest">Aspectos a Mejorar</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {diagnostico.recomendaciones.debilidades.map((d, i) => (
+                          <span key={i} className="text-[11px] bg-white text-orange-700 px-3 py-1 rounded-full border border-orange-100 font-medium">! {d}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div>
                     <h4 className="text-[10px] font-black uppercase text-amber-500 mb-2 tracking-widest">Recomendaciones Clave</h4>
                     <ul className="space-y-2">
@@ -188,6 +244,25 @@ export default function ResultadosEvaluacion({
           evaluacion={evaluacion}
           productor={productor}
         />
+      </div>
+
+      {/* Firmas — visibles en ambas pestañas, se guardan solas al terminar el trazo */}
+      <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 mt-2">
+        <h3 className="text-xs font-black uppercase text-gray-400 mb-3 text-center tracking-widest">Firmas de la visita</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <FirmaDigital
+            label="Técnico"
+            valorGuardado={firmaTecnico}
+            onGuardar={(v) => guardarFirma('firma_tecnico', v)}
+          />
+          <FirmaDigital
+            label={evaluacion?.receptor_es_otro && evaluacion?.receptor_nombre
+              ? `${evaluacion.receptor_nombre.split(' ')[0]} (${evaluacion.receptor_parentesco || 'receptor'})`
+              : 'Productor'}
+            valorGuardado={firmaProductor}
+            onGuardar={(v) => guardarFirma('firma_productor', v)}
+          />
+        </div>
       </div>
 
       </div>
