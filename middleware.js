@@ -111,7 +111,8 @@ export const config = {
      * - _next/static, _next/image (archivos de build)
      * - favicon.ico, manifest.json (PWA)
      * - archivos estáticos: imágenes, JSON públicos (seed-data.json, etc.)
+     * - auth/callback: debe procesar el código OAuth sin interferencia del middleware
      */
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|sw\\.js|workbox-.*|api/.*|~offline|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json|js)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|manifest.json|sw\\.js|workbox-.*|api/.*|auth/callback|~offline|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json|js)$).*)',
   ],
 }

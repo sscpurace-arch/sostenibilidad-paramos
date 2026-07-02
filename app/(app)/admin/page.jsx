@@ -4,11 +4,14 @@ import { createClient, getMockSession } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 const ADMIN_EMAIL = 'sscpurace@gmail.com';
 
+const ROLES = ['tecnico', 'admin', 'supervisor', 'visitante'];
+
 function RolBadge({ rol }) {
   const styles = {
-    admin:    'bg-pnn-verde/20 text-pnn-verde border-pnn-verde/40',
-    tecnico:  'bg-pnn-azul/20 text-pnn-azul-claro border-pnn-azul/40',
-    visitante:'bg-white/10 text-white/50 border-white/20',
+    admin:      'bg-pnn-verde/20 text-pnn-verde border-pnn-verde/40',
+    tecnico:    'bg-pnn-azul/20 text-pnn-azul-claro border-pnn-azul/40',
+    supervisor: 'bg-acento-amarillo/20 text-acento-amarillo border-acento-amarillo/40',
+    visitante:  'bg-white/10 text-white/50 border-white/20',
   };
   const label = rol || 'técnico';
   const cls = styles[label.toLowerCase()] || styles.tecnico;
@@ -33,8 +36,20 @@ export default function AdminPage() {
   const [globalStats, setGlobalStats] = useState({ users: 0, reales: 0, pruebas: 0 });
   const [loading, setLoading]     = useState(true);
   const [error, setError]         = useState(null);
+  const [guardandoId, setGuardandoId] = useState(null);
   const supabase = createClient();
   const router   = useRouter();
+
+  const actualizarUsuario = async (id, cambios) => {
+    setGuardandoId(id);
+    const { error: updErr } = await supabase.from('usuarios').update(cambios).eq('id', id);
+    if (!updErr) {
+      setUsuarios(prev => prev.map(u => u.id === id ? { ...u, ...cambios } : u));
+    } else {
+      alert('No se pudo actualizar: ' + updErr.message);
+    }
+    setGuardandoId(null);
+  };
 
   useEffect(() => {
     async function cargar() {
@@ -185,6 +200,29 @@ export default function AdminPage() {
                       <p className="text-[9px] text-white/40 font-semibold uppercase tracking-wide">Pruebas</p>
                     </div>
                   </div>
+                </div>
+
+                {/* Acciones: asignar rol + activar/aprobar */}
+                <div className="flex items-center gap-2 border-t border-white/[0.06] pt-3">
+                  <select
+                    value={u.rol || 'tecnico'}
+                    disabled={guardandoId === u.id}
+                    onChange={(e) => actualizarUsuario(u.id, { rol: e.target.value })}
+                    className="flex-1 bg-white/5 border border-white/10 text-white text-xs rounded-lg px-2 py-2 disabled:opacity-50"
+                  >
+                    {ROLES.map(r => <option key={r} value={r} className="bg-[#0d2a1c]">{r}</option>)}
+                  </select>
+                  <button
+                    onClick={() => actualizarUsuario(u.id, { activo: !(u.activo !== false) })}
+                    disabled={guardandoId === u.id}
+                    className={`text-[10px] font-bold uppercase px-3 py-2 rounded-lg whitespace-nowrap disabled:opacity-50 ${
+                      u.activo !== false
+                        ? 'bg-red-500/10 text-red-300 border border-red-500/20'
+                        : 'bg-pnn-verde/20 text-pnn-verde border border-pnn-verde/40'
+                    }`}
+                  >
+                    {u.activo !== false ? 'Desactivar' : 'Aprobar'}
+                  </button>
                 </div>
               </div>
             ))}

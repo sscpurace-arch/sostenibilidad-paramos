@@ -14,22 +14,29 @@ export async function POST(request) {
     return Response.json({ ok: false, error: 'Sin configuración Telegram' }, { status: 500 });
   }
 
-  const esPrueba = !!body.es_prueba;
-
-  const lineas = [
-    esPrueba ? '🧪 *CALIFICACIÓN DE PRUEBA*' : '📋 *Nueva calificación registrada*',
-    `👤 *Productor:* ${body.productor}`,
-    `📅 *Fecha:* ${body.fecha}`,
-    `📊 *Puntaje global:* ${body.puntaje}`,
-    `🗺️ *Sector:* ${body.sector || 'No especificado'}`,
-    `👨‍💼 *Técnico:* ${body.tecnico || 'No especificado'}`,
-  ];
-
-  if (esPrueba) {
-    lineas.push('_⚠️ Datos de prueba — no se guardan en el sistema real_');
+  let texto;
+  if (body.tipo === 'registro') {
+    texto = [
+      '🆕 *Nueva solicitud de registro*',
+      `👤 *Nombre:* ${body.nombre}`,
+      `✉️ *Correo:* ${body.email}`,
+      `💼 *Cargo:* ${body.cargo || 'No especificado'}`,
+      '',
+      '_Apruébalo desde el panel de administración de la app._',
+    ].join('\n');
+  } else {
+    const esPrueba = !!body.es_prueba;
+    const lineas = [
+      esPrueba ? '🧪 *CALIFICACIÓN DE PRUEBA*' : '📋 *Nueva calificación registrada*',
+      `👤 *Productor:* ${body.productor}`,
+      `📅 *Fecha:* ${body.fecha}`,
+      `📊 *Puntaje global:* ${body.puntaje}`,
+      `🗺️ *Sector:* ${body.sector || 'No especificado'}`,
+      `👨‍💼 *Técnico:* ${body.tecnico || 'No especificado'}`,
+    ];
+    if (esPrueba) lineas.push('_⚠️ Datos de prueba — no se guardan en el sistema real_');
+    texto = lineas.join('\n');
   }
-
-  const texto = lineas.join('\n');
 
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',

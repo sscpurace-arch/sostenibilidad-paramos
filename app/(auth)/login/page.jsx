@@ -16,6 +16,15 @@ export default function LoginPage() {
 
   const supabase = createClient();
 
+  const handleGoogleLogin = async () => {
+    document.cookie = 'mock-user-session=; path=/; max-age=0;';
+    localStorage.removeItem('mock-user-session');
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+  };
+
   // Cooldown timer
   useState(() => {
     if (cooldown <= 0) return;
@@ -138,13 +147,28 @@ export default function LoginPage() {
               🌿 Entrar a probarla
             </button>
 
+            {/* Botón Google — acceso real para técnicos y equipo de PNN */}
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full py-3.5 rounded-2xl font-bold text-sm bg-white text-gray-700 shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.57-5.17 3.57-8.82z" />
+                <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.91l-3.88-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.26v3.09A11.99 11.99 0 0 0 12 24z" />
+                <path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28V6.63H1.26A11.99 11.99 0 0 0 0 12c0 1.94.46 3.77 1.26 5.37l4.01-3.09z" />
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.26 6.63l4.01 3.09C6.22 6.86 8.87 4.75 12 4.75z" />
+              </svg>
+              Continuar con Google
+            </button>
+
             {/* Botón admin — secundario */}
             <button
               type="button"
               onClick={() => { setShowAdmin(!showAdmin); setError(null); }}
               className="w-full py-3 rounded-2xl font-bold text-xs uppercase tracking-wider bg-white/5 border border-white/10 hover:bg-white/10 text-white/60 hover:text-white/80 transition-all duration-300"
             >
-              {showAdmin ? '✕ Cerrar' : '🔐 Entrada Administrador'}
+              {showAdmin ? '✕ Cerrar' : '🔐 Entrada con correo'}
             </button>
           </div>
 

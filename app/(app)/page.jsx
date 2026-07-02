@@ -17,7 +17,9 @@ export default function Dashboard() {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser) {
         try {
-          const { data: userData } = await supabase.from('usuarios').select('nombre').eq('id', authUser.id).single();
+          const { data: userData } = await supabase.from('usuarios').select('nombre, rol').eq('id', authUser.id).single();
+          // Los supervisores tienen su propio dashboard de solo lectura — no el operativo
+          if (userData?.rol === 'supervisor') { router.replace('/supervisor'); return; }
           setUser(userData || { nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0] });
         } catch {
           setUser({ nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0] });
