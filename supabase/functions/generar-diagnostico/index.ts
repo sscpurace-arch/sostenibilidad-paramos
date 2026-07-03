@@ -177,6 +177,16 @@ Deno.serve(async (req) => {
       };
     });
 
+    // ─── Score global: cálculo exacto en código, NO se le pide a Gemini
+    // (un LLM promediando hasta 29 números a mano comete errores; este
+    // puntaje queda guardado como dato oficial del productor) ───
+    const valoresValidos = respuestasConNombre
+      .map((r) => r.valor)
+      .filter((v): v is number => typeof v === "number");
+    const scoreGlobal = valoresValidos.length
+      ? Math.round((valoresValidos.reduce((a, b) => a + b, 0) / valoresValidos.length) * 10) / 10
+      : 0;
+
     // ─── Construir sección de comparación ────────────────
     const tieneComparacion = respuestasPrevias.length > 0;
     const comparacionTexto = tieneComparacion
@@ -228,9 +238,10 @@ INSTRUCCIONES PARA EL DIAGNÓSTICO:
 - Las recomendaciones deben ser prácticas, implementables con recursos locales del Cauca
 - Considera el contexto de los acuerdos de conservación con PNN Puracé
 
+PUNTAJE GLOBAL YA CALCULADO (no lo recalcules, solo úsalo como referencia para tu texto): ${scoreGlobal}/5
+
 Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO las llaves {}):
 {
-  "score_global": 3.5,
   "diagnostico_texto": "2-3 oraciones. Nombra al productor. Resume el estado general. ${tieneComparacion ? "Menciona la tendencia de cambio." : "Destaca aspectos de la línea base."}",
   "fortalezas": ["Máximo 3. Cada una: indicador específico (X/5) + qué significa para la conservación del páramo"],
   "debilidades": ["Máximo 3. Cada una: indicador específico (X/5) + impacto en el ecosistema o la producción"],
@@ -312,7 +323,7 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO
             debilidades: resultJson.debilidades || [],
             acciones: resultJson.recomendaciones || [],
           },
-          score_global: resultJson.score_global || 0,
+          score_global: scoreGlobal,
           modelo: GEMINI_MODEL,
           fecha: new Date().toISOString(),
         },
@@ -331,7 +342,7 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO
             debilidades: resultJson.debilidades || [],
             acciones: resultJson.recomendaciones || [],
           },
-          score_global: resultJson.score_global || 0,
+          score_global: scoreGlobal,
           modelo: GEMINI_MODEL,
         })
         .select()
