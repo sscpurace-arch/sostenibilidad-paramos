@@ -105,17 +105,22 @@ export async function middleware(request) {
 
   // Aprobación de usuarios reales (no aplica al modo prueba): sin fila en
   // `usuarios` → falta completar registro; con activo=false → pendiente.
+  // También aplica aquí (no solo en el cliente) la restricción real del rol
+  // supervisor: de nada sirve ocultarle el menú si puede escribir la URL a mano.
   if (user && !esMock) {
     const rutasExentas = ['/completar-registro', '/pendiente-aprobacion']
     const exenta = rutasExentas.some((r) => request.nextUrl.pathname.startsWith(r))
     if (!exenta) {
       try {
-        const { data: ud } = await supabase.from('usuarios').select('activo').eq('id', user.id).maybeSingle()
+        const { data: ud } = await supabase.from('usuarios').select('rol, activo').eq('id', user.id).maybeSingle()
         if (!ud) {
           return NextResponse.redirect(new URL('/completar-registro', request.url))
         }
         if (ud.activo === false) {
           return NextResponse.redirect(new URL('/pendiente-aprobacion', request.url))
+        }
+        if (ud.rol === 'supervisor' && !request.nextUrl.pathname.startsWith('/supervisor')) {
+          return NextResponse.redirect(new URL('/supervisor', request.url))
         }
       } catch {
         // Sin red o error transitorio: no bloquear al usuario por esto
