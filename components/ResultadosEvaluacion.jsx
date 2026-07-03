@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import RadarChart from '@/components/RadarChart';
 import PlanAccionSMART from '@/components/PlanAccionSMART';
-import FirmaDigital from '@/components/FirmaDigital';
+import FirmaModal from '@/components/FirmaModal';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
 import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
 import { saveRecord } from '@/lib/sync-engine';
@@ -24,6 +24,7 @@ export default function ResultadosEvaluacion({
   const [descargandoPdf, setDescargandoPdf] = useState(false);
   const [firmaTecnico, setFirmaTecnico] = useState(evaluacion?.firma_tecnico || '');
   const [firmaProductor, setFirmaProductor] = useState(evaluacion?.firma_productor || '');
+  const [modalFirmasAbierto, setModalFirmasAbierto] = useState(false);
   const { diagnostico, isLoading, isStale, error: errorIA, generarNuevo } = useDiagnostico(evaluacionId);
   // Espejo: si firmaTecnico se guarda y luego firmaProductor, el segundo guardado
   // no debe pisar el primero con el `evaluacion` prop (que nunca se refresca aquí).
@@ -36,6 +37,12 @@ export default function ResultadosEvaluacion({
   const evaluacionConFirmas = evaluacion
     ? { ...evaluacion, firma_tecnico: firmaTecnico, firma_productor: firmaProductor }
     : evaluacion;
+
+  // Etiqueta del segundo firmante: si la visita la recibió otra persona, se
+  // nombra a esa persona en vez de "Productor".
+  const labelProductor = evaluacion?.receptor_es_otro && evaluacion?.receptor_nombre
+    ? `${evaluacion.receptor_nombre.split(' ')[0]} (${evaluacion.receptor_parentesco || 'receptor'})`
+    : 'Productor';
 
   const guardarFirma = async (campo, dataUrl) => {
     firmasRef.current = { ...firmasRef.current, [campo]: dataUrl };
@@ -254,23 +261,31 @@ export default function ResultadosEvaluacion({
         />
       </div>
 
-      {/* Firmas — visibles en ambas pestañas, se guardan solas al terminar el trazo */}
+      {/* Firmas — visibles en ambas pestañas. Se firma a pantalla completa
+          (un firmante a la vez) para que sea cómodo con el dedo en el campo. */}
       <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 mt-2">
         <h3 className="text-xs font-black uppercase text-gray-400 mb-3 text-center tracking-widest">Firmas de la visita</h3>
-        <div className="grid grid-cols-2 gap-3">
-          <FirmaDigital
-            label="Técnico"
-            valorGuardado={firmaTecnico}
-            onGuardar={(v) => guardarFirma('firma_tecnico', v)}
-          />
-          <FirmaDigital
-            label={evaluacion?.receptor_es_otro && evaluacion?.receptor_nombre
-              ? `${evaluacion.receptor_nombre.split(' ')[0]} (${evaluacion.receptor_parentesco || 'receptor'})`
-              : 'Productor'}
-            valorGuardado={firmaProductor}
-            onGuardar={(v) => guardarFirma('firma_productor', v)}
-          />
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          {[
+            { valor: firmaTecnico, label: 'Técnico' },
+            { valor: firmaProductor, label: labelProductor },
+          ].map((f) => (
+            <div key={f.label} className="flex flex-col items-center gap-1.5">
+              <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest text-center leading-tight">{f.label}</span>
+              {f.valor ? (
+                <img src={f.valor} alt={`Firma ${f.label}`} className="h-16 w-full object-contain bg-white border border-gray-200 rounded-xl" />
+              ) : (
+                <div className="h-16 w-full bg-white border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-[10px] text-gray-300">Sin firmar</div>
+              )}
+            </div>
+          ))}
         </div>
+        <button
+          onClick={() => setModalFirmasAbierto(true)}
+          className="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-[#03A64A] text-white active:scale-95 transition-all shadow-md"
+        >
+          <span>✍️</span> {(firmaTecnico || firmaProductor) ? 'Volver a firmar' : 'Firmar la calificación'}
+        </button>
       </div>
 
       </div>
@@ -288,6 +303,18 @@ export default function ResultadosEvaluacion({
           Finalizar y Salir
         </button>
       </div>
+
+      {modalFirmasAbierto && (
+        <FirmaModal
+          pasos={[
+            { key: 'firma_tecnico', label: 'Firma del técnico' },
+            { key: 'firma_productor', label: `Firma del ${labelProductor === 'Productor' ? 'productor' : labelProductor}` },
+          ]}
+          valores={{ firma_tecnico: firmaTecnico, firma_productor: firmaProductor }}
+          onGuardar={guardarFirma}
+          onCerrar={() => setModalFirmasAbierto(false)}
+        />
+      )}
     </div>,
     document.body
   );
