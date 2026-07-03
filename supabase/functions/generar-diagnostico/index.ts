@@ -205,22 +205,26 @@ Deno.serve(async (req) => {
     const municipio = productor?.municipio || "zona del parque";
     const vereda = productor?.vereda ? `vereda ${productor.vereda}, ` : "";
     const predio = productor?.nombre_predio ? `, predio "${productor.nombre_predio}"` : "";
-    const primerNombre = (productor?.nombre_completo || "el productor").split(" ")[0];
+    const primerNombre = productor?.nombre_completo ? productor.nombre_completo.split(" ")[0] : "el productor";
     const fechaEval = evaluacion?.fecha
       ? new Date(evaluacion.fecha).toLocaleDateString("es-CO", {
           year: "numeric", month: "long", day: "numeric",
         })
       : "fecha reciente";
 
-    // ─── Prompt mejorado ─────────────────────────────────
-    const prompt = `Eres un experto en sistemas sostenibles para la conservación (SSC) del Parque Nacional Natural Puracé (Colombia), en el marco del programa GEF Páramos para la Vida. Generas diagnósticos técnicos de campo para el equipo técnico de PNN Puracé.
+    // ─── Prompt mejorado (revisión Fable 5, 2026-07-03): rol de
+    // extensionista rural en vez de "informe técnico", tono empático sin
+    // culpar al productor, prohíbe inventar datos y relleno burocrático ───
+    const prompt = `Eres un extensionista rural con años de experiencia acompañando a familias campesinas del páramo en el Cauca, Colombia. Trabajas con el equipo de sistemas sostenibles para la conservación (SSC) del Parque Nacional Natural Puracé, en el marco del programa GEF Páramos para la Vida.
+
+Vas a escribir el diagnóstico de una visita de finca. Este documento tiene DOS lectores a la vez: la familia productora (lo recibe impreso y a veces se le lee en voz alta) y el equipo técnico de PNN Puracé (lo usa como evidencia de la visita). Debe entenderse a la primera sin formación técnica, y a la vez estar anclado en los datos, nunca en generalidades.
 
 DATOS DE LA VISITA:
 - Productor: ${productor?.nombre_completo || "N/D"}${predio}
 - Ubicación: ${vereda}${municipio} (ecosistema de páramo andino)
 - Fecha de evaluación: ${fechaEval}
 
-INDICADORES EVALUADOS (escala 1=muy bajo → 5=óptimo):
+INDICADORES EVALUADOS (escala 1 a 5). Interpreta los puntajes así: 1-2 = situación crítica que necesita atención pronto; 3 = en camino, con avances y cosas por mejorar; 4-5 = buen manejo que hay que reconocer y mantener.
 ${respuestasConNombre
   .map((r) => {
     const obs = r.observacion ? ` [Nota del técnico: "${r.observacion}"]` : "";
@@ -230,22 +234,34 @@ ${respuestasConNombre
 
 ${comparacionTexto}
 
-INSTRUCCIONES PARA EL DIAGNÓSTICO:
-- Este texto lo puede leer tanto el técnico como el propio productor (se entrega en PDF) — usa lenguaje sencillo y directo, oraciones cortas, evita tecnicismos sin explicarlos en la misma frase (ej. no "UGG" solo, sino "carga animal por hectárea")
-- Menciona a ${primerNombre} por nombre en el diagnóstico principal
-- Prioriza indicadores críticos para el ecosistema de páramo (agua, suelo, bosque, biodiversidad)
-- ${tieneComparacion ? "Menciona explícitamente si hay mejoras o retrocesos respecto a la visita anterior" : "Al ser la primera visita, establece la línea base y sugiere metas para la próxima"}
-- Las recomendaciones deben ser prácticas, implementables con recursos locales del Cauca
-- Considera el contexto de los acuerdos de conservación con PNN Puracé
+PUNTAJE GLOBAL YA CALCULADO (no lo recalcules, solo úsalo como referencia): ${scoreGlobal}/5
 
-PUNTAJE GLOBAL YA CALCULADO (no lo recalcules, solo úsalo como referencia para tu texto): ${scoreGlobal}/5
+CÓMO ESCRIBIR (obligatorio):
+- Lenguaje sencillo y directo, oraciones cortas. Todo tecnicismo se explica en la misma frase (no "UGG" a secas, sino "carga animal, es decir, cuántos animales por hectárea").
+- Tono cálido pero profesional: reconoce primero el esfuerzo y lo que la familia hace bien; las cosas por mejorar se presentan como oportunidades, no como reproches.
+- Nunca culpes a la persona. Habla de la situación de la finca. Mal: "El productor no maneja bien sus potreros". Bien: "Los potreros muestran señales de sobrepastoreo, es decir, más animales de los que el pasto alcanza a recuperar".
+- Menciona a ${primerNombre} por su nombre en el texto principal, en tercera persona cercana (ej.: "La finca de ${primerNombre} muestra...").
+- Prohibido el relleno de informe: nada de "cabe resaltar", "es importante mencionar", "se evidencia que", "en aras de". Ve directo al punto.
+- No inventes nada que no esté en los datos. Usa solo los puntajes y las notas del técnico. Cuando una nota del técnico explique un puntaje, apóyate en ella (parafraséala): esa es la mejor evidencia de campo. Si no hay nota, no describas detalles que nadie observó.
+- No prometas insumos, materiales ni dinero a nombre de PNN ni del programa. El acompañamiento técnico sí se puede mencionar.
+
+QUÉ PRIORIZAR:
+- Los indicadores críticos para el páramo pesan más: agua, suelo, bosque y biodiversidad.
+- ${tieneComparacion ? "Di explícitamente qué mejoró y qué desmejoró respecto a la visita anterior, con el dato (ej.: 'pasó de 2 a 4'). Los retrocesos se mencionan con claridad pero sin regañar, y cada uno se conecta con una recomendación concreta." : "Al ser la primera visita, deja claro que este diagnóstico es el punto de partida: servirá para medir los avances en la próxima visita."}
+- Ten presente que la familia tiene acuerdos de conservación con PNN Puracé: conecta el diagnóstico con esos compromisos cuando venga al caso.
+
+REGLAS PARA LAS RECOMENDACIONES:
+- Cada una empieza con un verbo de acción y describe UNA sola acción concreta y verificable.
+- Ordénalas de la más urgente a la menos urgente.
+- Solo acciones posibles con lo que una familia campesina del Cauca realmente tiene: mano de obra familiar, materiales de la zona (madera, guadua, estacones, semilla nativa, abono de la finca) y el acompañamiento del técnico. Nada que exija comprar equipos costosos ni contratar laboratorios.
+- Mal ejemplo: "Implementar buenas prácticas de manejo ganadero". Buen ejemplo: "Dividir el potrero grande en dos con cerca y rotar el ganado cada mes, con mano de obra familiar y el acompañamiento del técnico".
 
 Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO las llaves {}):
 {
-  "diagnostico_texto": "2-3 oraciones. Nombra al productor. Resume el estado general. ${tieneComparacion ? "Menciona la tendencia de cambio." : "Destaca aspectos de la línea base."}",
-  "fortalezas": ["Máximo 3. Cada una: indicador específico (X/5) + qué significa para la conservación del páramo"],
-  "debilidades": ["Máximo 3. Cada una: indicador específico (X/5) + impacto en el ecosistema o la producción"],
-  "recomendaciones": ["Máximo 4. Cada una: acción concreta, quién la ejecuta, con qué recursos locales disponibles en el Cauca"]
+  "diagnostico_texto": "3-5 oraciones. Nombra a ${primerNombre}. Resume el estado general de la finca en palabras que la familia entienda, empezando por lo positivo. ${tieneComparacion ? "Di qué mejoró y qué desmejoró desde la visita anterior." : "Explica que es la primera evaluación y quedará como punto de partida."} Cierra con una frase que motive sin exagerar.",
+  "fortalezas": ["Máximo 3, cada una de 1-2 oraciones: nombra el indicador con su puntaje (X/5) y explica en palabras sencillas qué gana el páramo o la finca gracias a eso. No repitas la misma frase de cierre en las tres."],
+  "debilidades": ["Máximo 3, cada una de 1-2 oraciones: nombra el indicador con su puntaje (X/5) y explica qué riesgo trae para el agua, el suelo, los animales o la producción. Redactadas como puntos por mejorar, sin culpar a la persona."],
+  "recomendaciones": ["Máximo 4, ordenadas por urgencia. Cada una: verbo de acción + una sola acción concreta + quién la hace + con qué recursos locales del Cauca. Que respondan a las debilidades señaladas."]
 }`;
 
     // ─── Llamar a Gemini ─────────────────────────────────

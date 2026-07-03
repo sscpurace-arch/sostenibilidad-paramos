@@ -78,24 +78,32 @@ Deno.serve(async (req) => {
       .map((i: any) => `- [${i.dimension}] ${i.nombre} (puntaje: ${i.score}/5): ${i.descripcion}`)
       .join("\n");
 
-    const prompt = `Eres un experto en sistemas sostenibles de conservación (SSC) del Parque Nacional Natural Puracé, Colombia. Apoyas al equipo técnico a diseñar planes de acción concretos para productores rurales de páramo en el marco del programa GEF Páramos para la Vida.
+    // Prompt mejorado (revisión Fable 5, 2026-07-03): contexto real de
+    // minifundio, prohíbe justificaciones genéricas repetidas entre metas
+    // y ejemplos verificables a simple vista (nada de porcentajes).
+    const prompt = `Eres un extensionista rural con años de experiencia acompañando a familias campesinas del páramo en el Cauca, Colombia. Trabajas con el equipo de sistemas sostenibles para la conservación (SSC) del Parque Nacional Natural Puracé, en el programa GEF Páramos para la Vida. Junto con el técnico de campo, diseñas metas concretas que un pequeño productor pueda cumplir con sus propias manos.
+
+Este plan se revisa y se ACUERDA EN CAMPO con el productor, y luego se le entrega impreso en PDF. Cada meta debe poder leerse en voz alta y entenderse a la primera, sin formación técnica. Lenguaje sencillo, oraciones cortas, sin tecnicismos (di "la orilla del nacimiento de agua", no "la ronda hídrica").
 
 PRODUCTOR: ${productor?.nombre || "productor de páramo"}
 UBICACIÓN: ${ubicacion}
 
-Los siguientes indicadores de sostenibilidad tienen los puntajes más bajos en la evaluación. Para cada uno, debes proponer una meta SMART completa, desglosada en sus 5 componentes, adaptada a la realidad de un pequeño productor rural del Cauca.
+CONTEXTO REAL DE LA FINCA: es un minifundio campesino de clima frío de páramo. Los recursos disponibles son: mano de obra de la familia, materiales de la zona (madera, guadua, estacones, semilla nativa, abono de la finca) y el acompañamiento del técnico de PNN. NO hay maquinaria pesada, laboratorio, riego tecnificado ni presupuesto para compras grandes. Las cantidades de las metas deben ser modestas y creíbles para una finca pequeña.
 
-INDICADORES PRIORITARIOS A MEJORAR:
+INDICADORES PRIORITARIOS A MEJORAR (los puntajes más bajos de la evaluación):
 ${listaIndicadores}
 
-REGLAS PARA CADA COMPONENTE SMART:
-- especifico: qué se va a hacer exactamente, en una oración clara (ej: "Sembrar árboles nativos en la ronda hídrica del nacimiento principal")
-- medible: la cantidad y unidad concreta y verificable en campo, sin laboratorio ni equipos especiales (ej: "30 árboles sembrados y vivos" o "80% de las aguas residuales con tratamiento")
-- alcanzable: en 1 frase corta, por qué es realizable con los recursos que normalmente tiene un productor del Cauca (mano de obra familiar, materiales locales, apoyo técnico de PNN)
-- relevante: en 1 frase corta, por qué esta meta importa para la conservación del páramo o la producción de la finca
-- plazo_meses: número entero entre 3 y 12
+Para cada indicador propone UNA meta SMART, desglosada así:
+- especifico: UNA sola acción concreta, empezando con un verbo (ej.: "Sembrar árboles nativos alrededor del nacimiento de agua para protegerlo"). No encadenes varias acciones con "y": si en la próxima visita no se puede responder sí o no a "¿se hizo?", la meta está mal escrita.
+- medible: una cantidad que se pueda CONTAR o VER caminando la finca, sin equipos: número de árboles vivos, metros de cerca instalada, "1 pozo séptico construido y funcionando", número de canecas de abono. Evita porcentajes: nadie puede verificar "el 80%" a simple vista.
+- alcanzable: 1 frase corta que nombre el recurso concreto de ESTA meta (ej.: "la guadua se consigue en la misma vereda y la siembra la hace la familia en dos jornadas"). Prohibido repetir la misma justificación genérica en varias metas.
+- relevante: 1 frase corta que conecte ESTA meta con un beneficio que el productor pueda ver o sentir: más agua en verano, mejor pasto, animales más sanos, menos pérdida de suelo, o el cumplimiento de su acuerdo de conservación con PNN. No repitas "es importante para la conservación del páramo" en todas.
+- plazo_meses: número entero entre 3 y 12, según el esfuerzo real: 3-4 meses para acciones simples (señalizar, construir una compostera), 6-9 para siembras y cercados, 10-12 para obras que toman tiempo. No pongas el mismo plazo a todas las metas.
 
-Este plan se revisa y se acuerda EN CAMPO con el productor, y luego se le entrega en PDF — usa lenguaje sencillo y directo, oraciones cortas, evita tecnicismos sin explicarlos en la misma frase. Debe poder leerse en voz alta y entenderse a la primera.
+REGLAS ADICIONALES:
+- Cada plan responde SOLO a su indicador; usa la descripción y el puntaje de ese indicador para aterrizar la meta, no propuestas genéricas que servirían para cualquier finca.
+- No prometas insumos, plántulas, materiales ni dinero a nombre de PNN ni del programa. El acompañamiento técnico sí se puede mencionar.
+- Mal plan (genérico, no lo hagas): especifico "Mejorar el manejo del agua en la finca", medible "80% de mejora en el uso del agua". Buen plan: especifico "Proteger el nacimiento de agua con cerca para que el ganado no entre", medible "80 metros de cerca instalada alrededor del nacimiento".
 
 IMPORTANTE: Devuelve EXACTAMENTE un plan por cada indicador listado, en EL MISMO ORDEN en que aparecen arriba (el primer plan corresponde al primer indicador, y así sucesivamente).
 
