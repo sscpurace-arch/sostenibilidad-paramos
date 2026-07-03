@@ -118,7 +118,7 @@ export default function ResultadosEvaluacion({
           <div className="mb-6">
             {!diagnostico ? (
               <button
-                onClick={() => generarNuevo({ productor, detalles })}
+                onClick={() => generarNuevo({ productor, detalles, lastResults })}
                 disabled={isLoading}
                 className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${
                   isLoading ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white active:scale-95'
@@ -218,7 +218,7 @@ export default function ResultadosEvaluacion({
             {errorIA && (
               <div className="mt-3 flex flex-col items-center gap-2">
                 <p className="text-center text-xs text-red-500 font-medium">⚠️ {errorIA}</p>
-                <button onClick={() => generarNuevo({ productor, detalles })} disabled={isLoading} className="text-xs font-bold text-blue-600 underline hover:no-underline disabled:opacity-50">
+                <button onClick={() => generarNuevo({ productor, detalles, lastResults })} disabled={isLoading} className="text-xs font-bold text-blue-600 underline hover:no-underline disabled:opacity-50">
                   Reintentar
                 </button>
               </div>

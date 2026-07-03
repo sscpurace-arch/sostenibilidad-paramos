@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ success: false, error: "JSON inválido en request" }, 400);
     }
 
-    const { evaluacion_id, is_mock, datos_locales } = body;
+    const { evaluacion_id, is_mock, datos_locales, respuestas_previas } = body;
     if (!evaluacion_id) {
       return jsonResponse({ success: false, error: "evaluacion_id requerido" }, 400);
     }
@@ -161,6 +161,17 @@ Deno.serve(async (req) => {
           .eq("evaluacion_id", evalAnterior.id);
         respuestasPrevias = prev || [];
       }
+    }
+
+    // ─── Fallback de comparación: si el servidor no halló evaluación anterior
+    // (típico en modo prueba, o cuando la previa es es_prueba/no-enviada), pero
+    // el cliente SÍ tiene datos comparativos (los mismos que ya pinta en pantalla
+    // como "Anterior" / ↑↓), usarlos. Así el texto de la IA coincide con lo que
+    // ve el productor y deja de decir "primera visita" cuando hay histórico. ───
+    if (respuestasPrevias.length === 0 && Array.isArray(respuestas_previas) && respuestas_previas.length) {
+      respuestasPrevias = respuestas_previas
+        .filter((r: any) => r && r.valor != null && r.indicador_id != null)
+        .map((r: any) => ({ valor: Number(r.valor), indicador_id: Number(r.indicador_id) }));
     }
 
     // ─── Combinar respuestas con nombres e indicadores ───
