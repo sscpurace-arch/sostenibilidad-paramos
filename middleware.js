@@ -55,6 +55,7 @@ export async function middleware(request) {
   )
 
   let user = null
+  let esMock = false
   const mockCookie = request.cookies.get('mock-user-session')?.value
   if (mockCookie) {
     // Sesión de prueba: solo válida si tiene expiración vigente. Si está
@@ -68,6 +69,7 @@ export async function middleware(request) {
       }
       if (parsed?.exp && Date.now() < parsed.exp) {
         user = parsed
+        esMock = true
       } else {
         response.cookies.set({ name: 'mock-user-session', value: '', path: '/', maxAge: 0 })
       }
@@ -99,6 +101,26 @@ export async function middleware(request) {
   // Si hay usuario y está en /login, redirigir a /
   if (user && request.nextUrl.pathname.startsWith('/login')) {
     return NextResponse.redirect(new URL('/', request.url))
+  }
+
+  // Aprobación de usuarios reales (no aplica al modo prueba): sin fila en
+  // `usuarios` → falta completar registro; con activo=false → pendiente.
+  if (user && !esMock) {
+    const rutasExentas = ['/completar-registro', '/pendiente-aprobacion']
+    const exenta = rutasExentas.some((r) => request.nextUrl.pathname.startsWith(r))
+    if (!exenta) {
+      try {
+        const { data: ud } = await supabase.from('usuarios').select('activo').eq('id', user.id).maybeSingle()
+        if (!ud) {
+          return NextResponse.redirect(new URL('/completar-registro', request.url))
+        }
+        if (ud.activo === false) {
+          return NextResponse.redirect(new URL('/pendiente-aprobacion', request.url))
+        }
+      } catch {
+        // Sin red o error transitorio: no bloquear al usuario por esto
+      }
+    }
   }
 
   return response
