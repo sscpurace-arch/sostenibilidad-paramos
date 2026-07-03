@@ -348,6 +348,10 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO
 
     // ─── Guardar en BD ───────────────────────────────────
     try {
+      // onConflict: "evaluacion_id" es OBLIGATORIO. La tabla tiene UNIQUE en
+      // evaluacion_id; sin esto el upsert intenta INSERT y, si ya existe un
+      // diagnóstico para esa evaluación (2da generación / botón Reintentar),
+      // revienta con "duplicate key 23505". Con onConflict, ACTUALIZA la fila.
       const { data: diag, error: saveError } = await supabase
         .from("diagnosticos")
         .upsert({
@@ -360,7 +364,7 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO
           },
           score_global: scoreGlobal,
           modelo: GEMINI_MODEL,
-        })
+        }, { onConflict: "evaluacion_id" })
         .select()
         .single();
 
