@@ -95,7 +95,7 @@ REGLAS PARA CADA COMPONENTE SMART:
 - relevante: en 1 frase corta, por qué esta meta importa para la conservación del páramo o la producción de la finca
 - plazo_meses: número entero entre 3 y 12
 
-Tono técnico pero claro, para técnicos de campo y productores de PNN Puracé.
+Este plan se revisa y se acuerda EN CAMPO con el productor, y luego se le entrega en PDF — usa lenguaje sencillo y directo, oraciones cortas, evita tecnicismos sin explicarlos en la misma frase. Debe poder leerse en voz alta y entenderse a la primera.
 
 IMPORTANTE: Devuelve EXACTAMENTE un plan por cada indicador listado, en EL MISMO ORDEN en que aparecen arriba (el primer plan corresponde al primer indicador, y así sucesivamente).
 

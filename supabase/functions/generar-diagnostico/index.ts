@@ -221,7 +221,7 @@ ${respuestasConNombre
 ${comparacionTexto}
 
 INSTRUCCIONES PARA EL DIAGNÓSTICO:
-- Dirígete al informe para el técnico de campo (no para el productor)
+- Este texto lo puede leer tanto el técnico como el propio productor (se entrega en PDF) — usa lenguaje sencillo y directo, oraciones cortas, evita tecnicismos sin explicarlos en la misma frase (ej. no "UGG" solo, sino "carga animal por hectárea")
 - Menciona a ${primerNombre} por nombre en el diagnóstico principal
 - Prioriza indicadores críticos para el ecosistema de páramo (agua, suelo, bosque, biodiversidad)
 - ${tieneComparacion ? "Menciona explícitamente si hay mejoras o retrocesos respecto a la visita anterior" : "Al ser la primera visita, establece la línea base y sugiere metas para la próxima"}
