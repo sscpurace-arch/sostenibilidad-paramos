@@ -29,6 +29,14 @@ export default function ResultadosEvaluacion({
   // no debe pisar el primero con el `evaluacion` prop (que nunca se refresca aquí).
   const firmasRef = useRef({ firma_tecnico: evaluacion?.firma_tecnico || '', firma_productor: evaluacion?.firma_productor || '' });
 
+  // El PDF del plan de acción necesita las firmas más recientes, pero `evaluacion`
+  // es la copia que cargó page.jsx al entrar a esta pantalla y nunca se refresca
+  // cuando el usuario firma aquí mismo — sin esto, el botón "Descargar PDF" seguía
+  // bajando el PDF con las líneas de firma en blanco aunque ya se hubiera firmado.
+  const evaluacionConFirmas = evaluacion
+    ? { ...evaluacion, firma_tecnico: firmaTecnico, firma_productor: firmaProductor }
+    : evaluacion;
+
   const guardarFirma = async (campo, dataUrl) => {
     firmasRef.current = { ...firmasRef.current, [campo]: dataUrl };
     if (campo === 'firma_tecnico') setFirmaTecnico(dataUrl);
@@ -241,7 +249,7 @@ export default function ResultadosEvaluacion({
           indicadores={indicadores}
           detalles={detalles}
           evaluacionId={evaluacionId}
-          evaluacion={evaluacion}
+          evaluacion={evaluacionConFirmas}
           productor={productor}
         />
       </div>
