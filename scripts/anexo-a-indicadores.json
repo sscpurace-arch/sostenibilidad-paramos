@@ -1,0 +1,1222 @@
+[
+  {
+    "numero": 1,
+    "nombre": "Protección de fuentes de agua",
+    "dimension": "Socioambiental",
+    "descripcion": "Se refiere a todas las actividades que garanticen la PROTECCIÓN de las fuentes de agua (nacimientos y cauces de ríos y quebradas). Se entiende por PROTEGER evitar que las aguas y bosques ribereños se afecten por alguna causa como deforestación, entrada de ganado o intervención humana y que se usen obras de protección como cercas, aislamientos, cerramientos o rondas.",
+    "ajustes": "acueducto rural = 3; canal abierto o bombeo = 2; acarreo = 1.",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Hay protección mayor al 81% de las fuentes de agua"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Entre el 61 y 80%"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Entre el 41 y 60%"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Entre el 21 y 40%"
+      },
+      {
+        "nivel": "1",
+        "situacion": "La protección es menor del 20%"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántos nacimientos de agua y cuántos cauces de ríos o quebradas hay en el predio?",
+      "¿Qué proporción de esos nacimientos y cauces está efectivamente cercada o aislada del ganado?",
+      "¿Existe vegetación ribereña (bosque de ronda) en los nacimientos y cauces, o están descubiertos?",
+      "¿El ganado bebe directamente de las fuentes o se ha implementado un bebedero alternativo?",
+      "¿Se observan signos de pisoteo del ganado en las riberas (barro, erosión, heces cerca del agua)?",
+      "¿Hay evidencia de deforestación reciente en las riberas?"
+    ],
+    "recomendaciones": [
+      "Recorra el predio con el productor y pida que le muestre todos los nacimientos y cauces. Estime visualmente el % cercado.",
+      "Calcule: (nº de fuentes protegidas / nº total de fuentes) × 100.",
+      "Verifique físicamente que las cercas estén en buen estado; una cerca rota no cuenta como protección efectiva.",
+      "Considere como \"protección\" solo aquella que impide efectivamente el ingreso del ganado.",
+      "Si el predio tiene acueducto rural sin fuentes propias, califique en 3 según el ajuste contextual."
+    ]
+  },
+  {
+    "numero": 2,
+    "nombre": "Disponibilidad y calidad de agua",
+    "dimension": "Socioambiental",
+    "descripcion": "Se tiene acceso al agua suficiente, de buena calidad y permanente para abastecer las necesidades domésticas y agropecuarias. Sí los tres criterios están satisfechos, puntuación máxima.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "La finca cuenta con agua permanente, suficiente caudal y de buena calidad"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Agua permanente, bajo caudal y de buena calidad"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Agua permanente, con bajo caudal y de mala calidad"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Intermitencia y con bajo caudal de agua y de mala calidad"
+      },
+      {
+        "nivel": "1",
+        "situacion": "La finca NO cuenta con agua durante cierta época del año"
+      }
+    ],
+    "preguntas": [
+      "¿El agua llega todo el año o hay épocas en que se seca o se reduce drásticamente?",
+      "¿El caudal es suficiente para consumo doméstico + agropecuario, o se raciona?",
+      "¿El agua es transparente, sin olor y sin sabor extraño? ¿Se realiza algún tratamiento?",
+      "¿Ha habido eventos de enfermedad gastrointestinal en la familia atribuibles al agua?",
+      "¿El almacenamiento (tanques, cántaros) está cubierto y protegido de contaminación?"
+    ],
+    "recomendaciones": [
+      "Pregunte al productor por la época más seca del año y cómo manejó el agua en esa época.",
+      "Observe el punto de captación y el almacenamiento: tanques destapados, con algas o heces indican mala calidad.",
+      "Si el productor declara \"buena calidad\" pero no hace tratamiento y el agua tiene turbiedad, califique en 3 máximo.",
+      "La \"intermitencia\" significa cortes de varias horas o días; si solo son variaciones estacionales de caudal pero el agua no falta, evalúe según caudal."
+    ]
+  },
+  {
+    "numero": 3,
+    "nombre": "Manejo de agua",
+    "dimension": "Socioambiental",
+    "descripcion": "El método de aprovisionamiento de agua para las actividades domésticas y agropecuarias es adecuado (canal abierto, bombeo, acarreo, acueducto rural, u otros), además las fuentes de agua están protegidas con cercas y no hay deforestación.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "La finca cuenta con solución de agua, las fuentes se encuentran protegidas con cercas y no se realiza deforestación"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Canal abierto, fuentes conservadas, sin protección y sin deforestación"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Bombeo, las fuentes no se protegen, sin deforestación"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Acequia, fuentes no protegidas con cercas y se realiza deforestación"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Se acarrea el agua y/o se cuenta con aljibe, no hay fuentes y se realiza deforestación"
+      }
+    ],
+    "preguntas": [
+      "¿Cómo se abastece de agua la finca: acueducto rural, canal abierto, bombeo, acequia, acarreo, aljibe?",
+      "¿Las fuentes de abastecimiento están cercadas o el ganado tiene acceso directo?",
+      "¿Hay tala de bosque en la zona de captación o en las riberas?",
+      "¿El sistema de conducción está en buen estado o hay fugas y contaminación?",
+      "¿Se ha implementado cosecha de agua (techos, canaletas, tanques) como solución complementaria?"
+    ],
+    "recomendaciones": [
+      "Identifique el método principal de aprovisionamiento antes de calificar.",
+      "Verifique simultáneamente el estado de las fuentes y la presencia/ausencia de deforestación; ambos criterios definen el nivel.",
+      "Si hay acueducto ganadero implementado con kit SSC, evalúe si las fuentes originales quedaron efectivamente protegidas.",
+      "La cosecha de agua de techos es una solución que, combinada con protección de fuentes, permite aspirar a niveles 4-5."
+    ]
+  },
+  {
+    "numero": 4,
+    "nombre": "Disposición y tratamiento de aguas residuales",
+    "dimension": "Socioambiental",
+    "descripcion": "Se realiza un tratamiento y manejo de aguas sucias (aguas utilizadas en procesos domésticos y agropecuarias) para una adecuada disposición final.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Tratamiento con trampa de grasa con filtro, pozo séptico y tanque de sedimentación u ordeño en campo"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Tratamiento y vierte a pozo séptico (negras y grises) y acequia (agropecuarias)"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Negras a letrina, grises sin tratamiento a fuente hídrica, agropecuarias a acequia"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Tienen tratamiento pero se vierten a una fuente hídrica"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No tienen tratamiento y se vierten directamente a una fuente hídrica"
+      }
+    ],
+    "preguntas": [
+      "¿Dónde van las aguas negras (inodoro) de la casa? ¿Hay pozo séptico, letrina, alcantarillado?",
+      "¿Dónde van las aguas grises (lavadero, ducha, cocina)? ¿Tienen trampa de grasa o filtro?",
+      "¿Dónde se lavan los utensilios de ordeño y dónde va el agua residual del ordeño?",
+      "¿Las aguas del ordeño llegan a una fuente hídrica directamente?",
+      "¿Hay presencia de malos olores o residuos sólidos en las quebradas cercanas?"
+    ],
+    "recomendaciones": [
+      "Pida al productor que le muestre el punto de disposición de las aguas negras y de las grises.",
+      "Verifique físicamente la existencia y estado del pozo séptico, letrina o trampa de grasa.",
+      "Para el componente agropecuario, priorice el agua del ordeño: si se vierte directa a quebrada, baje la calificación.",
+      "Recuerde que el nivel 5 requiere tratamiento diferenciado (grises vs negras vs agropecuarias)."
+    ]
+  },
+  {
+    "numero": 5,
+    "nombre": "Manejo del suelo",
+    "dimension": "Socioambiental",
+    "descripcion": "Se refiere a todas las actividades que garanticen un adecuado uso del suelo. Se entiende por manejo adecuado del suelo prácticas de conservación que eviten la erosión y que el suelo tenga alta cobertura vegetal.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "No se hacen quemas, alta cobertura vegetal del suelo y pendientes moderadas"
+      },
+      {
+        "nivel": "4",
+        "situacion": "No se hacen quemas, cobertura media y pendiente moderada"
+      },
+      {
+        "nivel": "3",
+        "situacion": "No se hacen quemas y la cobertura del suelo es baja"
+      },
+      {
+        "nivel": "2",
+        "situacion": "No se hacen quemas, mínima cobertura y pendiente severa"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Se hacen quemas, baja cobertura y muy severa pendiente"
+      }
+    ],
+    "preguntas": [
+      "¿Se realizan quemas en el predio (para renovar pastos, limpiar potreros, eliminar residuos)? ¿Con qué frecuencia?",
+      "¿Qué proporción del suelo está cubierta por vegetación vs suelo desnudo?",
+      "¿Las pendientes son moderadas (<15%), fuertes (15-30%) o severas (>30%)?",
+      "¿Se observan cárcavas, surcos de erosión o cárcavas activas?",
+      "¿Se usan prácticas de conservación (terrazas, curvas a nivel, barreras vivas, zanjas)?"
+    ],
+    "recomendaciones": [
+      "Pregunte abiertamente sobre quemas (no asuma que no se hacen). En muchos predios la práctica persiste pese a estar prohibida.",
+      "Observe el color del suelo: oscuro y con estructura granular indica buena cobertura; pálido y compactado indica lo contrario.",
+      "Camine por los potreros más altos y de mayor pendiente para verificar cobertura; no califique solo desde el camino.",
+      "Las cárcavas activas son señal de manejo deficiente, incluso sin quemas."
+    ]
+  },
+  {
+    "numero": 6,
+    "nombre": "Fertilidad",
+    "dimension": "Socioambiental",
+    "descripcion": "El suelo presenta buenas propiedades químicas, físicas y biológicas para el desarrollo de actividades productivas.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Según análisis de suelos no requiere insumos, sin encharcamiento/resequedad y alta actividad biológica"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Fertilización según análisis de suelos, requiere insumos, sin encharcamiento y alta actividad biológica"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Fertilización basado en experiencia del productor, sin encharcamiento y media actividad biológica"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Fertilización por moda o voz a voz, sin severidad de encharcamiento y baja actividad biológica"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Fertilización sin análisis de suelos, hay encharcamiento o resequedad y baja actividad biológica"
+      }
+    ],
+    "preguntas": [
+      "¿Ha realizado análisis de suelos en el predio? ¿Cuándo fue el último y dónde está el resultado?",
+      "¿Cómo decide qué abono o fertilizante aplicar: por análisis, por experiencia propia, por recomendación del vecino?",
+      "¿Se observan lombrices, raíces finas y materia orgánica descompuesta al cavar una calicata?",
+      "¿Hay zonas encharcadas (pérdida de oxígeno, olor fétido) o resecas (grietas, suelo polvoriento)?",
+      "¿Qué tipo de fertilización usa: química, orgánica (compost, estiércol), mixta?"
+    ],
+    "recomendaciones": [
+      "Pida ver el resultado del último análisis de suelos si lo hay. La fecha del análisis importa: uno de hace 5 años pierde vigencia.",
+      "Haga una pequeña calicata (10-15 cm) en un potrero representativo para observar actividad biológica.",
+      "Distinga \"experiencia del productor\" (nivel 3) de \"moda o voz a voz\" (nivel 2).",
+      "Si solo el 8% de los predios hace análisis de suelos, espere muchas calificaciones en 1-2; esto es parte del diagnóstico."
+    ]
+  },
+  {
+    "numero": 7,
+    "nombre": "Manejo del bosque",
+    "dimension": "Ambiental",
+    "descripcion": "Se refiere a todas las actividades tendientes al manejo adecuado del bosque: incremento, enriquecimiento, conservación y aprovechamiento sostenible de las áreas boscosas existentes.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Se protege, aprovechamiento sostenible, enriquecimiento con especies nativas, regeneración natural y mantiene conexión con otros bosques"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Se protege parcialmente, aprovechamiento sostenible, regeneración natural pero no existe conectividad"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Se protege parcialmente, aprovechamiento sostenible, NO enriquecimiento y se permite regeneración natural"
+      },
+      {
+        "nivel": "2",
+        "situacion": "NO se protege, aprovechamiento y NO enriquecimiento y NO regeneración natural"
+      },
+      {
+        "nivel": "1",
+        "situacion": "NO se protege, aprovechamiento indiscriminado y NO enriquecimiento ni regeneración natural"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántas hectáreas de bosque hay en el predio y de qué tipo (andino, altoandino, ripario)?",
+      "¿El bosque está protegido del pastoreo del ganado y de la extracción?",
+      "¿Se extraen productos del bosque (leña, postes, plantas medicinales)? ¿Con qué planificación?",
+      "¿Se han sembrado especies nativas para enriquecer el bosque (Aliso, Laurel de Cera, Arrayán, Pelotillo)?",
+      "¿Hay regeneración natural visible (plántulas, individuos jóvenes)?",
+      "¿El bosque del predio se conecta físicamente con bosques de predios vecinos?"
+    ],
+    "recomendaciones": [
+      "Camine el borde del bosque y el interior si es posible. La regeneración natural se observa en el sotobosque.",
+      "Para \"conectividad\", observe desde un punto alto si el bosque del predio se conecta con otros relictos visibles.",
+      "\"Aprovechamiento sostenible\" implica planificación; el indiscriminado es señal de nivel 1.",
+      "El enriquecimiento con especies nativas debe ser intencional y visible, no atribuirlo a regeneración natural."
+    ]
+  },
+  {
+    "numero": 8,
+    "nombre": "Árboles en potreros",
+    "dimension": "Ambiental",
+    "descripcion": "Se refiere a la presencia de árboles distribuidos por hectárea en potreros (árboles dispersos, franjas de árboles o en cualquier arreglo espacial). Estos pueden ser plantados o a partir de regeneración natural y pueden ser nativos o introducidos.",
+    "ajustes": "Calificación para Trópico alto. Para Trópico bajo los rangos son diferentes.",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Entre 70 y 100 árboles/ha"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Entre 30 y 69"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Entre 10 y 29"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Entre 5 y 9"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Menor de 5"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántos potreros hay en el predio y cuántas hectáreas en total de pastoreo?",
+      "¿Cuántos árboles hay dispersos en los potreros (estimación)?",
+      "¿Los árboles son nativos (Aliso, Laurel, Arrayán, Pelotillo) o introducidos (ciprés, pino, eucalipto)?",
+      "¿Hay franjas de árboles dentro de los potreros (cortavientos, división)?",
+      "¿Los árboles están establecidos o son plántulas recién sembradas?"
+    ],
+    "recomendaciones": [
+      "Estime árboles/ha mediante conteo en un potrero representativo y extrapolación.",
+      "Distinga árboles dispersos en potrero (cuentan) de árboles en linderos externos (no cuentan, van a cercas vivas).",
+      "Las plántulas recién sembradas (kit SSP) aún no cuentan como árboles establecidos; espere al menos 6 meses a 1 año.",
+      "Si el predio no tiene potreros (solo pastoreo libre), califique según densidad equivalente en el área de pastoreo."
+    ]
+  },
+  {
+    "numero": 9,
+    "nombre": "Cercas vivas",
+    "dimension": "Ambiental",
+    "descripcion": "Se refiere a la utilización de árboles en las cercas de divisiones de potreros y linderos, como un medio para disminuir la presión hacia los bosques, proveer sombra y alimento para los animales.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Mayor del 50%"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Entre el 25 y 49%"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Entre el 10 y 24%"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Entre el 5 y 9%"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Es menor del 5%"
+      }
+    ],
+    "preguntas": [
+      "¿Qué longitud total de cercas tiene el predio (linderos + divisiones)?",
+      "¿En qué porcentaje de las cercas hay árboles establecidos como postes vivos o como cercas vivas continuas?",
+      "¿Las cercas vivas son de especies nativas o introducidas?",
+      "¿Se han sembrado árboles en cercas como parte del kit SSP? ¿Están establecidos?",
+      "¿Los postes vivos reemplazan a postes muertos o son complementarios?"
+    ],
+    "recomendaciones": [
+      "Camine los linderos principales y las divisiones internas; cuente árboles establecidos en la línea de cerca.",
+      "Estime el % de cercas con árboles respecto al total de cercas del predio.",
+      "Los árboles en cercas vivas deben estar establecidos y funcionando como tales; plántulas recién sembradas no consolidan la cerca viva.",
+      "Si el predio tiene 1.500 m de cerca eléctrica del kit SSP sin árboles establecidos aún, evalúe la cerca viva real, no la potencial."
+    ]
+  },
+  {
+    "numero": 10,
+    "nombre": "Uso de fertilizantes, herbicidas y pesticidas",
+    "dimension": "Ambiental",
+    "descripcion": "Se refiere al uso de abonos, herbicidas y pesticidas en la finca, con el fin de causar el menor impacto negativo en el medio. (Que no sean de categoría toxicológica I y II).",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "No usa herbicidas ni pesticidas químicos y usa productos de origen biológico u orgánico"
+      },
+      {
+        "nivel": "4",
+        "situacion": "No usa productos de la docena sucia y usa categoría III y IV, eventualmente biológicos"
+      },
+      {
+        "nivel": "3",
+        "situacion": "No usa productos de la docena sucia y utiliza categoría III y IV, no usa biológicos"
+      },
+      {
+        "nivel": "2",
+        "situacion": "No utiliza productos de la docena sucia y usa categoría I y II"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Hace uso de herbicidas y pesticidas de la docena sucia y categoría I y II"
+      }
+    ],
+    "preguntas": [
+      "¿Qué productos agroquímicos usa en el predio (herbicidas, pesticidas, fertilizantes)? Pida nombres comerciales.",
+      "¿Conoce la categoría toxicológica de los productos que usa (I, II, III, IV)?",
+      "¿Usa productos biológicos u orgánicos (compost, estiércol, hongos, bacterias, extractos vegetales)?",
+      "¿Cómo almacena y dispone los envases vacíos de agroquímicos?",
+      "¿Ha oído hablar de la \"docena sucia\" (lista internacional de plaguicidas altamente peligrosos)?"
+    ],
+    "recomendaciones": [
+      "Lleve una lista de los productos de la \"docena sucia\" para verificar en campo.",
+      "Pida ver los envases de los productos que usa; la etiqueta indica categoría toxicológica con banda de color (roja = I, amarilla = II, azul = III, verde = IV).",
+      "Si usa glifosato pero no otros de la docena sucia, califique según el resto de productos.",
+      "El compromiso del Acuerdo de Paletará de evitar fumigaciones con tóxicos hace de este indicador un verificador de cumplimiento."
+    ]
+  },
+  {
+    "numero": 11,
+    "nombre": "Fauna nativa y silvestre",
+    "dimension": "Ambiental",
+    "descripcion": "Hay circulación de fauna nativa, silvestre y/o migratoria, asociada a las áreas boscosas, arreglos forestales, cuerpos de agua, donde encuentran refugio permanente y seguro y no se hace cacería ni pesca de fauna protegida o en peligro de extinción.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Permanentemente hay tránsito de fauna en el predio y no se realiza cacería"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Hay tránsito de fauna en el predio y no se realiza cacería"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Hay tránsito de fauna en el predio y se realiza cacería"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Eventualmente hay tránsito de fauna en el predio y se realiza cacería"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No hay tránsito de fauna en el predio"
+      }
+    ],
+    "preguntas": [
+      "¿Qué animales silvestres se observan en el predio (oso, danta, venados, aves, roedores, reptiles)?",
+      "¿Con qué frecuencia se observan (diaria, semanal, mensual, ocasional)?",
+      "¿Hay huellas, excretas, rastros o comederos que confirmen el tránsito de fauna?",
+      "¿Se practica cacería en el predio o en predios vecinos? ¿De qué especies?",
+      "¿Ha habido eventos de depredación de ganado por oso o puma? ¿Cómo se manejan?"
+    ],
+    "recomendaciones": [
+      "En contexto de conflicto oso-ganadería, sea cuidadoso con la pregunta sobre cacería: enmarque como \"manejo de la fauna\".",
+      "Las huellas y rastros son evidencia más confiable que los avistamientos; pida verlos si el productor los conoce.",
+      "La presencia de oso andino o danta, aunque genere conflicto, es señal de tránsito de fauna y debe calificarse en 3 mínimo si no hay cacería retaliativa.",
+      "Si el predio está completamente rodeado de potreros sin bosque, espere calificaciones bajas (1-2)."
+    ]
+  },
+  {
+    "numero": 12,
+    "nombre": "Reciclaje-reutilización de residuos líquidos y sólidos",
+    "dimension": "Ambiental",
+    "descripcion": "La finca tiene implementadas formas de reciclaje y reutilización para todos los residuos sólidos (orgánicos e inorgánicos) y líquidos.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Si reciclan y reutilizan el 100% de los residuos"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Si reciclan y reutilizan más de la mitad (>50%)"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Si reciclan y reutilizan menos de la mitad (<50%)"
+      },
+      {
+        "nivel": "2",
+        "situacion": "No le dan utilidad, son reciclados y reutilizados por un tercero"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No le dan utilidad y tienen una inadecuada disposición final"
+      }
+    ],
+    "preguntas": [
+      "¿Qué hace con los residuos orgánicos (restos de comida, estiércol, restos de cosecha)? ¿Compostaje, alimentación animal, quema, vertimiento?",
+      "¿Qué hace con los residuos inorgánicos (plásticos, vidrio, metal, papel)?",
+      "¿Qué hace con los envases de agroquímicos? ¿Los lava, los almacena, los entrega a algún programa (Campo Limpio)?",
+      "¿Hay un punto de separación de residuos en la casa y en las áreas de producción?",
+      "¿Se reutiliza el agua residual para riego, limpieza u otros fines?"
+    ],
+    "recomendaciones": [
+      "Pida ver el sitio de disposición de residuos; un predio sin sitio definido suele estar en nivel 1-2.",
+      "Los envases de agroquímicos son el punto crítico: si se queman o se entierran en el predio, baje la calificación.",
+      "El compostaje de residuos orgánicos es la práctica más común que eleva la calificación; verifique que esté activo.",
+      "La \"inadecuada disposición final\" incluye quema a cielo abierto, vertimiento a quebrada y entierro sin tratamiento."
+    ]
+  },
+  {
+    "numero": 13,
+    "nombre": "Acceso a crédito",
+    "dimension": "Socioeconómica",
+    "descripcion": "El productor tiene acceso y facilidad al crédito.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Tiene o ha tenido crédito, tiene garantías y no se encuentra reportado en centrales de riesgo"
+      },
+      {
+        "nivel": "4",
+        "situacion": "No tiene y no ha tenido crédito, tiene garantías y no se encuentra reportado"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Tiene crédito, baja capacidad para mayor endeudamiento y no se encuentra reportado"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Tiene crédito y no tiene capacidad para mayor endeudamiento"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No tiene crédito, tiene garantía y se encuentra reportado en centrales de riesgo"
+      }
+    ],
+    "preguntas": [
+      "¿Ha solicitado crédito alguna vez? ¿A qué entidad (banco, cooperativa, fondo ganadero, agrocadena)?",
+      "¿Tiene crédito vigente actualmente? ¿De qué monto y para qué destino?",
+      "¿Tiene garantías (tierra, ganado, codeudor, seguro) que le permitan acceder a crédito?",
+      "¿Está reportado en centrales de riesgo (Datacrédito, CIFIN)?",
+      "¿Su capacidad de endeudamiento actual es alta, media o baja?"
+    ],
+    "recomendaciones": [
+      "Esta pregunta puede ser sensible; enmarque como \"diagnóstico financiero\" no como evaluación moral.",
+      "Si el productor no sabe si está reportado en centrales de riesgo, indague por deudas pendientes con entidades formales.",
+      "Tener garantías pero no haber usado crédito no es necesariamente malo (nivel 4); el problema es no poder acceder cuando se necesita.",
+      "El acceso a crédito en Sotará es históricamente alto (4,1) por presencia del Comité de Ganaderos."
+    ]
+  },
+  {
+    "numero": 14,
+    "nombre": "Registros contables y de costos",
+    "dimension": "Socioeconómica",
+    "descripcion": "El productor tiene registros contables y de costos de las actividades productivas de la finca.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Maneja contabilidad financiera y de costos"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Maneja contabilidad financiera sin análisis de costos"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Maneja un sistema contable financiero básico"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Registra informalmente algunos costos"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No maneja registros contables ni de costos"
+      }
+    ],
+    "preguntas": [
+      "¿Lleva algún libro o cuaderno de registros de la finca? ¿Puede mostrármelo?",
+      "¿Registra ingresos (ventas de leche, queso, animales) y egresos (insumos, mano de obra, transporte)?",
+      "¿Sabe cuánto le cuesta producir un litro de leche o un kilo de queso?",
+      "¿Conoce el punto de equilibrio de la finca (cuándo cubre costos)?",
+      "¿Hace balances mensuales, trimestrales o anuales?"
+    ],
+    "recomendaciones": [
+      "Pida ver físicamente el cuaderno de registros; la existencia del cuaderno es verificable.",
+      "Si el productor dice \"sí, llevo registros\" pero no puede mostrárselos, califique en 1-2.",
+      "Este es el indicador más bajo de toda la matriz en Paletará (1,1); espere calificaciones mayoritariamente en 1.",
+      "Las plantillas simplificadas de registros son la intervención específica para mejorar este indicador."
+    ]
+  },
+  {
+    "numero": 15,
+    "nombre": "Ingresos",
+    "dimension": "Socioeconómica",
+    "descripcion": "Se define como la capacidad de la finca en producir recursos para cubrir los costos y generar utilidad durante todo el año.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Los ingresos cubren los costos y genera utilidad durante todo el año"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Cubren costos y genera utilidad más de la mitad del año"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Cubren los costos y eventualmente genera utilidad"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Cubren los costos y no genera utilidad"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Los ingresos NO cubren los costos"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántos ingresos genera la finca al mes y al año?",
+      "¿Cuáles son los costos fijos y variables de la finca?",
+      "¿En qué meses del año la finca es rentable y en cuáles no?",
+      "¿Tiene otras fuentes de ingreso fuera de la finca (jornaleo, pensión, empleo externo)?",
+      "¿La finca cubre los costos de vida de la familia (alimentación, educación, salud)?"
+    ],
+    "recomendaciones": [
+      "Sin registros contables (indicador 14), esta calificación se basa en estimación del productor; sea conservador.",
+      "Pregunte por meses específicos: febrero-marzo (sequía) suelen ser los más críticos.",
+      "Considere ingresos por leche + queso + venta de animales + otros productos; no solo leche.",
+      "Si el productor subsidia la finca con ingresos externos, evalúe la finca como unidad productiva, no el ingreso familiar total."
+    ]
+  },
+  {
+    "numero": 16,
+    "nombre": "Generación de nuevos empleos",
+    "dimension": "Socioeconómica",
+    "descripcion": "Se refiere a los empleos nuevos que genera la finca, pueden ser empleos permanentes o temporales.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "La finca genera empleos permanentes y temporales todo el año"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Genera empleos permanentes todo el año"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Genera empleos temporales todo el año"
+      },
+      {
+        "nivel": "2",
+        "situacion": "La finca genera empleos temporales en algunas épocas del año"
+      },
+      {
+        "nivel": "1",
+        "situacion": "La finca no genera nuevos empleos"
+      }
+    ],
+    "preguntas": [
+      "¿Contrata mano de obra externa a la familia? ¿Cuántas personas?",
+      "¿Son empleos permanentes (todo el año) o temporales (épocas específicas)?",
+      "¿En qué actividades contrata (ordeño, siembra, cosecha, construcción)?",
+      "¿Cuántos días al año contrata mano de obra externa?",
+      "¿Los empleos son formales (con prestaciones) o informales (pago diario)?"
+    ],
+    "recomendaciones": [
+      "En predios pequeños (9,6 ha promedio), el empleo permanente es estructuralmente limitado; no penalice por ello.",
+      "Cuente solo empleos externos a la familia, no el trabajo de los miembros familiares.",
+      "El trabajo temporal en ordeño suele ser el más común; un ordeñador contratado 6 meses al año coloca al predio en nivel 3.",
+      "La implementación de sistemas silvopastoriles puede generar empleo temporal en siembra y construcción de infraestructura."
+    ]
+  },
+  {
+    "numero": 17,
+    "nombre": "Difusión tecnológica",
+    "dimension": "Socioeconómica",
+    "descripcion": "Hace referencia a la disponibilidad y capacidad del productor, el grupo familiar o delegado de participar en procesos de capacitación, aplicar estos conocimientos en su finca y difundirlos.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Aplican y hacen difusión de las técnicas propuestas; comparten sus experiencias"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Aplican y hacen difusión parcial de las técnicas y comparten sus experiencias"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Aplican y NO hacen difusión de las técnicas propuestas"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Aplican parcialmente y NO hacen difusión"
+      },
+      {
+        "nivel": "1",
+        "situacion": "NO aplican y NO hacen difusión"
+      }
+    ],
+    "preguntas": [
+      "¿Ha participado en capacitaciones (talleres, días de campo, brigadas) en el último año?",
+      "¿Qué técnicas o prácticas aprendidas ha aplicado en su finca?",
+      "¿Comparte lo que aprende con vecinos, familiares o miembros de la asociación/cabildo?",
+      "¿Otros productores vienen a ver su finca como referente? ¿Visita usted otras fincas?",
+      "¿Participa en espacios comunitarios donde comparte experiencias?"
+    ],
+    "recomendaciones": [
+      "Verifique la aplicación efectiva de técnicas en el predio (no solo la asistencia a capacitaciones).",
+      "\"Difusión\" implica compartir activamente, no solo contestar si le preguntan.",
+      "Los productores referentes —visibles por tener buenas prácticas que otros vienen a ver— son clave para la estrategia SSC.",
+      "La no participación en capacitaciones no necesariamente es nivel 1; evalúe si el productor aprende por otras vías."
+    ]
+  },
+  {
+    "numero": 18,
+    "nombre": "Seguridad alimentaria",
+    "dimension": "Socioeconómica",
+    "descripcion": "Se refiere a los alimentos que produce el predio y que se destinan al autoconsumo de la familia y eventualmente generan excedentes que se comercializan.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Hay producción de alimentos en forma permanente y se generan excedentes para comercialización"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Hay producción permanente y genera excedentes para comercializar ocasionalmente"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Hay producción de alimentos permanente durante seis meses del año"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Hay producción de alimentos eventualmente durante el año"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No produce productos para la alimentación familiar"
+      }
+    ],
+    "preguntas": [
+      "¿Qué alimentos de consumo familiar se producen en la finca (leche, queso, huevos, carne, hortalizas, frutas, granos)?",
+      "¿Durante cuántos meses del año se producen estos alimentos?",
+      "¿Hay huerta casera? ¿Qué especies?",
+      "¿Se generan excedentes que se venden o se intercambian?",
+      "¿Qué proporción de la canasta familiar proviene de la finca vs del mercado?"
+    ],
+    "recomendaciones": [
+      "Pida ver la huerta casera y los animales menores (gallinas, cerdos); su existencia es verificable.",
+      "La leche y el queso cuentan como alimentos de autoconsumo en sistemas ganaderos.",
+      "\"Producción permanente\" significa durante todo el año; si hay meses sin producción, baje la calificación.",
+      "Considere la huerta como intervención prioritaria para mejorar este indicador."
+    ]
+  },
+  {
+    "numero": 19,
+    "nombre": "Sistemas productivos diversificados",
+    "dimension": "Socioeconómica",
+    "descripcion": "Se implementan diversos arreglos espaciales (policultivos, agroforestería, multiestratos) y temporales (rotaciones) entre especies vegetales, animales y arbóreas.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Diversificación de cultivos integrados, diversificación entre sistemas agrícolas, pecuarios y forestal, integrados en arreglos multiestrato"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Diversificación de cultivos integrados y diversificación entre sistemas sin arreglos espaciales"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Al menos dos sistemas agrícola, pecuario o forestal integrados"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Al menos dos sistemas agrícola, pecuarios o forestal"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Monocultivo"
+      }
+    ],
+    "preguntas": [
+      "¿Qué sistemas productivos hay en el predio (agrícola, pecuario, forestal, apícola)?",
+      "¿Están integrados físicamente (agroforestería, silvopastoreo) o están separados?",
+      "¿Hay arreglos multiestrato (árboles + arbustos + cultivos + animales en el mismo espacio)?",
+      "¿Hay rotación de cultivos o de potreros en el tiempo?",
+      "¿Qué especies vegetales, animales y arbóreas conviven en el predio?"
+    ],
+    "recomendaciones": [
+      "Un sistema silvopastoril con árboles + pasto + ganado es ya nivel 3 mínimo (dos sistemas integrados).",
+      "El arreglo multiestrato (nivel 5) requiere estratos definidos: arbóreo + arbustivo + herbáceo + animal en el mismo espacio.",
+      "La sola presencia de varios sistemas separados no es integración; ubíquese en nivel 2.",
+      "La rotación temporal de potreros cuenta como diversificación temporal."
+    ]
+  },
+  {
+    "numero": 20,
+    "nombre": "Aprovechamiento de subproductos de cosecha",
+    "dimension": "Socioeconómica",
+    "descripcion": "La finca tiene implementadas alternativas que permitan el aprovechamiento de subproductos de los proyectos agrícolas, pecuarios y agroindustriales, para su compostaje.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Si usan el 100% de los subproductos de cosecha utilizables para compostaje o abonos"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Si usan más de la mitad (>50%)"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Si usan menos de la mitad (<50%)"
+      },
+      {
+        "nivel": "2",
+        "situacion": "No le dan utilidad, son reciclados y reutilizados por un tercero"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No le dan utilidad y tienen una inadecuada disposición final"
+      }
+    ],
+    "preguntas": [
+      "¿Qué hace con el estiércol del ganado? ¿Con los restos de cosecha? ¿Con el suero lácteo?",
+      "¿Tiene compostaje o lombricultivo establecido?",
+      "¿Usa estiércol como abono para pastos o cultivos?",
+      "¿Los subproductos se queman, se entierran, se tiran o se aprovechan?",
+      "¿Vende o regala subproductos a terceros?"
+    ],
+    "recomendaciones": [
+      "Pida ver la pila de compostaje o el sitio de acopio de estiércol; la existencia es verificable.",
+      "El suero lácteo es un subproducto crítico en sistemas de quesería; si se vierte a quebrada, baje la calificación.",
+      "El uso de estiércol como abono es la práctica más común que eleva la calificación.",
+      "\"Aprovechamiento por tercero\" (nivel 2) implica que alguien retira los subproductos; es mejor que inadecuado, pero no es aprovechamiento en la finca."
+    ]
+  },
+  {
+    "numero": 21,
+    "nombre": "Número de potreros (divisiones)",
+    "dimension": "Productiva",
+    "descripcion": "Se refiere al número de divisiones destinadas al pastoreo de bovinos.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Mayor a 20 potreros"
+      },
+      {
+        "nivel": "4",
+        "situacion": "De 16 a 20 potreros"
+      },
+      {
+        "nivel": "3",
+        "situacion": "De 11 a 15 potreros"
+      },
+      {
+        "nivel": "2",
+        "situacion": "De 6 a 10 potreros"
+      },
+      {
+        "nivel": "1",
+        "situacion": "5 potreros o menos"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántos potreros tiene el predio destinados al pastoreo?",
+      "¿Cuántas hectáreas en total de pastoreo?",
+      "¿Cuánto tiempo permanece el ganado en cada potrero antes de rotar?",
+      "¿Las divisiones son con cerca eléctrica, cerca muerta o cercas vivas?",
+      "¿Hay potreros que no se usan actualmente?"
+    ],
+    "recomendaciones": [
+      "Cuente solo potreros operativos (en uso o disponibles), no los abandonados.",
+      "Las divisiones con cerca eléctrica del kit SSP deben contar si están operativas.",
+      "El pastoreo rotacional requiere al menos 6-8 potreros para descanso adecuado; menos de 5 implica pastoreo continuo.",
+      "Este indicador debe mejorar tras la entrega de kits SSP con cerca eléctrica."
+    ]
+  },
+  {
+    "numero": 22,
+    "nombre": "Litros de leche hectárea/año (LLHA)",
+    "dimension": "Productiva",
+    "descripcion": "Corresponde a la producción promedio de leche por hectárea por año (total leche producida en el año dividido entre las hectáreas dedicadas a la producción de leche).",
+    "ajustes": "Calificación diferenciada para Lechería y Doble propósito en Trópico alto.",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Lechería: ≥20.001 / Doble propósito: >2.500"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Lechería: 16.001-20.000 / Doble propósito: 2.001-2.500"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Lechería: 12.001-16.000 / Doble propósito: 1.501-2.000"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Lechería: 8.001-12.000 / Doble propósito: 1.001-1.500"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Lechería: ≤8.000 / Doble propósito: ≤1.000"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántos litros de leche produce al día en promedio? ¿Y en época alta y baja?",
+      "¿Cuántas hectáreas dedica a la producción de leche (excluyendo potreros de cría, bosque, infraestructura)?",
+      "¿Cuántas vacas en ordeño tiene en promedio?",
+      "¿Es sistema de lechería especializada o doble propósito?",
+      "¿Cómo comercializa la leche (precio por litro, destino)?"
+    ],
+    "recomendaciones": [
+      "Use la tabla de doble propósito para el PNN Puracé (sistemas predominantes).",
+      "Calcule: (L/día × 365 días) / ha dedicadas a leche = L/ha/año.",
+      "Verifique las hectáreas reales destinadas a leche; el productor suele sobreestimar.",
+      "Sin registros (indicador 14), esta calificación es estimada; pida al menos el rango de producción alta y baja."
+    ]
+  },
+  {
+    "numero": 23,
+    "nombre": "Peso al destete",
+    "dimension": "Productiva",
+    "descripcion": "Corresponde al peso promedio de las crías (machos y hembras). Para este indicador se suma el peso de todas las crías del año y se divide por el total de animales.",
+    "ajustes": "Calificación diferenciada para Cría (Trópico bajo) y Doble propósito (Trópico bajo-alto).",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Cría: ≥200 kg / Doble propósito: ≥171 kg"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Cría: 180-199 kg / Doble propósito: 161-170 kg"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Cría: 170-179 kg / Doble propósito: 151-160 kg"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Cría: 160-169 kg / Doble propósito: 140-150 kg"
+      },
+      {
+        "nivel": "1",
+        "situacion": "Cría: <160 kg / Doble propósito: <140 kg"
+      }
+    ],
+    "preguntas": [
+      "¿A qué edad desteta las crías (meses)?",
+      "¿Cuál es el peso promedio de las crías al destete? ¿Lo registra?",
+      "¿Usa báscula, cinta métrica o estimación visual?",
+      "¿Las crías son de raza Normando pura o cruces?",
+      "¿Cómo es la nutrición de las madres en el último tercio de gestación y durante la lactancia?"
+    ],
+    "recomendaciones": [
+      "Use la tabla de doble propósito para el PNN Puracé.",
+      "Si no hay registros de peso, use la cinta métrica torácica para estimar el peso de crías presentes.",
+      "El peso al destete refleja la nutrición de la madre y la calidad del forraje; si es bajo, los indicadores 5 y 21 suelen estar relacionados.",
+      "La raza Normando en doble propósito suele pesar 160-180 kg al destete (7-9 meses)."
+    ]
+  },
+  {
+    "numero": 24,
+    "nombre": "Edad de los machos al sacrificio",
+    "dimension": "Productiva",
+    "descripcion": "Edad promedio de los machos de ceba vendidos para matadero.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "≤ 30 meses"
+      },
+      {
+        "nivel": "4",
+        "situacion": "31 – 35 meses"
+      },
+      {
+        "nivel": "3",
+        "situacion": "36 – 40 meses"
+      },
+      {
+        "nivel": "2",
+        "situacion": "41 – 44 meses"
+      },
+      {
+        "nivel": "1",
+        "situacion": "45 meses o más"
+      }
+    ],
+    "preguntas": [
+      "¿A qué edad vende los machos para matadero?",
+      "¿Los vende como ceba (animales acabados) o como levante?",
+      "¿Cuál es el peso de venta?",
+      "¿Qué sistema de ceba usa (pastoreo, suplementación, semiconfinamiento)?",
+      "¿Cuántos machos vende al año?"
+    ],
+    "recomendaciones": [
+      "Distinga entre venta para matadero (ceba) y venta para levante (cría). Este indicador se refiere a ceba para matadero.",
+      "Si el productor no cebe (vende todos los machos como levante), califique según la edad de venta de los machos.",
+      "La ceba en pastoreo puro en páramo suele tardar 30-40 meses; con suplementación puede bajar a 24-30.",
+      "Indague por el destino final (matadero o intermediario) para verificar."
+    ]
+  },
+  {
+    "numero": 25,
+    "nombre": "Carga animal / hectárea (UGG)",
+    "dimension": "Productiva",
+    "descripcion": "Se refiere al peso promedio de todas las Unidades de Gran Ganado (UGG) que se tienen durante el año, dividido por el número de hectáreas de pastoreo. Una UGG equivale a 450 kilos.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "> 1,5"
+      },
+      {
+        "nivel": "4",
+        "situacion": "1,1 – 1,5"
+      },
+      {
+        "nivel": "3",
+        "situacion": "0,9 – 1,0"
+      },
+      {
+        "nivel": "2",
+        "situacion": "0,7 – 0,8"
+      },
+      {
+        "nivel": "1",
+        "situacion": "< 0,6"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántos animales tiene en total (vacas, novillos, terneros, toros)?",
+      "¿Cuántas hectáreas de pastoreo tiene?",
+      "¿Cuál es el peso promedio de los animales?",
+      "¿Cómo calcula la carga que puede sostener el predio?",
+      "¿Ha notado degradación del pasto por exceso de animales?"
+    ],
+    "recomendaciones": [
+      "Calcule: (total animales × peso estimado) / 450 kg = UGG; luego UGG / ha pastoreo = UGG/ha.",
+      "Una vaca adulta Normando pesa ~450 kg = 1 UGG; un ternero destete ~180 kg = 0,4 UGG; un toro ~600 kg = 1,3 UGG.",
+      "En el PNN Puracé, cargas de 2,3-2,6 UGG/ha son comunes pero insostenibles; el óptimo es 1,1-1,5.",
+      "Considere solo hectáreas efectivas de pastoreo, excluyendo bosque, infraestructura y áreas de conservación."
+    ]
+  },
+  {
+    "numero": 26,
+    "nombre": "Edad al primer parto (EPPA)",
+    "dimension": "Productiva",
+    "descripcion": "Se refiere al tiempo transcurrido entre el nacimiento y el primer parto de las vacas, tomado como un promedio del número total de vacas de la finca.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "30 – 35 meses"
+      },
+      {
+        "nivel": "4",
+        "situacion": "36 – 40 meses"
+      },
+      {
+        "nivel": "3",
+        "situacion": "41 – 45 meses"
+      },
+      {
+        "nivel": "2",
+        "situacion": "46 – 48 meses"
+      },
+      {
+        "nivel": "1",
+        "situacion": "> 48 meses"
+      }
+    ],
+    "preguntas": [
+      "¿A qué edad paren por primera vez las novillas en la finca?",
+      "¿Lleva registro de los nacimientos y de los primeros partos?",
+      "¿Cómo maneja la nutrición de las hembras de reemplazo?",
+      "¿Usa monta natural o inseminación artificial?",
+      "¿La raza Normando se adapta bien al sistema?"
+    ],
+    "recomendaciones": [
+      "Sin registros (indicador 29), esta calificación se basa en estimación; pida al menos el rango de edades.",
+      "El Normando en trópico alto suele parir entre 34-40 meses con buen manejo; más de 42 indica problemas nutricionales.",
+      "Si el productor no sabe, calcule: edad actual de una novilla preñada - meses de gestación = edad al primer servicio."
+    ]
+  },
+  {
+    "numero": 27,
+    "nombre": "Tasa de mortalidad (TM)",
+    "dimension": "Productiva",
+    "descripcion": "Corresponde al porcentaje de muertes de ganado en la finca; este porcentaje se evalúa anualmente.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Menos de 2,5% anual"
+      },
+      {
+        "nivel": "4",
+        "situacion": "De 2,5% a menos de 5% anual"
+      },
+      {
+        "nivel": "3",
+        "situacion": "De 5% a menos de 7,5% anual"
+      },
+      {
+        "nivel": "2",
+        "situacion": "De 7,5% a menos de 10% anual"
+      },
+      {
+        "nivel": "1",
+        "situacion": "10% o más anual"
+      }
+    ],
+    "preguntas": [
+      "¿Cuántos animales han muerto en el último año? ¿De qué causas?",
+      "¿Cuál es el total de animales del predio?",
+      "¿Vacuna contra fiebre aftosa, brucelosis, carbón sintomático?",
+      "¿Ha habido eventos sanitarios especiales (ceniza volcánica, epidemias, intoxicaciones)?",
+      "¿Tiene asistencia veterinaria (técnico del Comité de Ganaderos, ICA)?"
+    ],
+    "recomendaciones": [
+      "Calcule: (nº muertes en el año / total animales) × 100.",
+      "Distinga muertes naturales (vejez, enfermedades) de muertes evitables (parasitosis, desnutrición).",
+      "Las muertes por eventos extraordinarios (ceniza volcánica del Puracé) pueden excluirse del cálculo si se justifican.",
+      "La vacunación al día y la asistencia veterinaria reducen mortalidad; verifique su presencia."
+    ]
+  },
+  {
+    "numero": 28,
+    "nombre": "Intervalo entre partos (IP)",
+    "dimension": "Productiva",
+    "descripcion": "Se refiere al tiempo transcurrido entre dos partos tomado como un promedio del número total de vacas de la finca. Para poder determinar este parámetro es necesario contar con un registro de los partos que ocurren en el año.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "12 – 13 meses"
+      },
+      {
+        "nivel": "4",
+        "situacion": "14 – 15 meses"
+      },
+      {
+        "nivel": "3",
+        "situacion": "16 – 18 meses"
+      },
+      {
+        "nivel": "2",
+        "situacion": "19 – 20 meses"
+      },
+      {
+        "nivel": "1",
+        "situacion": "≥ 21 meses"
+      }
+    ],
+    "preguntas": [
+      "¿Con qué frecuencia paren las vacas de la finca (cada cuántos meses)?",
+      "¿Lleva registro de los partos de cada vaca?",
+      "¿Cómo detecta los celos? ¿Usa semental todo el año o por temporadas?",
+      "¿Tiene problemas de repetición de celos o vacas vacías?",
+      "¿Cómo es la nutrición de las vacas en el primer trimestre post-parto?"
+    ],
+    "recomendaciones": [
+      "Sin registros (indicador 29), esta calificación es estimada; pida al menos el intervalo aproximado.",
+      "Un intervalo de 12 meses implica concepción a los 90 días post-parto; es el óptimo zootécnico.",
+      "En sistemas de páramo sin suplementación, intervalos de 14-16 meses son comunes y aceptables.",
+      "Intervalos superiores a 18 meses indican problemas nutricionales, sanitarios o de manejo reproductivo."
+    ]
+  },
+  {
+    "numero": 29,
+    "nombre": "Registros técnicos y reproductivos",
+    "dimension": "Productiva",
+    "descripcion": "Se refiere a la toma de información, registro y análisis de datos técnicos que se generan en las actividades agropecuarias en la finca.",
+    "ajustes": "",
+    "niveles": [
+      {
+        "nivel": "5",
+        "situacion": "Se hace periódicamente toma, registro, análisis y se utilizan para la toma de decisiones"
+      },
+      {
+        "nivel": "4",
+        "situacion": "Toma, registro, análisis y se utilizan eventualmente para decisiones"
+      },
+      {
+        "nivel": "3",
+        "situacion": "Toma, registro, análisis y NO se utilizan para decisiones"
+      },
+      {
+        "nivel": "2",
+        "situacion": "Toma eventual, registro, no se analizan y NO se utilizan"
+      },
+      {
+        "nivel": "1",
+        "situacion": "No se toma ninguna información que se genere en la finca"
+      }
+    ],
+    "preguntas": [
+      "¿Lleva registros de producción lechera (litros por vaca, por día)?",
+      "¿Registra los partos, los servicios (montas) y los abortos?",
+      "¿Registra los pesos (nacimiento, destete, venta)?",
+      "¿Registra eventos sanitarios (vacunaciones, desparasitaciones, enfermedades)?",
+      "¿Utiliza la información para tomar decisiones (selección, descarte, compra de insumos)?"
+    ],
+    "recomendaciones": [
+      "Pida ver físicamente los registros; la existencia del cuaderno es verificable.",
+      "Si el productor dice \"sí, llevo registros\" pero no puede mostrárselos, califique en 1-2.",
+      "Este es el segundo indicador más bajo de toda la matriz en Paletará (1,4); espere calificaciones mayoritariamente en 1.",
+      "Los registros son la base para calcular los indicadores 22, 23, 24, 25, 26, 27 y 28; sin registros, esos indicadores se estiman y pierden precisión."
+    ]
+  }
+]
