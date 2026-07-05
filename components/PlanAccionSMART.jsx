@@ -43,8 +43,11 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
 
   // Indicadores en el plan: top-5 por defecto + los que el técnico agregue/tengan plan guardado
   const [seleccionados, setSeleccionados] = useState([]);
-  const [form, setForm] = useState({}); // { [id]: { especifico, medible, alcanzable, relevante, plazo, notas, sugerida_por_ia } }
+  const [form, setForm] = useState({}); // { [id]: { idea, especifico, medible, alcanzable, relevante, plazo, notas, sugerida_por_ia } }
   const [mostrarSelector, setMostrarSelector] = useState(false);
+  // Indicadores donde el evaluador pidió ver el cuadro SMART vacío para llenarlo
+  // a mano, sin pasar por la IA (independiente de si ya hay datos guardados).
+  const [mostrarManual, setMostrarManual] = useState({});
   const inicializado = useRef(false);
   const timers = useRef({});
   // Espejo del form para leerlo desde timers/async sin closures viejos
@@ -58,7 +61,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
     const init = {};
     Object.entries(planes).forEach(([indId, p]) => {
       init[indId] = {
-        especifico: p.especifico, medible: p.medible, alcanzable: p.alcanzable, relevante: p.relevante,
+        idea: p.idea, especifico: p.especifico, medible: p.medible, alcanzable: p.alcanzable, relevante: p.relevante,
         plazo: p.plazo, notas: p.notas, sugerida_por_ia: p.sugerida_por_ia,
       };
     });
@@ -74,7 +77,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
     clearTimeout(timers.current[indId]);
     timers.current[indId] = setTimeout(() => {
       const data = formRef.current[indId];
-      if (data?.especifico?.trim()) guardarPlan(indId, data);
+      if (data?.especifico?.trim() || data?.idea?.trim()) guardarPlan(indId, data);
     }, AUTOSAVE_MS);
   };
 
@@ -90,12 +93,12 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
   };
 
   const camposIguales = (a, b) => CAMPOS_SMART.every(c => (a?.[c.key] || '') === (b?.[c.key] || ''))
-    && (a?.plazo || '') === (b?.plazo || '') && (a?.notas || '') === (b?.notas || '');
+    && (a?.plazo || '') === (b?.plazo || '') && (a?.notas || '') === (b?.notas || '') && (a?.idea || '') === (b?.idea || '');
 
   const guardarAhora = (indId) => {
     clearTimeout(timers.current[indId]);
     const data = form[indId];
-    if (!data?.especifico?.trim()) return;
+    if (!data?.especifico?.trim() && !data?.idea?.trim()) return;
     // Si no cambió nada desde el último guardado, no encolar otro sync
     const p = planes[indId];
     if (p && camposIguales(p, data)) return;
@@ -111,7 +114,11 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
   const quitarIndicador = async (indId) => {
     const id = Number(indId);
     const tieneMeta = !!form[id]?.especifico?.trim();
-    if (tieneMeta && !window.confirm('Este indicador tiene una meta SMART definida. ¿Quitarlo del plan y borrarla?')) return;
+    const tieneIdea = !!form[id]?.idea?.trim();
+    if ((tieneMeta || tieneIdea) && !window.confirm(
+      tieneMeta ? 'Este indicador tiene una meta SMART definida. ¿Quitarlo del plan y borrarla?'
+                : 'Este indicador tiene una idea escrita. ¿Quitarlo del plan y borrarla?'
+    )) return;
     clearTimeout(timers.current[id]);
     setSeleccionados(prev => prev.filter(x => x !== id));
     setForm(prev => { const n = { ...prev }; delete n[id]; return n; });
@@ -128,6 +135,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
       descripcion: i.descripcion,
       dimension: i.dimension,
       score: detalles[i.id]?.valor,
+      idea: form[i.id]?.idea || '',
     }));
 
     const sugerencias = await sugerirConIA(payload, productor);
@@ -183,7 +191,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start justify-between gap-3">
         <p className="text-xs text-amber-800 font-medium leading-relaxed flex-1">
           <span className="font-black">Indicadores prioritarios</span> (los más bajos, marcados automáticamente).
-          Llena el cuadro SMART para cada uno — o usa IA para sugerirlo. Puedes agregar, quitar y editar todo.
+          Para cada uno, escribe la idea del productor en sus propias palabras (opcional) y genera el plan con IA
+          — o llénalo tú mismo a mano. Puedes agregar, quitar y editar todo.
         </p>
         {savingState !== 'idle' && (
           <span className={`text-[10px] font-bold whitespace-nowrap mt-0.5 ${savingState === 'saved' ? 'text-green-600' : 'text-amber-600'}`}>
@@ -203,11 +212,14 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
         }`}
       >
         {isLoadingIA ? (
-          <><span className="animate-spin text-lg">✨</span> Generando sugerencias...</>
+          <><span className="animate-spin text-lg">✨</span> Generando plan...</>
         ) : (
-          <><span>✨</span> Sugerir metas SMART con IA</>
+          <><span>✨</span> Generar plan con IA</>
         )}
       </button>
+      <p className="text-[10px] text-gray-400 text-center -mt-1">
+        Usa la idea que hayas escrito en cada indicador; si no escribiste nada, la IA propone la meta desde cero.
+      </p>
 
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-start gap-2">
@@ -224,6 +236,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
         const scoreColor = SCORE_COLOR(score);
         const f = form[ind.id] || {};
         const guardado = !!planes[ind.id]?.especifico;
+        const tieneSmart = !!f.especifico?.trim();
+        const mostrarCamposSmart = tieneSmart || !!mostrarManual[ind.id];
 
         return (
           <div key={ind.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -257,13 +271,40 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
               </button>
             </div>
 
+            {/* Idea en crudo — siempre visible, es la semilla del plan */}
+            <div className="px-4 py-3 border-b border-gray-50">
+              <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest block mb-1">
+                Su idea (opcional)
+              </label>
+              <textarea
+                value={f.idea || ''}
+                onChange={e => handleField(ind.id, 'idea', e.target.value)}
+                onBlur={() => guardarAhora(ind.id)}
+                placeholder="Escríbalo con sus propias palabras: ¿qué se le ocurre hacer aquí?"
+                rows={2}
+                className="w-full text-sm text-gray-700 border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-gray-300"
+              />
+            </div>
+
             {f.sugerida_por_ia && f.especifico && (
               <div className="bg-indigo-50 px-4 py-2 border-b border-indigo-100">
                 <p className="text-[10px] text-indigo-600 font-bold">✨ Sugerido por IA — revísalo con el productor y edita lo que haga falta</p>
               </div>
             )}
 
-            {/* Cuadro SMART */}
+            {!mostrarCamposSmart && (
+              <div className="px-4 py-3">
+                <button
+                  onClick={() => setMostrarManual(prev => ({ ...prev, [ind.id]: true }))}
+                  className="text-xs text-indigo-500 font-bold underline"
+                >
+                  Prefiero escribirlo yo
+                </button>
+              </div>
+            )}
+
+            {/* Cuadro SMART — aparece al generar con IA o al pedir escribirlo a mano */}
+            {mostrarCamposSmart && (
             <div className="px-4 py-3 flex flex-col gap-3">
               {CAMPOS_SMART.map(campo => (
                 <div key={campo.key}>
@@ -315,6 +356,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
                 />
               </div>
             </div>
+            )}
           </div>
         );
       })}

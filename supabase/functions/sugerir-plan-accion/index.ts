@@ -75,7 +75,11 @@ Deno.serve(async (req) => {
     ].filter(Boolean).join(", ");
 
     const listaIndicadores = indicadores_debiles
-      .map((i: any) => `- [${i.dimension}] ${i.nombre} (puntaje: ${i.score}/5): ${i.descripcion}`)
+      .map((i: any) => {
+        const base = `- [${i.dimension}] ${i.nombre} (puntaje: ${i.score}/5): ${i.descripcion}`;
+        const idea = typeof i.idea === "string" ? i.idea.trim() : "";
+        return idea ? `${base}\n  IDEA DEL EVALUADOR O PRODUCTOR PARA ESTE INDICADOR: "${idea}"` : base;
+      })
       .join("\n");
 
     // Prompt mejorado (revisión Fable 5, 2026-07-03): contexto real de
@@ -104,6 +108,8 @@ REGLAS ADICIONALES:
 - Cada plan responde SOLO a su indicador; usa la descripción y el puntaje de ese indicador para aterrizar la meta, no propuestas genéricas que servirían para cualquier finca.
 - No prometas insumos, plántulas, materiales ni dinero a nombre de PNN ni del programa. El acompañamiento técnico sí se puede mencionar.
 - Mal plan (genérico, no lo hagas): especifico "Mejorar el manejo del agua en la finca", medible "80% de mejora en el uso del agua". Buen plan: especifico "Proteger el nacimiento de agua con cerca para que el ganado no entre", medible "80 metros de cerca instalada alrededor del nacimiento".
+
+CUANDO UN INDICADOR TRAE "IDEA DEL EVALUADOR O PRODUCTOR": esa idea manda. No la reemplaces por una ocurrencia tuya ni le cambies la intención de fondo — tu trabajo es traducir esa idea, tal cual, a los 5 componentes SMART (especifico/medible/alcanzable/relevante/plazo_meses). Si la idea es vaga o incompleta, complétala con criterio técnico pero sin desviarte de lo que la persona quiso decir. Si un indicador NO trae idea, propón tú la meta desde cero, exactamente como en los demás casos.
 
 IMPORTANTE: Devuelve EXACTAMENTE un plan por cada indicador listado, en EL MISMO ORDEN en que aparecen arriba (el primer plan corresponde al primer indicador, y así sucesivamente).
 
