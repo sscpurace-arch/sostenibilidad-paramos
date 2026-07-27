@@ -10,8 +10,11 @@ jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase table 'usuarios'
+      - name: Write-ping Supabase table 'keep_alive_ping'
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/usuarios?select=id&limit=1" \
+          curl -f -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive_ping" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Content-Type: application/json" \
+          -H "Prefer: resolution=merge-duplicates,return=representation" \
+          -d "{\"id\":1,\"pinged_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}"
