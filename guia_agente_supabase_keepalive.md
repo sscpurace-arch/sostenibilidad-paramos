@@ -2,13 +2,25 @@
 
 **ATENCIÓN AGENTE:** Este documento contiene instrucciones estrictas y lecciones aprendidas de ejecuciones previas. Debes leer y acatar estas directrices obligatoriamente al implementar flujos de trabajo (workflows) automatizados de GitHub Actions relacionados con bases de datos Supabase, especialmente para sortear bloqueos de seguridad y problemas de caché de credenciales.
 
+**⚠️ ACTUALIZADO 2026-07-28:** el ping original (`GET` de solo lectura) NO evitó que Supabase marcara el proyecto para pausa — llegó el correo de aviso el 2026-07-27 pese a que el cron corría cada pocos días sin fallar. La causa probable: Supabase no cuenta una lectura simple como "actividad suficiente". La solución que sí funcionó: reemplazar el `GET` por una **escritura real** (upsert) contra una tabla dedicada. Ver sección 1 y 2 actualizadas.
+
 ---
 
 ## 1. Objetivo Técnico Principal
 
 Debes configurar un entorno automatizado (ping) para evitar que un proyecto de Supabase alojado en la capa gratuita se pause por inactividad (lo cual ocurre tras 7 días sin actividad).
 
-Para lograrlo, implementarás un **GitHub Action** que ejecute un cronjob los días Lunes y Jueves, además de habilitar la ejecución manual (`workflow_dispatch`). La acción principal consistirá en realizar una petición `curl GET` a una tabla de la base de datos (por defecto, `usuarios`) solicitando únicamente el campo `id` con `limit=1` para minimizar la transferencia de datos.
+Para lograrlo, implementarás un **GitHub Action** que ejecute un cronjob los días Lunes y Jueves, además de habilitar la ejecución manual (`workflow_dispatch`). La acción debe realizar una **escritura real** (upsert `POST`) contra una tabla dedicada `keep_alive_ping` — no un `GET` de solo lectura, que no cuenta como actividad suficiente para el detector de inactividad de Supabase.
+
+### Tabla dedicada (crear una sola vez vía SQL, Management API o dashboard)
+```sql
+create table if not exists public.keep_alive_ping (
+  id smallint primary key default 1,
+  pinged_at timestamptz not null default now()
+);
+grant select, insert, update on public.keep_alive_ping to anon, authenticated;
+```
+No se activa RLS sobre esta tabla (no contiene datos sensibles), así el anon key puede escribir directamente sin necesitar políticas.
 
 ## 2. Código Obligatorio del Workflow
 
@@ -27,14 +39,17 @@ jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Execute Keep-Alive Ping
+      - name: Write-ping Supabase table 'keep_alive_ping'
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/usuarios?select=id&limit=1" \
+          curl -f -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive_ping" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Content-Type: application/json" \
+          -H "Prefer: resolution=merge-duplicates,return=representation" \
+          -d "{\"id\":1,\"pinged_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}"
 ```
 
-*(Nota operativa: Si la tabla `usuarios` no existe en el esquema de la base de datos destino, ajusta la URL en el comando curl por una tabla pública válida tras consultar la arquitectura o preguntar al usuario).*
+*(Si prefieres no crear una tabla nueva, en teoría un `PATCH`/`POST` de escritura sobre cualquier tabla existente también cuenta como actividad — pero una tabla dedicada evita tocar datos reales de producción por accidente).*
 
 ## 3. Instrucciones de Configuración de Secrets
 
@@ -54,24 +69,22 @@ Al intentar subir (push) archivos creados o modificados dentro de la carpeta `.g
 ! [remote rejected] main -> main (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/keep_alive.yml` without `workflow` scope)
 ```
 
-## 5. EL BYPASS DE LA CACHÉ (Procedimiento Estricto)
+## 5. CORRECCIÓN 2026-07-28: SÍ se puede arreglar sin generar un token nuevo
 
-El error más frustrante y recurrente ocurre porque **la caché del administrador de credenciales local de Git** (en Windows/macOS) continuará utilizando el token antiguo y obsoleto que carece de permisos, **incluso después de que el usuario haya generado uno nuevo** en la plataforma web de GitHub.
+**Esto reemplaza la instrucción anterior de este documento, que estaba equivocada.** Un PAT **classic** (prefijo `ghp_...`, NO fine-grained) sí permite editar sus scopes después de creado, sin cambiar el valor del token ni su fecha de expiración:
 
-Para evitar bucles inútiles y pérdida de tiempo procesal, **CUMPLE LA SIGUIENTE ORDEN ANTES DE REALIZAR EL PUSH:**
+1. El usuario entra a `https://github.com/settings/tokens`.
+2. Hace clic en el nombre del token existente (ej. "Git CLI").
+3. Marca la casilla **`workflow`** (deja `repo` marcado).
+4. Clic en **"Update token"**.
 
-1.  **DETENTE:** No intentes ejecutar `git push origin main` de manera automática tras realizar el `git commit`.
-2.  **SOLICITA CREDENCIALES:** Pídele directamente al usuario su nuevo Token de Acceso Personal (asegurándole que debe tener marcadas las casillas `repo` y `workflow` al crearlo), así como su nombre de usuario de GitHub y el nombre del repositorio.
-3.  **INYECTA EL TOKEN (BYPASS):** Una vez que obtengas los datos, altera la URL del repositorio remoto incrustando las credenciales directamente, lo que forzará a Git a ignorar la caché local defectuosa. Ejecuta exactamente:
-    ```bash
-    git remote set-url origin https://[USUARIO]:[TOKEN_NUEVO]@github.com/[USUARIO]/[REPO].git
-    ```
-4.  **EJECUTA EL PUSH:** Tras actualizar el remote de forma directa, ejecuta el comando de subida:
-    ```bash
-    git push origin main
-    ```
+El valor del token (`ghp_...`) **no cambia** — por lo tanto, si ya lo tienes guardado (ver `github-token` en la memoria del agente), el `git push origin main` funciona de inmediato sin pedirle nada nuevo al usuario ni reescribir el remote.
 
-**ADVERTENCIA FINAL:** Si el push sigue fallando tras inyectar el token, NO repitas el intento a ciegas. Detente y verifica con el usuario que el token fue generado con los scopes `repo` + `workflow` marcados. Los tokens antiguos NO se pueden editar para agregar el scope `workflow`; el usuario DEBE generar uno completamente nuevo.
+Solo hace falta generar un token completamente nuevo si:
+- El token es **fine-grained** (esos no permiten editar scopes/permisos después de creados), o
+- El token está **expirado** (un token expirado no se puede reactivar, solo regenerar — lo que sí cambia el valor).
+
+**Nunca pidas al usuario que pegue el token en la URL del remote como primer recurso** — es más lento y más propenso a error que simplemente ampliar el scope del token classic ya guardado.
 
 ---
 
