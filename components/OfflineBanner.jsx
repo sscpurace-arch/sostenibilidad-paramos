@@ -99,16 +99,25 @@ export default function OfflineBanner() {
         </div>
       )}
 
-      {/* Cambios que fallaron */}
+      {/* Cambios que fallaron. Se muestra el motivo real: sin él, "no se
+          pudieron subir" no le dice a nadie qué hacer, y el usuario reintenta
+          en vano. */}
       {state.failedCount > 0 && (
-        <div className="py-1.5 px-4 text-xs font-bold text-amber-900 bg-amber-200 flex items-center justify-between">
-          <span>⚠ {state.failedCount} cambios no se pudieron subir</span>
-          <button
-            onClick={() => retryFailed()}
-            className="ml-4 bg-amber-700 text-white px-3 py-0.5 rounded-full text-[10px] hover:bg-amber-800 transition-colors uppercase"
-          >
-            Reintentar
-          </button>
+        <div className="py-1.5 px-4 text-xs font-bold text-amber-900 bg-amber-200 flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <span>⚠ {state.failedCount} cambios no se pudieron subir</span>
+            <button
+              onClick={() => retryFailed()}
+              className="ml-4 bg-amber-700 text-white px-3 py-0.5 rounded-full text-[10px] hover:bg-amber-800 transition-colors uppercase shrink-0"
+            >
+              Reintentar
+            </button>
+          </div>
+          {state.lastError && (
+            <span className="font-normal text-[10px] text-amber-900/80 leading-snug break-words">
+              Motivo: {state.lastError}
+            </span>
+          )}
         </div>
       )}
 
