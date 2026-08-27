@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { saveRecord, deleteRecord, deleteRecordBulk, waitForSync } from '@/lib/sync-engine';
+import { eliminarFotosDeEvaluacion } from '@/lib/foto-sync';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import ProductorInfoCard from '@/components/ProductorInfoCard';
@@ -144,6 +145,10 @@ function PerfilProductorContent() {
 
       const diag = await db.diagnosticos?.where('evaluacion_id').equals(evalId).first();
       if (diag) await deleteRecord('diagnosticos', diag.id);
+
+      // Dexie no tiene claves foráneas: las fotos hay que borrarlas a mano o
+      // quedan blobs ocupando espacio sin nada que los referencie.
+      await eliminarFotosDeEvaluacion(evalId);
 
       await deleteRecord('evaluaciones', evalId);
 

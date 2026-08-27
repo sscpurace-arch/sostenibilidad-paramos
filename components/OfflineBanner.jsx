@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { subscribe, getState, syncQueue, retryFailed } from '@/lib/sync-engine';
+import { subscribeFotos, syncFotos, retryFotosFallidas } from '@/lib/foto-sync';
 
 export default function OfflineBanner() {
   const [state, setState] = useState(getState());
   const [isOnline, setIsOnline] = useState(true);
   const [isMock, setIsMock] = useState(false);
+  const [fotos, setFotos] = useState({ subiendo: false, pendientes: 0, fallidas: 0 });
 
   useEffect(() => {
     // Detectar modo prueba
@@ -13,6 +15,7 @@ export default function OfflineBanner() {
 
     setState(getState());
     const unsub = subscribe(setState);
+    const unsubFotos = subscribeFotos(setFotos);
 
     setIsOnline(navigator.onLine);
     const handleOnline = () => setIsOnline(true);
@@ -23,6 +26,7 @@ export default function OfflineBanner() {
 
     return () => {
       unsub();
+      unsubFotos();
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
@@ -47,6 +51,11 @@ export default function OfflineBanner() {
             ? `⏳ ${state.pendingCount} cambios pendientes — se sincronizarán cuando haya conexión`
             : '📡 Sin conexión — Modo Offline activado'}
         </div>
+        {fotos.pendientes > 0 && (
+          <div className="text-center py-1.5 px-4 text-xs font-bold text-white bg-red-600 shadow-md">
+            📷 {fotos.pendientes} {fotos.pendientes === 1 ? 'foto guardada' : 'fotos guardadas'} en el celular, sin subir
+          </div>
+        )}
         {state.seedFailed && (
           <div className="text-center py-1.5 px-4 text-xs font-bold text-white bg-red-700 shadow-md">
             Sin datos locales — conéctate una vez para descargar la base
@@ -57,7 +66,8 @@ export default function OfflineBanner() {
   }
 
   // Banners de errores aunque haya conexión
-  const hasIssues = state.failedCount > 0 || state.seedFailed || state.isSyncing || state.pendingCount > 0;
+  const hasIssues = state.failedCount > 0 || state.seedFailed || state.isSyncing || state.pendingCount > 0
+    || fotos.pendientes > 0 || fotos.fallidas > 0 || fotos.subiendo;
   if (!hasIssues) return null;
 
   return (
@@ -95,6 +105,37 @@ export default function OfflineBanner() {
           <span>⚠ {state.failedCount} cambios no se pudieron subir</span>
           <button
             onClick={() => retryFailed()}
+            className="ml-4 bg-amber-700 text-white px-3 py-0.5 rounded-full text-[10px] hover:bg-amber-800 transition-colors uppercase"
+          >
+            Reintentar
+          </button>
+        </div>
+      )}
+
+      {/* Fotos: van por su propia cola, así que se cuentan aparte */}
+      {(fotos.subiendo || fotos.pendientes > 0) && (
+        <div className="py-2 px-4 text-xs font-bold text-white bg-amber-500 shadow-md flex items-center justify-between">
+          <span className="flex-1 text-center">
+            {fotos.subiendo
+              ? `📷 Subiendo fotos… (${fotos.pendientes} por subir)`
+              : `📷 ${fotos.pendientes} ${fotos.pendientes === 1 ? 'foto pendiente' : 'fotos pendientes'}`}
+          </span>
+          {!fotos.subiendo && (
+            <button
+              onClick={() => syncFotos()}
+              className="ml-4 bg-white text-amber-600 px-3 py-1 rounded-full text-[10px] hover:bg-amber-50 transition-colors uppercase"
+            >
+              Subir ahora
+            </button>
+          )}
+        </div>
+      )}
+
+      {fotos.fallidas > 0 && (
+        <div className="py-1.5 px-4 text-xs font-bold text-amber-900 bg-amber-200 flex items-center justify-between">
+          <span>⚠ {fotos.fallidas} {fotos.fallidas === 1 ? 'foto no se pudo subir' : 'fotos no se pudieron subir'}</span>
+          <button
+            onClick={() => retryFotosFallidas()}
             className="ml-4 bg-amber-700 text-white px-3 py-0.5 rounded-full text-[10px] hover:bg-amber-800 transition-colors uppercase"
           >
             Reintentar

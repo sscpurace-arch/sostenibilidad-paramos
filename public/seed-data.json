@@ -31,7 +31,8 @@
           "valor": 1,
           "texto": "La protección es menor del 20%."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado."
     },
     {
       "id": 2,
@@ -64,7 +65,8 @@
           "valor": 1,
           "texto": "La finca NO cuenta con agua durante cierta época del año."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 3,
@@ -98,7 +100,7 @@
           "texto": "En la finca se acarrea el agua y/o se cuenta con aljibe, no hay fuentes de agua y se realiza deforestación."
         }
       ],
-      "nota_criterio": "Referencia rápida según el método: acueducto rural = 3; canal abierto o bombeo = 2; acarreo = 1. Otros casos dependen del tratamiento y las condiciones sépticas de la conducción."
+      "nota_criterio": "Referencia rápida según el método: acueducto rural = 3; canal abierto o bombeo = 2; acarreo = 1. Otros casos dependen del tratamiento y las condiciones sépticas de la conducción. Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 4,
@@ -131,7 +133,8 @@
           "valor": 1,
           "texto": "No tienen tratamiento y se vierten directamente a una fuente hídrica."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 5,
@@ -164,7 +167,8 @@
           "valor": 1,
           "texto": "Se hacen quemas, baja cobertura vegetal y pendiente muy severa."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado."
     },
     {
       "id": 6,
@@ -197,7 +201,8 @@
           "valor": 1,
           "texto": "La fertilización se hace sin análisis de suelos; hay encharcamiento/resequedad y baja actividad biológica."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 7,
@@ -264,7 +269,7 @@
           "texto": "Menos de 5 árboles por hectárea."
         }
       ],
-      "nota_criterio": "Referencia para trópico alto (páramo)."
+      "nota_criterio": "Referencia para trópico alto (páramo). Se cuentan los árboles ESTABLECIDOS Y VIVOS por hectárea, no los sembrados."
     },
     {
       "id": 9,
@@ -297,7 +302,8 @@
           "valor": 1,
           "texto": "Menos del 5%."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado."
     },
     {
       "id": 10,
@@ -331,7 +337,7 @@
           "texto": "Usa herbicidas y pesticidas de la \"docena sucia\" y de categoría toxicológica I y II."
         }
       ],
-      "nota_criterio": "\"Docena sucia\" = lista de plaguicidas de mayor riesgo para salud y ambiente. Categoría toxicológica I y II = alta y extrema peligrosidad."
+      "nota_criterio": "\"Docena sucia\" = lista de plaguicidas de mayor riesgo para salud y ambiente. Categoría toxicológica I y II = alta y extrema peligrosidad. Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 11,
@@ -364,7 +370,8 @@
           "valor": 1,
           "texto": "No hay tránsito de fauna en el predio."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 12,
@@ -397,7 +404,8 @@
           "valor": 1,
           "texto": "No les dan utilidad y tienen una disposición final inadecuada."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado."
     },
     {
       "id": 13,
@@ -430,7 +438,8 @@
           "valor": 1,
           "texto": "No tiene crédito, tiene garantía y está reportado en centrales de riesgo."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 14,
@@ -463,7 +472,8 @@
           "valor": 1,
           "texto": "No maneja registros contables ni de costos."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 15,
@@ -496,7 +506,8 @@
           "valor": 1,
           "texto": "Los ingresos NO cubren los costos."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 16,
@@ -529,7 +540,8 @@
           "valor": 1,
           "texto": "No genera nuevos empleos."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 17,
@@ -562,7 +574,8 @@
           "valor": 1,
           "texto": "NO aplican ni difunden las técnicas propuestas."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 18,
@@ -595,7 +608,8 @@
           "valor": 1,
           "texto": "No produce alimentos para la familia."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 19,
@@ -628,7 +642,8 @@
           "valor": 1,
           "texto": "Monocultivo."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 20,
@@ -661,7 +676,8 @@
           "valor": 1,
           "texto": "No se les da utilidad y tienen disposición final inadecuada."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado."
     },
     {
       "id": 21,
@@ -694,7 +710,8 @@
           "valor": 1,
           "texto": "Menos de 5 potreros."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
     },
     {
       "id": 22,
@@ -728,7 +745,7 @@
           "texto": "1000 litros por hectárea/año o menos."
         }
       ],
-      "nota_criterio": "Banda mostrada: Doble Propósito, trópico alto (páramo). Para sistemas de Lechería especializada en trópico alto los rangos son distintos (mayores): 5=≥20001, 4=16001-20000, 3=12001-16000, 2=8001-12000, 1=≤8000 litros/ha/año. Confirmar con Santiago cuál sistema predomina en el área para fijar la banda por defecto."
+      "nota_criterio": "Banda mostrada: Doble Propósito, trópico alto (páramo). Para sistemas de Lechería especializada en trópico alto los rangos son distintos (mayores): 5=≥20001, 4=16001-20000, 3=12001-16000, 2=8001-12000, 1=≤8000 litros/ha/año. Confirmar con Santiago cuál sistema predomina en el área para fijar la banda por defecto. Fórmula: (litros por día × 365) ÷ hectáreas en pastoreo."
     },
     {
       "id": 23,
@@ -762,7 +779,7 @@
           "texto": "Menos de 140 kilos promedio."
         }
       ],
-      "nota_criterio": "Banda mostrada: Doble Propósito (trópico bajo-alto). Para sistemas de Cría en trópico bajo los rangos son distintos (mayores): 5=≥200, 4=180-199, 3=170-179, 2=160-169, 1=<160 kg. Confirmar con Santiago cuál sistema predomina."
+      "nota_criterio": "Banda mostrada: Doble Propósito (trópico bajo-alto). Para sistemas de Cría en trópico bajo los rangos son distintos (mayores): 5=≥200, 4=180-199, 3=170-179, 2=160-169, 1=<160 kg. Confirmar con Santiago cuál sistema predomina. Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 24,
@@ -795,7 +812,8 @@
           "valor": 1,
           "texto": "Más de 45 meses."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 25,
@@ -828,7 +846,8 @@
           "valor": 1,
           "texto": "Menos de 0,6 UGG por hectárea."
         }
-      ]
+      ],
+      "nota_criterio": "Fórmula: (nº animales × peso promedio) ÷ 450 kg = UGG; luego UGG ÷ hectáreas de pastoreo."
     },
     {
       "id": 26,
@@ -861,7 +880,8 @@
           "valor": 1,
           "texto": "Más de 48 meses."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     },
     {
       "id": 27,
@@ -894,7 +914,8 @@
           "valor": 1,
           "texto": "Mayor al 10% anual."
         }
-      ]
+      ],
+      "nota_criterio": "Fórmula: (nº de muertes en el año ÷ total de animales) × 100."
     },
     {
       "id": 28,
@@ -927,7 +948,8 @@
           "valor": 1,
           "texto": "21 meses o más."
         }
-      ]
+      ],
+      "nota_criterio": "Promedio de meses transcurridos entre dos partos consecutivos."
     },
     {
       "id": 29,
@@ -960,7 +982,8 @@
           "valor": 1,
           "texto": "No se toma ninguna información de la finca."
         }
-      ]
+      ],
+      "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
     }
   ],
   "productores": [

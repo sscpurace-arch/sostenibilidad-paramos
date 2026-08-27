@@ -3,7 +3,7 @@
 /**
  * Footer fijo con botones de guardar y finalizar.
  */
-export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancelar, todosCompletos, totalRespondidos, totalIndicadores }) {
+export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancelar, todosCompletos, totalRespondidos, totalIndicadores, fotosFaltantes = 0 }) {
   return (
     <footer className="fixed bottom-16 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-gray-100 z-20">
       <div className="flex flex-col gap-3 max-w-md mx-auto">
@@ -32,6 +32,16 @@ export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancel
         >
           {todosCompletos ? '✅ ENVIAR CALIFICACIÓN FINAL' : `Enviar (${totalRespondidos}/${totalIndicadores})`}
         </button>
+
+        {/* Aviso, no bloqueo: el botón sigue siendo pulsable y valida al
+            presionar. Un botón muerto sin explicación deja al técnico varado. */}
+        {fotosFaltantes > 0 && (
+          <p className="text-[11px] text-amber-700 text-center -mt-1">
+            ⚠ {fotosFaltantes === 1
+              ? 'Un indicador crítico sin foto'
+              : `${fotosFaltantes} indicadores críticos sin foto`}
+          </p>
+        )}
       </div>
     </footer>
   );

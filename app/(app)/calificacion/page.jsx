@@ -3,7 +3,8 @@ import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
-import { crearSchemaEvaluacion } from '@/lib/validation';
+import { crearSchemaEvaluacion, validarEvidenciaFotografica } from '@/lib/validation';
+import { useFotos } from '@/lib/hooks/useFotos';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -12,6 +13,7 @@ import ResultadosEvaluacion from '@/components/ResultadosEvaluacion';
 import EvaluacionHeader from '@/components/EvaluacionHeader';
 import EvaluacionFooter from '@/components/EvaluacionFooter';
 import ValidationBanner from '@/components/ValidationBanner';
+import PanoramicaCard from '@/components/PanoramicaCard';
 
 // Ruta estática + parámetro por query (?id=EVAL) para funcionar sin conexión.
 function EvaluacionContent() {
@@ -30,12 +32,35 @@ function EvaluacionContent() {
   const [showErrors, setShowErrors] = useState(false);
   const [autoSaveMsg, setAutoSaveMsg] = useState(null);
   const [tecnicoNombre, setTecnicoNombre] = useState('Técnico');
+  const [fotosFaltantes, setFotosFaltantes] = useState([]);
 
   const detallesRef = useRef(detalles);
   const dirtyRef = useRef(false);
+
+  /**
+   * Id de la fila de cada indicador, en un ref y no en el estado.
+   *
+   * Cada handler hacía `detalles[ind]?.id || crypto.randomUUID()`. Dos
+   * escrituras en el mismo tick (elegir puntaje y escribir enseguida) leen el
+   * mismo estado sin id y acuñan UUIDs distintos, con lo que el indicador
+   * termina con dos filas y la evaluación queda con datos contradictorios.
+   * El ref se actualiza al instante, así que la segunda escritura ya ve el id.
+   */
+  const idsRef = useRef({});
+  const idDeIndicador = useCallback((indId) => {
+    const k = String(indId);
+    if (!idsRef.current[k]) idsRef.current[k] = crypto.randomUUID();
+    return idsRef.current[k];
+  }, []);
   const router = useRouter();
   const supabase = createClient();
   const { pendingCount } = useOfflineSync();
+
+  // Evidencia fotográfica. El hook tolera evaluacion === null mientras carga.
+  const fotos = useFotos(evalId, {
+    tecnicoId: evaluacion?.tecnico_id,
+    esPrueba: !!evaluacion?.es_prueba,
+  });
 
   useEffect(() => { detallesRef.current = detalles; }, [detalles]);
 
@@ -47,8 +72,9 @@ function EvaluacionContent() {
         const entries = Object.entries(detallesRef.current).filter(([_, d]) => d.valor);
         for (const [indId, det] of entries) {
           await saveRecord('respuestas_indicadores', {
-            id: det.id, evaluacion_id: evalId,
-            indicador_id: indId, valor: det.valor, observacion: det.observacion || ''
+            id: det.id || idsRef.current[indId], evaluacion_id: evalId,
+            indicador_id: indId, valor: det.valor, observacion: det.observacion || '',
+            motivo_sin_foto: det.motivo_sin_foto || null, entradas: det.entradas || null
           });
         }
         dirtyRef.current = false;
@@ -80,7 +106,14 @@ function EvaluacionContent() {
       })));
 
       const detMap = {};
-      existingDets.forEach(d => { detMap[d.indicador_id] = { id: d.id, valor: d.valor, observacion: d.observacion }; });
+      idsRef.current = {};
+      existingDets.forEach(d => {
+        idsRef.current[String(d.indicador_id)] = d.id;
+        detMap[d.indicador_id] = {
+          id: d.id, valor: d.valor, observacion: d.observacion,
+          motivo_sin_foto: d.motivo_sin_foto || '', entradas: d.entradas || null
+        };
+      });
       setDetalles(detMap);
 
       const prevEvals = await db.evaluaciones
@@ -112,27 +145,67 @@ function EvaluacionContent() {
 
   // ─── Handlers ───────────────────────────────────────────
   const handleScoreChange = useCallback(async (indId, score) => {
-    const recordId = detalles[indId]?.id || crypto.randomUUID();
+    const recordId = idDeIndicador(indId);
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: score } }));
     dirtyRef.current = true;
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     await saveRecord('respuestas_indicadores', {
       id: recordId, evaluacion_id: evalId, indicador_id: indId,
-      valor: score, observacion: detalles[indId]?.observacion || ''
+      valor: score, observacion: detalles[indId]?.observacion || '',
+      motivo_sin_foto: detalles[indId]?.motivo_sin_foto || null,
+      entradas: detalles[indId]?.entradas || null
     });
-  }, [detalles, evalId, validationErrors]);
+  }, [detalles, evalId, validationErrors, idDeIndicador]);
 
   const handleObservationChange = useCallback(async (indId, text) => {
-    const recordId = detalles[indId]?.id || crypto.randomUUID();
+    const recordId = idDeIndicador(indId);
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, observacion: text } }));
     dirtyRef.current = true;
     if (detalles[indId]?.valor) {
       await saveRecord('respuestas_indicadores', {
         id: recordId, evaluacion_id: evalId, indicador_id: indId,
-        valor: detalles[indId].valor, observacion: text
+        valor: detalles[indId].valor, observacion: text,
+        motivo_sin_foto: detalles[indId]?.motivo_sin_foto || null,
+        entradas: detalles[indId]?.entradas || null
       });
     }
-  }, [detalles, evalId]);
+  }, [detalles, evalId, idDeIndicador]);
+
+  // Por qué no se pudo tomar la foto de un indicador crítico (ver validation.js)
+  const handleMotivoSinFotoChange = useCallback(async (indId, text) => {
+    const recordId = idDeIndicador(indId);
+    setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, motivo_sin_foto: text } }));
+    dirtyRef.current = true;
+    if (detalles[indId]?.valor) {
+      await saveRecord('respuestas_indicadores', {
+        id: recordId, evaluacion_id: evalId, indicador_id: indId,
+        valor: detalles[indId].valor, observacion: detalles[indId]?.observacion || '',
+        motivo_sin_foto: text, entradas: detalles[indId]?.entradas || null
+      });
+    }
+  }, [detalles, evalId, idDeIndicador]);
+
+  /**
+   * Una calculadora aplicó su resultado: puntaje, desglose y entradas crudas
+   * entran juntos, en una sola escritura.
+   *
+   * Las entradas se guardan además del resumen textual para que el dato sea
+   * auditable y se pueda recalcular si una fórmula cambia.
+   */
+  const handleCalculoAplicado = useCallback(async (indId, { valor, observacion, entradas }) => {
+    const recordId = idDeIndicador(indId);
+    setDetalles(prev => ({
+      ...prev,
+      [indId]: { ...prev[indId], id: recordId, valor, observacion, entradas }
+    }));
+    dirtyRef.current = true;
+    if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
+    await saveRecord('respuestas_indicadores', {
+      id: recordId, evaluacion_id: evalId, indicador_id: indId,
+      valor, observacion, entradas,
+      motivo_sin_foto: detalles[indId]?.motivo_sin_foto || null
+    });
+  }, [detalles, evalId, validationErrors, idDeIndicador]);
 
   const handleFinalizar = async () => {
     const { validate } = crearSchemaEvaluacion(indicadores);
@@ -144,6 +217,19 @@ function EvaluacionContent() {
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
+
+    // Segunda barrera: regla 3 de la guía — los indicadores en 2 o menos
+    // necesitan foto, o una explicación de por qué no la hay.
+    const evidencia = validarEvidenciaFotografica(indicadores, detalles, fotos.porIndicador);
+    if (!evidencia.success) {
+      setFotosFaltantes(evidencia.faltantes);
+      setShowErrors(true);
+      const el = document.getElementById(`ind-${evidencia.faltantes[0].indicador_id}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    setFotosFaltantes([]);
+
     await saveRecord('evaluaciones', { ...evaluacion, estado: 'enviada' });
 
     const avgs = calculateAverages(detalles);
@@ -174,8 +260,9 @@ function EvaluacionContent() {
   const handleGuardarSalir = async () => {
     for (const [indId, det] of Object.entries(detalles).filter(([_, d]) => d.valor)) {
       await saveRecord('respuestas_indicadores', {
-        id: det.id, evaluacion_id: evalId,
-        indicador_id: indId, valor: det.valor, observacion: det.observacion || ''
+        id: det.id || idsRef.current[indId], evaluacion_id: evalId,
+        indicador_id: indId, valor: det.valor, observacion: det.observacion || '',
+        motivo_sin_foto: det.motivo_sin_foto || null, entradas: det.entradas || null
       });
     }
     router.push('/');
@@ -246,6 +333,22 @@ function EvaluacionContent() {
         todosCompletos={todosCompletos} autoSaveMsg={autoSaveMsg} pendingCount={pendingCount}
       />
 
+      {fotos.aviso && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
+          <span className="text-amber-600 shrink-0">⚠</span>
+          <p className="text-xs text-amber-800 leading-relaxed flex-1">{fotos.aviso}</p>
+          <button onClick={fotos.descartarAviso} className="text-amber-500 text-lg leading-none px-1">✕</button>
+        </div>
+      )}
+
+      <PanoramicaCard
+        foto={fotos.panoramica}
+        url={fotos.panoramica ? fotos.urls[fotos.panoramica.id] : null}
+        onAgregar={fotos.agregarPanoramica}
+        onBorrar={fotos.borrar}
+        guardando={fotos.guardando}
+      />
+
       {dimensiones.map(dim => (
         <div key={dim.nombre} className="flex flex-col gap-3 mt-2">
           <div className="bg-[#2E7D32]/10 p-2 rounded text-[#2E7D32] font-black text-xs uppercase tracking-wider">
@@ -259,19 +362,34 @@ function EvaluacionContent() {
                 observation={detalles[ind.id]?.observacion}
                 onObservationChange={(t) => handleObservationChange(ind.id, t)}
                 showError={showErrors && !detalles[ind.id]?.valor}
+                fotos={fotos.porIndicador[ind.id] || []}
+                fotoUrls={fotos.urls}
+                onAgregarFoto={fotos.agregar}
+                onBorrarFoto={fotos.borrar}
+                guardandoFoto={fotos.guardando}
+                motivoSinFoto={detalles[ind.id]?.motivo_sin_foto}
+                onMotivoSinFotoChange={(t) => handleMotivoSinFotoChange(ind.id, t)}
+                entradas={detalles[ind.id]?.entradas}
+                onCalculoAplicado={(r) => handleCalculoAplicado(ind.id, r)}
               />
             </div>
           ))}
         </div>
       ))}
 
-      {showErrors && <ValidationBanner errorCount={Object.keys(validationErrors).length} />}
+      {showErrors && (
+        <ValidationBanner
+          errorCount={Object.keys(validationErrors).length}
+          fotosFaltantes={fotosFaltantes}
+        />
+      )}
 
       <EvaluacionFooter
         onGuardarSalir={handleGuardarSalir} onFinalizar={handleFinalizar}
         onCancelar={handleCancelar}
         todosCompletos={todosCompletos} totalRespondidos={totalRespondidos}
         totalIndicadores={totalIndicadores}
+        fotosFaltantes={fotosFaltantes.length}
       />
 
     </div>

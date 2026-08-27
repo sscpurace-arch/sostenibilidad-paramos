@@ -1,12 +1,14 @@
 ﻿'use client';
 import { useState } from 'react';
-import CalculadoraLeche from '@/components/CalculadoraLeche';
+import CalculadoraIndicador, { tieneCalculadora } from '@/components/CalculadoraIndicador';
+import ConteoArboles from '@/components/ConteoArboles';
+import FotoEvidencia from '@/components/FotoEvidencia';
 
 const NIVEL_COLOR = { 1: '#DC2626', 2: '#EA580C', 3: '#D97706', 4: '#65A30D', 5: '#03A64A' };
 
-// Indicador 22 (litros leche/ha/año): en vez de pedirle la cuenta al técnico,
-// la app la hace con datos fáciles de preguntar en campo.
-const INDICADOR_LECHE = 22;
+// Indicador 8 (árboles en potreros): se cuentan los establecidos y vivos,
+// no los sembrados. Ver ConteoArboles.jsx.
+const INDICADOR_ARBOLES = 8;
 
 /**
  * IndicadorCard — Tarjeta de calificación por indicador
@@ -16,6 +18,7 @@ const INDICADOR_LECHE = 22;
  * - Criterios de calificación expandibles (pregunta guía + los 5 niveles oficiales)
  * - Error inline con var(--color-danger)
  * - Validación visual al intentar finalizar (via prop `showError`)
+ * - Evidencia fotográfica, obligatoria cuando la calificación es 1 o 2
  */
 export default function IndicadorCard({
   indicador,
@@ -23,7 +26,16 @@ export default function IndicadorCard({
   onScoreChange,
   observation,
   onObservationChange,
-  showError = false  // true cuando se intenta finalizar sin calificar
+  showError = false,  // true cuando se intenta finalizar sin calificar
+  fotos = [],
+  fotoUrls = {},
+  onAgregarFoto,
+  onBorrarFoto,
+  guardandoFoto = false,
+  motivoSinFoto = '',
+  onMotivoSinFotoChange,
+  entradas,
+  onCalculoAplicado
 }) {
   const [expanded, setExpanded] = useState(false);
   const tieneNiveles = Array.isArray(indicador.niveles) && indicador.niveles.length > 0;
@@ -34,14 +46,38 @@ export default function IndicadorCard({
 
   const hasError = showError && !score;
 
+  // Regla 3 de la guía: calificar en 2 o menos exige respaldo fotográfico.
+  // Se admite cerrar sin foto solo si el evaluador explica por qué.
+  const soporteFotografico = !!onAgregarFoto;
+  const requiereFoto = soporteFotografico && !!score && score <= 2;
+  const faltaEvidencia = requiereFoto && fotos.length === 0;
+  const faltaEvidenciaSinExcusa = faltaEvidencia && !String(motivoSinFoto || '').trim();
+
+  // Las calculadoras aplican puntaje, desglose y entradas de una sola vez.
+  //
+  // Va por un handler propio y NO por onScoreChange + onObservationChange en
+  // cadena: esos tres callbacks leen el mismo estado del render actual, así que
+  // encadenarlos hace que cada uno guarde con datos obsoletos y el último
+  // sobreescriba a los anteriores. Se perdían la observación y las entradas.
+  const aplicarCalculo = (puntaje, resumen, entradasCalculo) => {
+    if (onCalculoAplicado) {
+      onCalculoAplicado({ valor: puntaje, observacion: resumen, entradas: entradasCalculo });
+    } else {
+      onScoreChange(puntaje);
+      onObservationChange(resumen);
+    }
+  };
+
   return (
     <div 
       className={`bg-white rounded-xl p-4 shadow-sm border-2 transition-colors duration-200 ${
-        hasError 
-          ? 'border-[var(--color-danger)] bg-red-50/30' 
-          : score 
-            ? 'border-green-200' 
-            : 'border-gray-100'
+        hasError
+          ? 'border-[var(--color-danger)] bg-red-50/30'
+          : faltaEvidenciaSinExcusa
+            ? 'border-amber-300 bg-amber-50/30'
+            : score
+              ? 'border-green-200'
+              : 'border-gray-100'
       }`}
     >
       {/* Header con nombre e indicador de completado */}
@@ -102,14 +138,12 @@ export default function IndicadorCard({
         )
       )}
 
-      {/* Calculadora de leche: solo para el indicador 22 */}
-      {indicador.id === INDICADOR_LECHE && (
-        <CalculadoraLeche
-          onAplicar={(puntaje, resumen) => {
-            onScoreChange(puntaje);
-            onObservationChange(resumen);
-          }}
-        />
+      {/* Indicadores con cálculo: la app hace la cuenta y guarda las entradas */}
+      {indicador.id === INDICADOR_ARBOLES && (
+        <ConteoArboles entradas={entradas} onAplicar={aplicarCalculo} />
+      )}
+      {tieneCalculadora(indicador.id) && (
+        <CalculadoraIndicador indicadorId={indicador.id} onAplicar={aplicarCalculo} />
       )}
 
       {/* Botones de score — rango dinámico */}
@@ -151,6 +185,29 @@ export default function IndicadorCard({
           rows={2}
           value={observation || ''}
           onChange={(e) => onObservationChange(e.target.value)}
+        />
+      )}
+
+      {/* Evidencia fotográfica — también tras elegir score, como la observación */}
+      {score && soporteFotografico && (
+        <FotoEvidencia
+          fotos={fotos}
+          urls={fotoUrls}
+          onAgregar={(files) => onAgregarFoto(indicador.id, files)}
+          onBorrar={onBorrarFoto}
+          guardando={guardandoFoto}
+          obligatoria={faltaEvidencia}
+        />
+      )}
+
+      {/* Escape justificado: sin esto, la salida fácil sería subir la nota a 3 */}
+      {faltaEvidencia && onMotivoSinFotoChange && (
+        <textarea
+          className="w-full mt-2 p-3 border border-amber-200 rounded-lg text-sm bg-amber-50/50 text-gray-800 placeholder-amber-700/50 focus:border-amber-400 focus:bg-white outline-none transition-colors resize-none"
+          placeholder="¿Por qué no se pudo tomar la foto?"
+          rows={2}
+          value={motivoSinFoto || ''}
+          onChange={(e) => onMotivoSinFotoChange(e.target.value)}
         />
       )}
     </div>

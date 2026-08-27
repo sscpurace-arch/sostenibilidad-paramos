@@ -180,3 +180,45 @@ update indicadores set
   nota_criterio = NULL
 where id = 29;
 
+
+-- ============================================================================
+-- R3 · Fórmula y método de levantamiento visibles al calificar
+-- Taller de calibración, Paletará, 31-jul-2026.
+--
+-- El objetivo del taller es que el evaluador interiorice el cálculo y con el
+-- tiempo pueda prescindir de la guía impresa. Una fórmula visible en el momento
+-- de uso enseña; una escondida en un manual aparte, no.
+--
+-- OJO: estas notas CONSERVAN la guía que ya traían los indicadores 3, 8, 10,
+-- 22 y 23, y le agregan el método detrás. No las reemplazan.
+-- El indicador 7 no pertenece a ninguna familia de levantamiento: queda sin nota.
+-- ============================================================================
+
+update indicadores set nota_criterio = 'Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado.' where id = 1;
+update indicadores set nota_criterio = 'Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 2;
+update indicadores set nota_criterio = 'Referencia rápida según el método: acueducto rural = 3; canal abierto o bombeo = 2; acarreo = 1. Otros casos dependen del tratamiento y las condiciones sépticas de la conducción. Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 3;
+update indicadores set nota_criterio = 'Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 4;
+update indicadores set nota_criterio = 'Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado.' where id = 5;
+update indicadores set nota_criterio = 'Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 6;
+update indicadores set nota_criterio = 'Referencia para trópico alto (páramo). Se cuentan los árboles ESTABLECIDOS Y VIVOS por hectárea, no los sembrados.' where id = 8;
+update indicadores set nota_criterio = 'Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado.' where id = 9;
+update indicadores set nota_criterio = '"Docena sucia" = lista de plaguicidas de mayor riesgo para salud y ambiente. Categoría toxicológica I y II = alta y extrema peligrosidad. Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 10;
+update indicadores set nota_criterio = 'Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 11;
+update indicadores set nota_criterio = 'Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado.' where id = 12;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 13;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 14;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 15;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 16;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 17;
+update indicadores set nota_criterio = 'Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 18;
+update indicadores set nota_criterio = 'Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 19;
+update indicadores set nota_criterio = 'Levantamiento: estimación visual de proporción o densidad, recorriendo el predio completo. Se califica lo observado, no lo declarado.' where id = 20;
+update indicadores set nota_criterio = 'Levantamiento: verificación directa de existencia y funcionamiento en el predio.' where id = 21;
+update indicadores set nota_criterio = 'Banda mostrada: Doble Propósito, trópico alto (páramo). Para sistemas de Lechería especializada en trópico alto los rangos son distintos (mayores): 5=≥20001, 4=16001-20000, 3=12001-16000, 2=8001-12000, 1=≤8000 litros/ha/año. Confirmar con Santiago cuál sistema predomina en el área para fijar la banda por defecto. Fórmula: (litros por día × 365) ÷ hectáreas en pastoreo.' where id = 22;
+update indicadores set nota_criterio = 'Banda mostrada: Doble Propósito (trópico bajo-alto). Para sistemas de Cría en trópico bajo los rangos son distintos (mayores): 5=≥200, 4=180-199, 3=170-179, 2=160-169, 1=<160 kg. Confirmar con Santiago cuál sistema predomina. Levantamiento: entrevista al productor y cálculo.' where id = 23;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 24;
+update indicadores set nota_criterio = 'Fórmula: (nº animales × peso promedio) ÷ 450 kg = UGG; luego UGG ÷ hectáreas de pastoreo.' where id = 25;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 26;
+update indicadores set nota_criterio = 'Fórmula: (nº de muertes en el año ÷ total de animales) × 100.' where id = 27;
+update indicadores set nota_criterio = 'Promedio de meses transcurridos entre dos partos consecutivos.' where id = 28;
+update indicadores set nota_criterio = 'Levantamiento: entrevista al productor y cálculo.' where id = 29;
