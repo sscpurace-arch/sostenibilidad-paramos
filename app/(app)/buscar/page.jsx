@@ -15,11 +15,13 @@ export default function BuscarPage() {
   const router = useRouter();
 
   useEffect(() => {
-    cargarProductores();
-    // Recargar la lista cuando la descarga/sync termine de poblar la base local
+    cargarProductores({ primeraVez: true });
+    // Recargar la lista cuando la descarga/sync termine de poblar la base local.
+    // OJO: sin silencio, cada ciclo de sync repintaba la lista entera, se
+    // perdía el scroll y el usuario terminaba de vuelta en el primer productor.
     let prevSyncing = false;
     const unsub = subscribe(({ isSyncing }) => {
-      if (prevSyncing && !isSyncing) cargarProductores();
+      if (prevSyncing && !isSyncing) cargarProductores({ primeraVez: false });
       prevSyncing = isSyncing;
     });
     return unsub;
@@ -32,16 +34,27 @@ export default function BuscarPage() {
     return () => clearTimeout(handler);
   }, [query]);
 
-  async function cargarProductores() {
-    setLoading(true);
+  async function cargarProductores({ primeraVez = false } = {}) {
+    // Solo la primera carga muestra "Cargando...". Las recargas por sync son
+    // silenciosas: si desmontaran la lista, el usuario perdería el scroll y la
+    // fila que estaba a punto de tocar.
+    if (primeraVez) setLoading(true);
     try {
       const all = await db.productores.toArray();
-      setProductores(all);
+      // No repintar si no cambió nada: evita re-render y salto de scroll.
+      setProductores(prev => sonIguales(prev, all) ? prev : all);
     } catch (e) {
       console.error('Error cargando productores de DB local:', e);
     } finally {
-      setLoading(false);
+      if (primeraVez) setLoading(false);
     }
+  }
+
+  // Comparación barata: misma cantidad y mismos ids en el mismo orden.
+  function sonIguales(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (a[i].id !== b[i].id) return false;
+    return true;
   }
 
   const filtered = productores.filter(p => 
