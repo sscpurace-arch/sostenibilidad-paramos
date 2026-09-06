@@ -111,6 +111,17 @@ export default function Dashboard() {
 
       {/* ═══ Preparar / estado offline ═══ */}
       <PrepararOffline />
+
+      {/* Acceso permanente al diagnóstico.
+          Dentro de la app instalada no hay barra de direcciones, así que si no
+          existe un enlace no hay forma de llegar a esta pantalla — que es justo
+          la que sirve cuando la app está fallando. Discreto pero siempre ahí. */}
+      <a
+        href="/diagnostico"
+        className="text-center text-[11px] text-white/30 underline py-3 -mt-1"
+      >
+        ¿Algo no funciona? Ver diagnóstico
+      </a>
     </div>
   );
 }
