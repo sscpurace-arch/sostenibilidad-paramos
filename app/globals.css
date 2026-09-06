@@ -65,11 +65,36 @@
 }
 
 body {
-  background: linear-gradient(180deg, #0D3B23 0%, #0A2E1C 40%, #071E13 100%);
-  background-attachment: fixed;
   color: var(--text-on-dark);
   -webkit-tap-highlight-color: transparent;
+  /* dvh sigue a la barra de Safari al aparecer y desaparecer; con 100vh la
+     página cambia de alto al desplazar y la pantalla da saltos en iPhone. */
   min-height: 100vh;
+  min-height: 100dvh;
+  background: #0A2E1C;
+}
+
+/* El degradado va en una capa fija propia, NO con background-attachment:fixed.
+   En iOS ese modo obliga a repintar el fondo en cada cuadro del desplazamiento:
+   la pantalla titila y la app se siente trabada. Una capa fija se compone en la
+   GPU una sola vez y el problema desaparece. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, #0D3B23 0%, #0A2E1C 40%, #071E13 100%);
+  pointer-events: none;
+}
+
+/* Respetar el área segura del iPhone (isla dinámica y barra de gestos).
+   `pb-safe` se venía usando en NavBar.jsx pero no existía en ninguna parte:
+   la barra inferior quedaba justo encima del gesto de inicio. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 /* Contraste global de campos de texto.

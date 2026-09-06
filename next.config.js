@@ -12,6 +12,13 @@ const withSerwist = require('@serwist/next').default({
 });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  // Identificador de versión visible en /diagnostico. Sin esto no hay forma de
+  // saber si el celular está corriendo la versión nueva o una vieja cacheada.
+  env: {
+    NEXT_PUBLIC_BUILD_ID:
+      (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7) || revision,
+  },
+};
 
 module.exports = withSerwist(nextConfig);

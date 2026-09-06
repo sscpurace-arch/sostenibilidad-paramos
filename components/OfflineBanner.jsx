@@ -118,6 +118,9 @@ export default function OfflineBanner() {
               Motivo: {state.lastError}
             </span>
           )}
+          <a href="/diagnostico" className="font-normal text-[10px] underline text-amber-900">
+            Ver diagnóstico y forzar actualización
+          </a>
         </div>
       )}
 

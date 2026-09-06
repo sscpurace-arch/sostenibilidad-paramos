@@ -20,12 +20,23 @@ export default function UpdateBanner() {
     };
     navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
 
-    // Detecta si hay una versión en espera.
-    // Solo muestra la barra si hay un SW activo previo (no la primera instalación).
+    // Al arrancar, si ya hay una versión nueva esperando, se activa sola.
+    // Es el único momento en que cambiar el código es seguro: el usuario aún no
+    // ha empezado a llenar nada. Antes había que tocar el botón, y si la
+    // versión instalada estaba rota el usuario no alcanzaba ni a tocarlo:
+    // quedaba atrapado en la versión mala sin salida.
+    let arranque = true;
+    setTimeout(() => { arranque = false; }, 8000);
+
     const checkWaiting = () => {
-      if (reg?.waiting && navigator.serviceWorker.controller) {
-        setUpdateReady(true);
+      if (!reg?.waiting || !navigator.serviceWorker.controller) return;
+      if (arranque) {
+        reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        return;   // controllerchange recarga sola
       }
+      // A mitad de sesión sí se pregunta: cambiar el código bajo un formulario
+      // a medio llenar sería peor que esperar.
+      setUpdateReady(true);
     };
 
     // Revisar automáticamente.

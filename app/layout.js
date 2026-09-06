@@ -77,6 +77,9 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  // Sin esto, env(safe-area-inset-*) devuelve 0 y la barra inferior queda
+  // debajo del gesto de inicio del iPhone.
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }) {
