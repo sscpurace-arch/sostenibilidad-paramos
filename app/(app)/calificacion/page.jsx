@@ -26,6 +26,7 @@ function EvaluacionContent() {
   const [dimensiones, setDimensiones] = useState([]);
   const [detalles, setDetalles] = useState({});
   const [loading, setLoading] = useState(true);
+  const [errorCarga, setErrorCarga] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [lastResults, setLastResults] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
@@ -88,18 +89,57 @@ function EvaluacionContent() {
   useEffect(() => {
     async function cargarDatos() {
       setLoading(true);
-      if (!evalId) return router.push('/');
-      const eval_ = await db.evaluaciones.get(evalId);
-      if (!eval_) return router.push('/');
+      setErrorCarga(null);
+      if (!evalId) {
+        setLoading(false);
+        setErrorCarga('No se indicó qué calificación abrir.');
+        return;
+      }
+
+      // Si la calificación no está en el celular, buscarla en el servidor antes
+      // de rendirse. Devolver al inicio en silencio —lo que hacía antes— parece
+      // que la app "se saliera sola" y no deja pista de qué pasó.
+      let eval_ = await db.evaluaciones.get(evalId);
+      if (!eval_ && navigator.onLine) {
+        try {
+          const { data } = await supabase
+            .from('evaluaciones').select('*').eq('id', evalId).maybeSingle();
+          if (data) {
+            await db.evaluaciones.put(data);
+            eval_ = data;
+            const { data: resp } = await supabase
+              .from('respuestas_indicadores').select('*').eq('evaluacion_id', evalId);
+            if (resp?.length > 0) await db.respuestas_indicadores.bulkPut(resp);
+          }
+        } catch (e) { console.error('Error buscando la calificación en el servidor:', e); }
+      }
+      if (!eval_) {
+        setLoading(false);
+        setErrorCarga(navigator.onLine
+          ? 'No se encontró esta calificación. Puede que se haya borrado o que aún no esté en este celular.'
+          : 'Esta calificación no está en el celular y no hay conexión para buscarla.');
+        return;
+      }
       setEvaluacion(eval_);
 
-      const [prod, inds, existingDets] = await Promise.all([
+      const [prodLocal, inds, existingDets] = await Promise.all([
         db.productores.get(eval_.finca_id),
         db.indicadores.orderBy('orden').toArray(),
         db.respuestas_indicadores.where('evaluacion_id').equals(eval_.id).toArray()
       ]);
 
-      setProductor(prod);
+      // El productor puede faltar localmente. No es motivo para cerrar la
+      // calificación: se intenta traer y, si no se puede, se sigue con el
+      // nombre en blanco en vez de romper la pantalla entera.
+      let prod = prodLocal;
+      if (!prod && navigator.onLine) {
+        try {
+          const { data } = await supabase
+            .from('productores').select('*').eq('id', eval_.finca_id).maybeSingle();
+          if (data) { await db.productores.put(data); prod = data; }
+        } catch (e) { console.error('Error buscando el productor en el servidor:', e); }
+      }
+      setProductor(prod || { id: eval_.finca_id, nombre_completo: 'Productor sin datos locales' });
       setIndicadores(inds);
       setDimensiones([...new Set(inds.map(i => i.dimension))].map(nombre => ({
         nombre, color: DIMENSION_COLORS[nombre] || '#666'
@@ -269,6 +309,32 @@ function EvaluacionContent() {
   // ─── Render ─────────────────────────────────────────────
 
   if (loading) return <div className="p-10 text-center text-gray-400">Cargando evaluación...</div>;
+
+  // Antes esto era un router.push('/') mudo: la app se devolvía sola al inicio
+  // y no había forma de saber por qué.
+  if (errorCarga) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-5 text-center px-6">
+        <div className="text-5xl">⚠️</div>
+        <h2 className="text-lg font-bold text-white">No se pudo abrir la calificación</h2>
+        <p className="text-sm text-white/60 leading-relaxed">{errorCarga}</p>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <button
+            onClick={() => location.reload()}
+            className="bg-[#03A64A] text-white py-3 px-8 rounded-xl font-bold shadow-lg active:scale-95 transition-all"
+          >
+            Reintentar
+          </button>
+          <button
+            onClick={() => router.push('/buscar')}
+            className="bg-white/10 text-white py-3 px-8 rounded-xl font-bold border border-white/20 active:scale-95 transition-all"
+          >
+            Volver a la lista
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Estado vacío: cargó pero no hay indicadores (problema de datos/conexión)
   if (!loading && indicadores.length === 0) {

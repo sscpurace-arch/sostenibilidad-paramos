@@ -25,6 +25,7 @@ function PerfilProductorContent() {
   const [indicadores, setIndicadores] = useState([]);
   const [dimensiones, setDimensiones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorCarga, setErrorCarga] = useState(null);
   const [fechaNuevaEval, setFechaNuevaEval] = useState(new Date().toISOString().split('T')[0]);
   const [esPrueba, setEsPrueba] = useState(false);
   const [receptorEsOtro, setReceptorEsOtro] = useState(false);
@@ -37,9 +38,35 @@ function PerfilProductorContent() {
 
   const cargarDatos = useCallback(async () => {
     setLoading(true);
-    if (!productorId) return router.push('/buscar');
-    const prod = await db.productores.get(productorId);
-    if (!prod) return router.push('/buscar');
+    setErrorCarga(null);
+    if (!productorId) {
+      setLoading(false);
+      setErrorCarga('No se indicó qué productor abrir.');
+      return;
+    }
+
+    // El productor puede faltar en la base local: descarga incompleta, creado
+    // en otro celular, o caché a medio actualizar. Antes se devolvía al usuario
+    // a la lista sin decir nada y parecía que la app simplemente no abría al
+    // productor. Ahora se busca en el servidor y solo se avisa si tampoco está.
+    let prod = await db.productores.get(productorId);
+    if (!prod && navigator.onLine) {
+      try {
+        const { data } = await supabase
+          .from('productores').select('*').eq('id', productorId).maybeSingle();
+        if (data) {
+          await db.productores.put(data);
+          prod = data;
+        }
+      } catch (e) { console.error('Error buscando el productor en el servidor:', e); }
+    }
+    if (!prod) {
+      setLoading(false);
+      setErrorCarga(navigator.onLine
+        ? 'No se encontró este productor. Puede que aún no se haya descargado a este celular.'
+        : 'Este productor no está descargado en el celular y no hay conexión para buscarlo.');
+      return;
+    }
     setProductor(prod);
 
     const inds = await db.indicadores.orderBy('orden').toArray();
@@ -111,7 +138,12 @@ function PerfilProductorContent() {
     let userId = 'e81ba52c-23df-4f4e-808d-937fd606426c';
     if (!isMock) {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      // Sin sesión el botón no hacía absolutamente nada y el técnico se quedaba
+      // tocándolo sin entender. Mejor decirlo.
+      if (!user) {
+        alert('No se pudo confirmar tu sesión. Cierra y vuelve a abrir la app, o entra de nuevo con tu correo.');
+        return;
+      }
       userId = user.id;
     }
     const newEval = {
@@ -163,6 +195,32 @@ function PerfilProductorContent() {
   };
 
   if (loading) return <div className="p-10 text-center text-gray-400">Cargando perfil...</div>;
+
+  // Nunca devolver al usuario al inicio en silencio: si algo faltó, se dice
+  // qué faltó y se le dan las dos salidas útiles.
+  if (errorCarga || !productor) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-5 text-center px-6">
+        <div className="text-5xl">⚠️</div>
+        <h2 className="text-lg font-bold text-white">No se pudo abrir el productor</h2>
+        <p className="text-sm text-white/60 leading-relaxed">{errorCarga}</p>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <button
+            onClick={() => cargarDatos()}
+            className="bg-[#03A64A] text-white py-3 px-8 rounded-xl font-bold shadow-lg active:scale-95 transition-all"
+          >
+            Reintentar
+          </button>
+          <button
+            onClick={() => router.push('/buscar')}
+            className="bg-white/10 text-white py-3 px-8 rounded-xl font-bold border border-white/20 active:scale-95 transition-all"
+          >
+            Volver a la lista
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 pb-20">

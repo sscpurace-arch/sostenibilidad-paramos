@@ -5,6 +5,7 @@ import { initSyncEngine } from '@/lib/sync-engine';
 import { initFotoSync } from '@/lib/foto-sync';
 import { pedirPersistencia } from '@/lib/foto-utils';
 import { prefetchDemoTiles } from '@/lib/tile-prefetch';
+import { calentarPantallas } from '@/lib/data-prefetch';
 import OfflineBanner from '@/components/OfflineBanner';
 import UpdateBanner from '@/components/UpdateBanner';
 import NavBar from '@/components/NavBar';
@@ -28,6 +29,10 @@ export default function AppLayout({ children }) {
       prefetchDemoTiles().catch(() => {});
       fetch('/seed-data.json').catch(() => {});
       fetch('/purace-boundary.json').catch(() => {});
+      // Guardar las pantallas apenas hay señal, sin esperar a que el usuario
+      // toque "Preparar sin conexión". Con señal intermitente —lo normal en el
+      // páramo— una pantalla sin guardar se cae al respaldo "Sin conexión".
+      calentarPantallas().catch(() => {});
     }
   }, []);
 

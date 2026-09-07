@@ -1,9 +1,40 @@
 'use client';
 
-import { memo, useMemo, useState, useEffect } from 'react';
+import { memo, useMemo, useState, useEffect, Component } from 'react';
 import dynamic from 'next/dynamic';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
+/**
+ * Aísla los fallos de ApexCharts.
+ *
+ * La librería lanza desde dentro de su propio dibujado y se llevaba por
+ * delante la pantalla entera: al enviar una calificación quedaba en blanco y
+ * el técnico perdía de vista el resultado de la visita. La gráfica es lo menos
+ * importante de esa pantalla; si no puede dibujarse, se avisa y ya.
+ */
+class GraficaSegura extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { fallo: false };
+  }
+  static getDerivedStateFromError() {
+    return { fallo: true };
+  }
+  componentDidCatch(error) {
+    console.error('[radar] La gráfica no se pudo dibujar:', error);
+  }
+  render() {
+    if (this.state.fallo) {
+      return (
+        <div className="flex items-center justify-center h-full text-xs text-gray-400 text-center px-4">
+          No se pudo dibujar la gráfica. Los puntajes de abajo sí son correctos.
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const BASE_OPTIONS = {
   chart: {
@@ -56,14 +87,15 @@ function RadarChartComponent({
   dimensiones,
   indicadores,
 }) {
-  // Arranca en cero y anima hacia los valores reales → efecto radar expandiéndose
-  const [animatedDatasets, setAnimatedDatasets] = useState(
-    () => (datasets ?? []).map(d => ({ ...d, data: (d.data ?? []).map(() => 0) }))
-  );
+  // Antes arrancaba con todos los valores en cero para animar el radar
+  // expandiéndose. Con todos los puntos iguales, ApexCharts no puede calcular
+  // la escala del eje y revienta al dibujarlo ("drawYAxis"): la gráfica quedaba
+  // en blanco para siempre, aunque 200 ms después llegaran los datos buenos.
+  // La animación no vale una gráfica vacía en campo.
+  const [animatedDatasets, setAnimatedDatasets] = useState(() => datasets ?? []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setAnimatedDatasets(datasets ?? []), 200);
-    return () => clearTimeout(timer);
+    setAnimatedDatasets(datasets ?? []);
   }, [datasets]);
 
   const series = useMemo(
@@ -164,13 +196,15 @@ function RadarChartComponent({
   return (
     <div className="flex flex-col gap-3">
       <div className="animate-entry" style={{ width: '100%', height }}>
-        <Chart
-          options={options}
-          series={series}
-          type="radar"
-          width="100%"
-          height="100%"
-        />
+        <GraficaSegura>
+          <Chart
+            options={options}
+            series={series}
+            type="radar"
+            width="100%"
+            height="100%"
+          />
+        </GraficaSegura>
       </div>
 
       {indicadores && indicadores.length > 0 && (
