@@ -245,6 +245,58 @@ const nivelesGlobales = [
   doc.rect(MARGEN, c0.y - 7 * (nivelesGlobales.length + 1), ANCHO_UTIL, 7 * (nivelesGlobales.length + 1));
 }
 
+// ─── Página: reglas de aplicación y formas de levantamiento ───
+doc.addPage();
+const cR = crearCursor(doc, TITULO_DOC, SUBTITULO_DOC);
+cR.y = encabezado(doc, TITULO_DOC, SUBTITULO_DOC);
+
+cR.parrafo('Reglas de aplicación', { tamano: 15, color: VERDE, negrita: true, interlineado: 6 });
+cR.avanzar(1);
+cR.parrafo(
+  'Estas siete reglas aplican a los 29 indicadores por igual. La validez del instrumento depende de que dos evaluadores distintos califiquen igual el mismo predio, y la dispersión entre evaluadores viene sobre todo de no aplicar estas reglas de forma consistente.',
+  { tamano: 10, interlineado: 5.2 }
+);
+cR.avanzar(2);
+cR.lista([
+  'Califique lo observado, no lo declarado. Si no lo puede verificar, regístrelo como discrepancia.',
+  'Si duda entre dos niveles, elija el inferior.',
+  'Tome fotografías: al menos una por cada indicador calificado en 2 o menos, y una panorámica del predio. La herramienta digital las exige y no permite cerrar la visita sin ellas.',
+  'Entreviste solo lo no observable (registros, ingresos, créditos, historial sanitario). Lo físico se observa.',
+  'Recorra el predio completo. No califique desde la casa. Es válido observar durante el recorrido y consignar al cierre, bajo techo, cuando las condiciones climáticas lo impidan.',
+  'Registre "no aplica" con justificación. La herramienta digital todavía no dispone de esa casilla: califique 1 y escriba NO APLICA junto con el motivo en el campo de observación.',
+  'Firme al cerrar: evaluador y productor.',
+], { marcador: '>' });
+
+cR.avanzar(4);
+cR.parrafo('Tres formas de levantar la información', { tamano: 13, color: VERDE, negrita: true, interlineado: 5.5 });
+cR.avanzar(1);
+cR.parrafo(
+  'No son 29 indicadores independientes: son tres formas de trabajar. Quien domina la forma, la aplica a todo el grupo. Cada ficha indica a qué familia pertenece el indicador.',
+  { tamano: 10, interlineado: 5.2 }
+);
+cR.avanzar(2);
+cR.lista([
+  'Familia A — Estimación visual de proporción o densidad: indicadores 1, 5, 8, 9, 12 y 20. El ojo se entrena; por eso los talleres incluyen ejercicios de calibración.',
+  'Familia B — Verificación de existencia y funcionamiento: indicadores 2, 3, 4, 6, 10, 11, 18, 19 y 21. El trabajo consiste en pedir que se lo muestren. Si no se lo pueden mostrar, no cuenta.',
+  'Familia C — Entrevista y cálculo: indicadores 13 a 17 y 22 a 29. Los indicadores 22 a 28 dependen de que existan registros (indicador 29); sin registros se estima por entrevista y aplica con más fuerza la regla de elegir el nivel inferior.',
+], { marcador: '•' });
+
+cR.avanzar(4);
+cR.parrafo('Cálculos que resuelve la herramienta digital', { tamano: 13, color: VERDE, negrita: true, interlineado: 5.5 });
+cR.avanzar(1);
+cR.parrafo(
+  'Cinco indicadores traen calculadora en la aplicación: el evaluador entrega los datos fáciles de preguntar en campo y la herramienta aplica la fórmula y sugiere el puntaje según la banda oficial. La fórmula permanece visible, con el propósito de que el evaluador la interiorice y con el tiempo pueda prescindir de la guía impresa. La aplicación conserva además los datos de entrada, no solo el resultado, de modo que el dato sea auditable y pueda recalcularse si una fórmula cambia.',
+  { tamano: 10, interlineado: 5.2 }
+);
+cR.avanzar(2);
+cR.lista([
+  'Indicador 8 — árboles establecidos y vivos por hectárea.',
+  'Indicador 22 — litros de leche por hectárea al año.',
+  'Indicador 25 — carga animal en UGG por hectárea.',
+  'Indicador 27 — tasa de mortalidad anual.',
+  'Indicador 28 — intervalo entre partos.',
+], { marcador: '•' });
+
 // Fichas de indicador, agrupadas por dimensión
 doc.addPage();
 let y = encabezado(doc, TITULO_DOC, SUBTITULO_DOC);
@@ -268,6 +320,9 @@ DIMENSIONES.forEach((dim) => {
     c.parrafo(ind.descripcion, { tamano: 9.5, interlineado: 4.6 });
     if (ind.ajustes) {
       c.parrafo(`Ajustes contextuales: ${ind.ajustes}`, { tamano: 9, color: TERRACOTA, cursiva: true, interlineado: 4.4 });
+    }
+    if (ind.nota_metodo) {
+      c.parrafo(`Cómo se levanta: ${ind.nota_metodo}`, { tamano: 9, color: VERDE_SEC, cursiva: true, interlineado: 4.4 });
     }
     c.avanzar(1.5);
 
