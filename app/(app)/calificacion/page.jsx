@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
-import { crearSchemaEvaluacion, validarEvidenciaFotografica } from '@/lib/validation';
+import { crearSchemaEvaluacion } from '@/lib/validation';
 import { useFotos } from '@/lib/hooks/useFotos';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -218,16 +218,8 @@ function EvaluacionContent() {
       return;
     }
 
-    // Segunda barrera: regla 3 de la guía — los indicadores en 2 o menos
-    // necesitan foto, o una explicación de por qué no la hay.
-    const evidencia = validarEvidenciaFotografica(indicadores, detalles, fotos.porIndicador);
-    if (!evidencia.success) {
-      setFotosFaltantes(evidencia.faltantes);
-      setShowErrors(true);
-      const el = document.getElementById(`ind-${evidencia.faltantes[0].indicador_id}`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
+    // Evidencia fotográfica desactivada temporalmente como bloqueo (taller 2026-09-07):
+    // las fotos quedan opcionales, no impiden enviar la calificación.
     setFotosFaltantes([]);
 
     await saveRecord('evaluaciones', { ...evaluacion, estado: 'enviada' });
