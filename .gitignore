@@ -47,3 +47,8 @@ scratch/
 
 # claude code settings (contiene tokens locales)
 .claude/
+
+# estado local del CLI de Supabase — se regenera solo al correr `supabase` local
+# (linked-project.json SÍ se versiona: documenta a qué proyecto está enlazado el repo)
+supabase/.temp/*
+!supabase/.temp/linked-project.json
