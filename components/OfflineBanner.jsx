@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { subscribe, getState, syncQueue, retryFailed } from '@/lib/sync-engine';
+import { subscribe, getState, syncQueue, retryFailed, descartarFallidos } from '@/lib/sync-engine';
 import { subscribeFotos, syncFotos, retryFotosFallidas } from '@/lib/foto-sync';
 
 export default function OfflineBanner() {
@@ -8,6 +8,20 @@ export default function OfflineBanner() {
   const [isOnline, setIsOnline] = useState(true);
   const [isMock, setIsMock] = useState(false);
   const [fotos, setFotos] = useState({ subiendo: false, pendientes: 0, fallidas: 0 });
+  const [descartando, setDescartando] = useState(false);
+
+  // Borra de la cola lo que el servidor rechazó definitivamente. Los datos
+  // siguen en el celular; solo deja de intentarse subirlos.
+  const handleDescartar = async () => {
+    const n = state.failedCount;
+    const ok = window.confirm(
+      `¿Descartar ${n} ${n === 1 ? 'cambio' : 'cambios'} que el servidor rechazó?` + '\n\n' +
+      'Dejarán de intentarse. Lo que ves en este celular no cambia, pero esos cambios no llegarán al servidor.'
+    );
+    if (!ok) return;
+    setDescartando(true);
+    try { await descartarFallidos(); } finally { setDescartando(false); }
+  };
 
   useEffect(() => {
     // Detectar modo prueba
@@ -103,24 +117,34 @@ export default function OfflineBanner() {
           pudieron subir" no le dice a nadie qué hacer, y el usuario reintenta
           en vano. */}
       {state.failedCount > 0 && (
-        <div className="py-1.5 px-4 text-xs font-bold text-amber-900 bg-amber-200 flex flex-col gap-1">
-          <div className="flex items-center justify-between">
-            <span>⚠ {state.failedCount} cambios no se pudieron subir</span>
+        <div className="py-2 px-4 text-xs font-bold text-amber-900 bg-amber-200 flex flex-col gap-1.5">
+          <span>⚠ {state.failedCount} {state.failedCount === 1 ? 'cambio no se pudo subir' : 'cambios no se pudieron subir'}</span>
+
+          {/* Motivos agrupados: el usuario tiene que saber POR QUÉ para decidir */}
+          {(state.failedReasons?.length > 0 ? state.failedReasons : (state.lastError ? [{ texto: state.lastError, n: state.failedCount }] : [])).map((m) => (
+            <span key={m.texto} className="font-normal text-[11px] text-amber-900/90 leading-snug break-words">
+              <span className="font-black">{m.n}×</span> {m.texto}
+            </span>
+          ))}
+
+          <div className="flex items-center gap-2 mt-0.5">
             <button
               onClick={() => retryFailed()}
-              className="ml-4 bg-amber-700 text-white px-3 py-0.5 rounded-full text-[10px] hover:bg-amber-800 transition-colors uppercase shrink-0"
+              className="bg-amber-700 text-white px-3 py-1 rounded-full text-[10px] hover:bg-amber-800 transition-colors uppercase"
             >
               Reintentar
             </button>
+            <button
+              onClick={handleDescartar}
+              disabled={descartando}
+              className="bg-white text-amber-800 border border-amber-400 px-3 py-1 rounded-full text-[10px] hover:bg-amber-50 transition-colors uppercase disabled:opacity-60"
+            >
+              {descartando ? 'Descartando…' : 'Descartar'}
+            </button>
+            <a href="/diagnostico" className="ml-auto font-normal text-[10px] underline text-amber-900/70">
+              Ver detalle
+            </a>
           </div>
-          {state.lastError && (
-            <span className="font-normal text-[10px] text-amber-900/80 leading-snug break-words">
-              Motivo: {state.lastError}
-            </span>
-          )}
-          <a href="/diagnostico" className="font-normal text-[10px] underline text-amber-900">
-            Ver diagnóstico y forzar actualización
-          </a>
         </div>
       )}
 
