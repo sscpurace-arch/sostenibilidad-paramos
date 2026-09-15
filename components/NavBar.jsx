@@ -7,8 +7,16 @@ import IconMapa from '@/components/icons/IconMapa';
 import IconProceso from '@/components/icons/IconProceso';
 import IconCalificar from '@/components/icons/IconCalificar';
 
+// Pantallas donde la barra NO se muestra: el formulario de calificación tiene
+// su propio pie fijo (Cancelar / Guardar / Enviar) y el botón flotante central
+// quedaba encima de "Enviar": los taps caían en el FAB y sacaban al técnico del
+// formulario. Además, mientras se califica, navegar a otra pantalla es un
+// riesgo, no una ayuda.
+const SIN_BARRA = ['/calificacion'];
+
 export default function NavBar() {
   const pathname = usePathname();
+  if (SIN_BARRA.includes(pathname)) return null;
 
   const leftLinks = [
     { name: 'Inicio', href: '/', CustomIcon: IconInicio },
