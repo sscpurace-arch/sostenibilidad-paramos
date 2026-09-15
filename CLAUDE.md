@@ -43,7 +43,7 @@ app/
     calificacion/nueva/page.jsx ← Perfil del productor + arranque de evaluación (query ?productor=)
     calificacion/page.jsx ← Formulario de evaluación, 29 indicadores (query ?id=)
     diagnostico/page.jsx ← Pantalla de mantenimiento: prueba cada cambio atascado contra el servidor, fuerza actualización de versión (borra SW/caché, conserva IndexedDB). Enlazada desde el pie del inicio
-    base-datos/page.jsx  ← Exportación de datos (XLSX dinámico)
+    base-datos/page.jsx  ← Tabla de productores (solo lectura; NO hay exportación XLSX en la app, `xlsx` se usa solo en scripts/)
   (auth)/
     login/page.jsx       ← Login con Supabase Auth
 ```
@@ -55,11 +55,13 @@ lib/
   db-offline.js          ← Esquema Dexie (versiones 3→10), DIMENSION_COLORS
   sync-engine.js         ← Motor offline-first: saveRecord, deleteRecord, syncQueue, initSyncEngine, retryFailed
   foto-sync.js           ← Canal SEPARADO para fotos de evidencia (Storage), no toca sync-engine.js
+  reporte-sync.js        ← Canal SEPARADO para los PDF generados (bucket `reportes`), calcado de foto-sync
+  perfil.js              ← Nombre y cargo del técnico, con caché en IndexedDB (perfil_tecnico) para verlos sin señal
   foto-utils.js          ← Compresión de imágenes (canvas → JPEG ~200KB) y geolocalización
   data-prefetch.js       ← prepararOffline(), calentarPantallas() (precachea pantallas a mano)
-  pdf-utils.js, pdf-diagnostico.js, pdf-plan-accion.js ← Generación de PDFs institucionales (jsPDF)
+  pdf-utils.js, pdf-diagnostico.js, pdf-plan-accion.js ← Generación de PDFs institucionales (jsPDF). `fechaLegible()` es el ÚNICO parser de fechas para PDF; `lineaElaboradoPor()`/`datosTecnico()` sacan el snapshot del técnico
   supabase.js            ← createClient() para browser
-  validation.js          ← crearSchemaEvaluacion() con Zod; validarEvidenciaFotografica() (regla del 2, actualmente NO llamada — ver sección 13)
+  validation.js          ← crearSchemaEvaluacion() con Zod (acepta N/A); estaCalificado(); promedioDimension()/promedioGlobal() (ÚNICO sitio de la regla de N/A); validarEvidenciaFotografica() (aviso de fotos al enviar)
   hooks/
     useFotos.js           ← Fotos de una evaluación (metadata + blobs + subida)
     useDiagnostico.js      ← Diagnóstico IA (Edge Function generar-diagnostico)
@@ -73,7 +75,9 @@ components/
   RadarChart.jsx         ← Radar ApexCharts (memo, dynamic import, SSR:false, error boundary propio)
   Map.jsx                ← Mapa individual (Leaflet, carga dinámica)
   MultiMap.jsx           ← Mapa multi-productor con leyenda de veredas
-  IndicadorCard.jsx      ← Tarjeta de calificación (rango dinámico, calculadora, fotos, motivo_sin_foto)
+  IndicadorCard.jsx      ← Tarjeta de calificación (rango dinámico, botón "No aplica" con modal, calculadora, fotos, motivo_sin_foto)
+  ConfirmarNoAplicaModal.jsx ← Aviso confirmable antes de marcar N/A (portal)
+  FotosFaltantesModal.jsx ← Aviso al enviar con los indicadores sin foto: "Volver a tomar fotos" / "Enviar sin fotos" (portal)
   CalculadoraIndicador.jsx ← Calculadoras de los indicadores 22/25/27/28 (fórmula visible, guarda entradas)
   ConteoArboles.jsx      ← Indicador 8: sembrados vs. establecidos y vivos
   FotoEvidencia.jsx      ← Captura/galería de fotos por indicador
@@ -82,7 +86,7 @@ components/
   EvaluacionFooter.jsx   ← Footer fijo con guardar/finalizar
   ResultadosEvaluacion.jsx ← Pantalla post-evaluación con diagnóstico IA (Gemini) y firma
   PlanAccionSMART.jsx    ← Plan de acción con IA, 5 indicadores priorizados
-  FirmaModal.jsx         ← Captura de firma en canvas (técnico + productor)
+  FirmaModal.jsx         ← Captura de firma en canvas (técnico + productor). `valores` va por ref: NUNCA volver a ponerlo como dependencia del efecto (un re-render del padre borraba el trazo y repintaba la firma vieja)
   SostenibilidadPanel.jsx ← Panel radar comparativo en perfil del productor
   ProductorInfoCard.jsx  ← Card de datos del productor
   HistorialEvals.jsx     ← Lista de evaluaciones con borrado en 2 pasos (borra fotos en cascada)
@@ -127,7 +131,7 @@ Usuario → componente
 3. **Cada fila tiene una sola oportunidad por corrida del `while`.** Subir el contador de reintentos sin marcarla de alguna forma (sincronizada o con contador incrementado) hace que el bucle la vuelva a tomar en la siguiente vuelta y no termine nunca — la interfaz queda girando y parpadeando. Hay además un tope duro de 50 vueltas como red de seguridad.
 4. Registros con `es_prueba: true` **nunca** se encolan hacia Supabase — quedan solo en IndexedDB.
 
-**Fotos: canal aparte, no tocar sync-engine.** `lib/foto-sync.js` sube a Supabase Storage (bucket `evidencias`) de forma completamente independiente: primero el blob a Storage, y solo si eso confirma OK se encola la metadata via `saveRecord('fotos_evidencia', ...)`. Nunca meter la subida de Storage dentro de `_runSyncQueue` — es otra API, sin batching, y debe ser secuencial.
+**Fotos: canal aparte, no tocar sync-engine.** `lib/foto-sync.js` sube a Supabase Storage (bucket `evidencias`) de forma completamente independiente: primero el blob a Storage, y solo si eso confirma OK se encola la metadata via `saveRecord('fotos_evidencia', ...)`. Nunca meter la subida de Storage dentro de `_runSyncQueue` — es otra API, sin batching, y debe ser secuencial. `lib/reporte-sync.js` (PDF generados → bucket `reportes`) sigue exactamente el mismo patrón. `ORDEN` en `_runSyncQueue` termina en `fotos_evidencia, reportes_pdf`.
 
 ---
 
@@ -136,12 +140,14 @@ Usuario → componente
 ### Tablas principales
 | Tabla | Descripción |
 |-------|-------------|
-| `productores` | Ganaderos evaluados. Campos: id, cedula, nombre_completo, nombre_predio, vereda, municipio, ubicacion_lat, ubicacion_lng, nombre_tecnico, nombre_facilitador |
-| `evaluaciones` | Cada visita de evaluación. Campos: id, finca_id (=productor_id), tecnico_id, fecha, estado, es_prueba |
-| `respuestas_indicadores` | Calificaciones por indicador. Campos: id, evaluacion_id, indicador_id, valor (1-5), observacion, motivo_sin_foto, entradas (jsonb, datos crudos de las calculadoras) |
+| `productores` | Ganaderos evaluados. Campos: id, cedula, nombre_completo, nombre_predio, vereda, municipio, ubicacion_lat, ubicacion_lng, nombre_tecnico, nombre_facilitador, area_total_ha, area_ganaderia_ha (numeric, null; vienen de la Base Maestra SSP vía `scripts/import-hectareas.mjs`) |
+| `evaluaciones` | Cada visita de evaluación. Campos: id, finca_id (=productor_id), tecnico_id, fecha, estado, es_prueba, receptor_*, firma_tecnico, firma_productor, tecnico_nombre, tecnico_cargo (snapshot de quién hizo la visita, se llena al enviar) |
+| `respuestas_indicadores` | Calificaciones por indicador. Campos: id, evaluacion_id, indicador_id, valor (1-5 o NULL), no_aplica (bool; si true, valor es NULL — hay CHECK), observacion, motivo_sin_foto, entradas (jsonb, datos crudos de las calculadoras) |
 | `fotos_evidencia` | Fotos por indicador + panorámica del predio. Campos: id, evaluacion_id, indicador_id (null=panorámica), tipo, storage_path, lat/lng, tomada_en, tecnico_id. Binario en Storage (bucket `evidencias`, privado), no en Postgres |
 | `indicadores` | Catálogo de 29 indicadores. Campos: id, nombre, descripcion, dimension, orden, rango_min, rango_max, pregunta_guia, niveles (jsonb), nota_criterio |
 | `planes_accion` | Plan de acción SMART, sugerido por IA. Campos: id, evaluacion_id, indicador_id, especifico, medible, alcanzable, relevante, plazo |
+| `reportes_pdf` | Archivo de los PDF generados. Campos: id, evaluacion_id, tipo ('diagnostico'/'plan_accion'), storage_path (`{evaluacion_id}/{tipo}.pdf`), generado_en, bytes, tecnico_id, es_prueba. UNIQUE (evaluacion_id, tipo): regenerar reemplaza. Binario en Storage (bucket `reportes`, privado). RLS igual a fotos + `es_admin()` |
+| `usuarios.completar_perfil(nombre, cargo)` | RPC SECURITY DEFINER: cada usuario actualiza SOLO su nombre y cargo. La policy de UPDATE de `usuarios` sigue siendo solo admin (rol/activo protegidos) |
 | `usuarios` | Técnicos. Campos: id, nombre, email, rol (admin/tecnico/supervisor), activo |
 | `sync_queue` | Cola offline interna de Dexie (NO existe en Supabase) |
 | `diagnosticos` | Diagnósticos IA generados por Gemini (IndexedDB v6, cache offline) |
@@ -316,14 +322,14 @@ npm run lint      # ESLint
 2. **No importar** Leaflet, ApexCharts o jsPDF directamente en un componente que renderiza en servidor — siempre `dynamic(..., { ssr: false })`
 3. **No hardcodear** correos, contraseñas, ni URLs de Supabase
 4. **No agregar** `console.log` en producción — usar el logger condicional si existe
-5. **Respetar** las versiones de Dexie: si se agrega una tabla nueva, crear versión `db.version(11)...` (la última usada es 10, `fotos_evidencia`/`fotos_blobs`)
+5. **Respetar** las versiones de Dexie: si se agrega una tabla nueva, crear versión `db.version(12)...` (la última usada es 11: `reportes_pdf`/`reportes_blobs`/`perfil_tecnico`)
 6. **Preservar** todos los cambios previos al editar un archivo — este proyecto acumula decenas de correcciones aplicadas en producción real
 7. **Nunca crear una ruta dinámica** (`[id]`, `[algo]`) dentro de `app/(app)/`. Todo es ruta estática + query param — ver sección 2
 8. **Validar siempre en Vercel (producción), nunca en localhost.** Santiago prueba en la URL real; si algo "no funciona" para él, es ahí. `npm run build` corrompe `.next` si se corre con `npm run dev` activo al mismo tiempo — apagar el dev server primero
 
 ---
 
-## 13. Estado actual del proyecto (act. 2026-09-08)
+## 13. Estado actual del proyecto (act. 2026-09-14)
 
 ### Funcionando ✅
 - Auth con Supabase (email/password + Google), RLS activo, admin puede escribir cualquier registro (`es_admin()`)
@@ -335,7 +341,13 @@ npm run lint      # ESLint
 - Mapa con perímetro GeoJSON del PNN Puracé + localización GPS
 - RadarChart con comparación multi-evaluación, con error boundary propio (una librería de gráficas rota no debe tumbar la pantalla de resultados)
 - Diagnóstico IA con Gemini 2.5 y plan de acción SMART con IA (Edge Functions `generar-diagnostico`, `sugerir-plan-accion`, ambas ACTIVE)
-- Firma digital (técnico + productor) en canvas
+- Firma digital (técnico + productor) en canvas; borrar y volver a firmar funciona (2026-09-14)
+- **"No aplica" (N/A) por indicador** (2026-09-14): botón en la tarjeta + aviso confirmable. Se guarda `valor = null, no_aplica = true`. **Regla de promedio:** el N/A se excluye del denominador, por dimensión y global; una dimensión toda N/A no entra al global; nunca vale 0 ni 1 (`promedioDimension`/`promedioGlobal` en `lib/validation.js`). El radar omite los ejes sin dato en ninguna serie conservando la numeración. La IA (`generar-diagnostico` v19) los recibe como "No aplica [motivo]", fuera del score y de la comparación. Quedan fuera del plan SMART solos (filtra por valor).
+- **Fotos: aviso confirmable al enviar** (2026-09-14): la regla del 2 pasó de "bloqueo" (hasta 7-sep) a "desactivada" (7-sep) a **aviso**: al tocar Enviar se listan todos los indicadores calificados sin foto y el técnico elige "Volver a tomar fotos" o "Enviar sin fotos". Guardar borrador no pregunta. N/A no pide foto.
+- **Nombre y cargo del funcionario** (2026-09-14): obligatorios (middleware y callback mandan a `/completar-registro` si faltan; usuario ya activo solo completa datos vía RPC, sin Telegram ni tocar `activo`); visibles en inicio y menú (caché en IndexedDB); snapshot `tecnico_nombre/tecnico_cargo` en la evaluación al enviar; "Elaborado por: Nombre — Cargo — PNN Puracé" en ambos PDF y bajo la firma del técnico
+- **Hectáreas del predio** (2026-09-14): `area_total_ha`/`area_ganaderia_ha`, 269/271 productores cruzados por cédula desde la Base Maestra SSP (`docs/reporte-hectareas.md`); en la tarjeta del productor, en el encabezado de los PDF y precargadas (editables) en las calculadoras 22 y 25
+- **PDF archivados** (2026-09-14): cada PDF generado se sube al bucket `reportes` con metadata en `reportes_pdf` (`lib/reporte-sync.js`, canal aparte, offline-first). Sin pantalla para listarlos todavía
+- **Fechas en PDF**: `fechaLegible()` único; muestran la fecha de la visita, nunca la de generación; el pie dice explícito "Documento generado el …"
 - PWA instalable en Android e iPhone; la versión nueva se activa sola al abrir la app
 - **`/diagnostico`**: pantalla de autoservicio para cuando algo falla en campo (ver sección 9)
 - Panel de administración (`/admin`) — lista de usuarios + stats
@@ -344,8 +356,9 @@ npm run lint      # ESLint
 - URL prod: https://sostenibilidad-paramos.vercel.app
 
 ### Pendiente / advertencias ⚠️
-- 🔴 **La "regla del 2" (bloqueo de envío si un indicador ≤2 no tiene foto) está DESACTIVADA** desde el taller de campo del 7-sep-2026 (commit `7fd4ffa`). El código completo sigue en `lib/validation.js` (`validarEvidenciaFotografica`) — solo dejó de llamarse desde `calificacion/page.jsx`. Falta decidir con Santiago si se reactiva y con qué ajuste (probable relación con la falta de "N/A": ver el punto de abajo).
-- 🟡 **No existe casilla de "no aplica" (N/A)** para indicadores que no corresponden al sistema productivo del predio (ej. leche en un predio de ceba). Se fuerza a calificar 1-5 igual. Decisión metodológica pendiente antes de codificar — un N/A no puede valer 0 ni 1, debe excluirse del denominador del promedio.
+- 🟡 **Evaluación `01bcb4d8` (31-jul-2026) quedó en `borrador` en Supabase** aunque tiene 29 respuestas, diagnóstico, plan y firmas: la causó el bug "firmar después de enviar devolvía a borrador" (arreglado 2026-09-14, commit `b8f4119`). Falta que Santiago apruebe corregir el dato: `update evaluaciones set estado='enviada' where id='01bcb4d8-8636-4382-8ef7-437419ff22e2';`
+- 🟡 La guía PDF de calificación (`scripts/generar-guia-pdf.mjs`) aún no menciona el N/A ni el aviso de fotos — va en otra sesión.
+- 🟡 No hay pantalla para listar/abrir los PDF archivados en `reportes_pdf` (solo se guardan).
 - 🟡 UI de edición para que el admin toque registros de otros técnicos: el permiso de base de datos existe, la pantalla no.
 - 🟡 Divergencia de nomenclatura: los materiales de taller hablan de 4 dimensiones (separando Socioambiental de Ambiental); la app y Supabase manejan 3. Mismos 29 indicadores, mismo orden — cambia solo el agrupamiento del promedio.
 - 🔴 **Validar siempre en Vercel, no en localhost.** Santiago prueba en la URL real — si dice "no funciona", es la URL de producción. Pedirle que cierre/reabra la app o, si sigue mal, mandarlo a `/diagnostico`.
