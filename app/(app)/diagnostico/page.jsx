@@ -17,6 +17,7 @@ import { getClient, retryFailed, syncQueue } from '@/lib/sync-engine';
 export default function DiagnosticoPage() {
   const [info, setInfo] = useState(null);
   const [pendientes, setPendientes] = useState([]);
+  const [padres, setPadres] = useState({}); // evaluaciones locales de los cambios pendientes, por id
   const [analizando, setAnalizando] = useState(false);
   const [resultados, setResultados] = useState({});
   const [mensaje, setMensaje] = useState(null);
@@ -40,7 +41,23 @@ export default function DiagnosticoPage() {
       }
     } catch (e) { /* no disponible */ }
 
+    // Quién está logueado: la cola es del celular, y si entra otra cuenta la
+    // hereda. Sin este dato, "sin permiso" no se puede interpretar.
+    let usuario = null;
+    try {
+      const { data } = await getClient()?.auth.getUser() || { data: null };
+      usuario = data?.user ? `${data.user.email} (${String(data.user.id).slice(0, 8)})` : null;
+    } catch (e) { /* sin sesión */ }
+
+    // Contexto de cada cambio pendiente: su evaluación local (dueño, prueba)
+    const idsEval = [...new Set(cola.map(c => c.payload?.evaluacion_id).filter(Boolean))];
+    const evs = await db.evaluaciones.bulkGet(idsEval);
+    const mapa = {};
+    idsEval.forEach((id, i) => { if (evs[i]) mapa[id] = evs[i]; });
+    setPadres(mapa);
+
     setInfo({
+      usuario,
       version: process.env.NEXT_PUBLIC_BUILD_ID || 'desconocida',
       swEsperando,
       swActivo,
@@ -118,8 +135,9 @@ export default function DiagnosticoPage() {
       `Local: ${info?.productores} productores, ${info?.evaluaciones} evaluaciones, ${info?.respuestas} respuestas`,
       `Navegador: ${info?.navegador}`,
       `Cambios pendientes: ${pendientes.length}`,
+      `Sesión: ${info?.usuario || 'n/d'}`,
       ...pendientes.map(p =>
-        `  · ${p.tabla} (${p.operacion || 'UPSERT'}) intentos=${p.error_count || 0} :: ${resultados[p.localId] || p.ultimo_error || 'sin analizar'}`
+        `  · ${p.tabla} (${p.operacion || 'UPSERT'}) eval=${String(p.payload?.evaluacion_id || p.payload?.id || '').slice(0, 8)} tecnico=${String(padres[p.payload?.evaluacion_id]?.tecnico_id || p.payload?.tecnico_id || '').slice(0, 8)}${padres[p.payload?.evaluacion_id]?.es_prueba ? ' PRUEBA' : ''} intentos=${p.error_count || 0} :: ${resultados[p.localId] || p.ultimo_error || 'sin analizar'}`
       ),
     ].join('\n');
     try {
@@ -148,7 +166,7 @@ export default function DiagnosticoPage() {
         <Fila k="Versión instalada" v={info?.version} />
         <Fila k="Versión nueva esperando" v={info?.swEsperando ? 'SÍ — toca Forzar actualización' : 'no'} />
         <Fila k="Conexión" v={info?.conexion} />
-        <Fila k="Sesión" v={info?.sesionReal ? 'real (sincroniza)' : 'prueba o sin sesión (NO sincroniza)'} />
+        <Fila k="Sesión" v={info?.sesionReal ? `real (sincroniza)${info?.usuario ? ' · ' + info.usuario : ''}` : 'prueba o sin sesión (NO sincroniza)'} />
         <Fila k="Almacenamiento" v={info?.almacenamiento || 'n/d'} />
         <Fila k="Datos en el celular" v={`${info?.productores ?? '…'} productores · ${info?.evaluaciones ?? '…'} evaluaciones`} />
       </div>
@@ -200,6 +218,9 @@ export default function DiagnosticoPage() {
                   <div key={p.localId} className="border border-gray-100 rounded-lg p-2 text-[11px]">
                     <p className="font-bold text-gray-700">
                       {p.tabla} · {p.operacion || 'UPSERT'} · intentos {p.error_count || 0}
+                      {p.payload?.evaluacion_id && padres[p.payload.evaluacion_id]
+                        ? ` · eval ${String(p.payload.evaluacion_id).slice(0, 8)} de ${String(padres[p.payload.evaluacion_id].tecnico_id || '').slice(0, 8)}${padres[p.payload.evaluacion_id].es_prueba ? ' (PRUEBA)' : ''}`
+                        : (p.payload?.evaluacion_id ? ' · eval no está en el celular' : '')}
                     </p>
                     <p className="text-gray-400 font-mono text-[10px] break-all">{p.payload?.id}</p>
                     {r && (

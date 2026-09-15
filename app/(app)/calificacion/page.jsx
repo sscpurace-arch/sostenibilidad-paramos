@@ -74,6 +74,7 @@ function EvaluacionContent() {
    * para que TODOS los guardados lleven la misma regla de N/A: si no aplica,
    * valor va en null (el CHECK de la base lo exige) y no_aplica en true.
    */
+  const esPrueba = !!evaluacion?.es_prueba;
   const payloadRespuesta = useCallback((indId, det) => ({
     id: det.id || idsRef.current[String(indId)],
     evaluacion_id: evalId,
@@ -83,7 +84,13 @@ function EvaluacionContent() {
     observacion: det.observacion || '',
     motivo_sin_foto: det.motivo_sin_foto || null,
     entradas: det.entradas || null,
-  }), [evalId]);
+    // Hija de una calificación de prueba: la marca hace que saveRecord la deje
+    // solo en el celular. Sin ella, la evaluación no subía (es_prueba) pero
+    // sus respuestas sí se encolaban y el servidor las rechazaba por RLS para
+    // siempre — "41 cambios pendientes" en el iPhone de Santiago. Solo se
+    // agrega cuando aplica: la columna no existe en Postgres.
+    ...(esPrueba ? { es_prueba: true } : {}),
+  }), [evalId, esPrueba]);
 
 
   // ─── Autosave cada 30 segundos ──────────────────────────

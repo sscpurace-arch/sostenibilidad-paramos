@@ -40,7 +40,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
   const top5Ids = useMemo(() => ordenadosPorScore.slice(0, 5).map(i => i.id), [ordenadosPorScore]);
 
   const { planes, isLoading, isLoadingIA, error, setError, savingState, sugerirConIA, guardarPlan, eliminarPlan } =
-    usePlanAccion(evaluacionId);
+    usePlanAccion(evaluacionId, { esPrueba: !!evaluacion?.es_prueba });
 
   // Indicadores en el plan: top-5 por defecto + los que el técnico agregue/tengan plan guardado
   const [seleccionados, setSeleccionados] = useState([]);
