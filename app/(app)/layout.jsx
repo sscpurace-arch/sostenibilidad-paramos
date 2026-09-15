@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import { initSyncEngine } from '@/lib/sync-engine';
 import { initFotoSync } from '@/lib/foto-sync';
+import { initReporteSync } from '@/lib/reporte-sync';
 import { pedirPersistencia } from '@/lib/foto-utils';
 import { prefetchDemoTiles } from '@/lib/tile-prefetch';
 import { calentarPantallas } from '@/lib/data-prefetch';
@@ -18,6 +19,7 @@ export default function AppLayout({ children }) {
     const supabase = isMock ? null : createClient();
     initSyncEngine(supabase);
     initFotoSync();
+    initReporteSync();
 
     // Sin esto, Android puede desalojar IndexedDB cuando se llene el disco y
     // llevarse fotos que todavía no han subido.

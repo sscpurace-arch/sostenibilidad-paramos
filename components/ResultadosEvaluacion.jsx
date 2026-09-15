@@ -7,6 +7,7 @@ import FirmaModal from '@/components/FirmaModal';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
 import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
 import { saveRecord } from '@/lib/sync-engine';
+import { guardarReportePdf } from '@/lib/reporte-sync';
 import { db } from '@/lib/db-offline';
 import { formatoPromedio } from '@/lib/validation';
 
@@ -70,7 +71,18 @@ export default function ResultadosEvaluacion({
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
     try {
-      await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion: evaluacionConFirmas, tecnico: perfilTecnico });
+      const salida = await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion: evaluacionConFirmas, tecnico: perfilTecnico });
+      // Archivar el PDF (Storage, canal aparte). Si falla no se le quita la
+      // descarga al técnico: el archivo ya está en su celular.
+      if (salida?.blob && evaluacion?.id) {
+        guardarReportePdf({
+          evaluacionId: evaluacion.id,
+          tipo: 'diagnostico',
+          blob: salida.blob,
+          tecnicoId: evaluacion.tecnico_id,
+          esPrueba: !!evaluacion.es_prueba,
+        }).catch(() => {});
+      }
     } catch (e) {
       console.error('Error generando PDF del diagnóstico:', e);
     } finally {

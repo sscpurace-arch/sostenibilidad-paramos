@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { usePlanAccion } from '@/lib/hooks/usePlanAccion';
 import { DIMENSION_COLORS } from '@/lib/db-offline';
 import { descargarPlanAccionPdf } from '@/lib/pdf-plan-accion';
+import { guardarReportePdf } from '@/lib/reporte-sync';
 
 const SCORE_COLOR = (s) => s <= 1 ? '#DC2626' : s <= 2 ? '#EA580C' : s <= 3 ? '#D97706' : '#65A30D';
 const SCORE_LABEL = (s) => s <= 1 ? 'Muy bajo' : s <= 2 ? 'Bajo' : s <= 3 ? 'Regular' : 'Aceptable';
@@ -172,7 +173,17 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
     try {
-      await descargarPlanAccionPdf({ planes, indicadores, detalles, productor, evaluacion, tecnico: perfilTecnico });
+      const salida = await descargarPlanAccionPdf({ planes, indicadores, detalles, productor, evaluacion, tecnico: perfilTecnico });
+      // Archivar el PDF (Storage, canal aparte); si falla, la descarga ya salió
+      if (salida?.blob && evaluacion?.id) {
+        guardarReportePdf({
+          evaluacionId: evaluacion.id,
+          tipo: 'plan_accion',
+          blob: salida.blob,
+          tecnicoId: evaluacion.tecnico_id,
+          esPrueba: !!evaluacion.es_prueba,
+        }).catch(() => {});
+      }
     } catch (e) {
       console.error('Error generando PDF del plan de acción:', e);
     } finally {

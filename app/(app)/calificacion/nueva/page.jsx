@@ -4,6 +4,7 @@ import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { saveRecord, deleteRecord, deleteRecordBulk, waitForSync } from '@/lib/sync-engine';
 import { eliminarFotosDeEvaluacion } from '@/lib/foto-sync';
+import { eliminarReportesDeEvaluacion } from '@/lib/reporte-sync';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import ProductorInfoCard from '@/components/ProductorInfoCard';
@@ -26,7 +27,14 @@ function PerfilProductorContent() {
   const [dimensiones, setDimensiones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorCarga, setErrorCarga] = useState(null);
-  const [fechaNuevaEval, setFechaNuevaEval] = useState(new Date().toISOString().split('T')[0]);
+  // Fecha LOCAL, no toISOString(): esa es UTC y después de las 7 pm en
+  // Colombia (UTC-5) proponía el día siguiente como fecha de la visita.
+  const [fechaNuevaEval, setFechaNuevaEval] = useState(() => {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${mm}-${dd}`;
+  });
   const [esPrueba, setEsPrueba] = useState(false);
   const [receptorEsOtro, setReceptorEsOtro] = useState(false);
   const [receptorNombre, setReceptorNombre] = useState('');
@@ -181,6 +189,7 @@ function PerfilProductorContent() {
       // Dexie no tiene claves foráneas: las fotos hay que borrarlas a mano o
       // quedan blobs ocupando espacio sin nada que los referencie.
       await eliminarFotosDeEvaluacion(evalId);
+      await eliminarReportesDeEvaluacion(evalId);
 
       await deleteRecord('evaluaciones', evalId);
 
