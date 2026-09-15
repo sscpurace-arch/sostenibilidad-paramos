@@ -27,7 +27,7 @@ function fechaDesdeMeses(meses) {
 
 const AUTOSAVE_MS = 700;
 
-export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, evaluacion, productor }) {
+export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, evaluacion, productor, perfilTecnico = null }) {
   const [descargandoPdf, setDescargandoPdf] = useState(false);
   // Indicadores respondidos, ordenados de menor a mayor puntaje
   const ordenadosPorScore = useMemo(() => (
@@ -172,7 +172,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
     try {
-      await descargarPlanAccionPdf({ planes, indicadores, detalles, productor, evaluacion });
+      await descargarPlanAccionPdf({ planes, indicadores, detalles, productor, evaluacion, tecnico: perfilTecnico });
     } catch (e) {
       console.error('Error generando PDF del plan de acción:', e);
     } finally {

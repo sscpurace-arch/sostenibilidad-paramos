@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { db } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { subscribe } from '@/lib/sync-engine';
+import { obtenerPerfilTecnico } from '@/lib/perfil';
+import { getMockSession } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import PrepararOffline from '@/components/PrepararOffline';
 
@@ -14,17 +16,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function cargarDatos() {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (authUser) {
-        try {
-          const { data: userData } = await supabase.from('usuarios').select('nombre, rol').eq('id', authUser.id).single();
-          // Los supervisores tienen su propio dashboard de solo lectura — no el operativo
-          if (userData?.rol === 'supervisor') { router.replace('/supervisor'); return; }
-          setUser(userData || { nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0] });
-        } catch {
-          setUser({ nombre: authUser.user_metadata?.nombre || authUser.email.split('@')[0] });
-        }
-      }
+      // Nombre y cargo salen de IndexedDB si no hay señal (lib/perfil.js)
+      try {
+        const perfil = await obtenerPerfilTecnico(getMockSession() ? null : supabase);
+        // Los supervisores tienen su propio dashboard de solo lectura — no el operativo
+        if (perfil?.rol === 'supervisor') { router.replace('/supervisor'); return; }
+        if (perfil) setUser(perfil);
+      } catch { /* sin sesión: el saludo no sale */ }
 
       const [total, pendientes, completadas] = await Promise.all([
         db.productores.count(),
@@ -54,6 +52,10 @@ export default function Dashboard() {
           <h2 className="text-2xl font-black text-white drop-shadow-sm">
             Hola, {user.nombre?.split(' ')[0] || 'Técnico'}
           </h2>
+          {/* Quién firma los documentos: nombre completo y cargo, también sin señal */}
+          <p className="text-xs text-white/60 font-medium mt-0.5 truncate">
+            {[user.nombre, user.cargo].filter(Boolean).join(' · ')}
+          </p>
         </div>
       )}
 

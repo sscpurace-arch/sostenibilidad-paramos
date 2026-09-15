@@ -20,6 +20,7 @@ export default function ResultadosEvaluacion({
   lastResults,
   currentAvgs,
   lastAvgs,
+  perfilTecnico = null,
   onVolver
 }) {
   const [tab, setTab] = useState('resultados');
@@ -69,7 +70,7 @@ export default function ResultadosEvaluacion({
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
     try {
-      await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion });
+      await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion: evaluacionConFirmas, tecnico: perfilTecnico });
     } catch (e) {
       console.error('Error generando PDF del diagnóstico:', e);
     } finally {
@@ -283,6 +284,7 @@ export default function ResultadosEvaluacion({
           evaluacionId={evaluacionId}
           evaluacion={evaluacionConFirmas}
           productor={productor}
+          perfilTecnico={perfilTecnico}
         />
       </div>
 

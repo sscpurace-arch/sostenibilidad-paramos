@@ -5,7 +5,8 @@ import { saveRecord } from '@/lib/sync-engine';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
 import { crearSchemaEvaluacion, validarEvidenciaFotografica, estaCalificado, promedioDimension, promedioGlobal, formatoPromedio } from '@/lib/validation';
 import { useFotos } from '@/lib/hooks/useFotos';
-import { createClient } from '@/lib/supabase';
+import { createClient, getMockSession } from '@/lib/supabase';
+import { obtenerPerfilTecnico } from '@/lib/perfil';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import IndicadorCard from '@/components/IndicadorCard';
@@ -34,6 +35,7 @@ function EvaluacionContent() {
   const [showErrors, setShowErrors] = useState(false);
   const [autoSaveMsg, setAutoSaveMsg] = useState(null);
   const [tecnicoNombre, setTecnicoNombre] = useState('Técnico');
+  const [perfilTecnico, setPerfilTecnico] = useState(null); // { nombre, cargo } — snapshot al enviar
   const [fotosFaltantes, setFotosFaltantes] = useState([]);
   const [modalFotosAbierto, setModalFotosAbierto] = useState(false);
 
@@ -179,19 +181,16 @@ function EvaluacionContent() {
       if (prevEvals.length > 0) {
         setLastResults(await db.respuestas_indicadores.where('evaluacion_id').equals(prevEvals[0].id).toArray());
       }
-      // Cargar nombre del técnico
-      const isMock = !!localStorage.getItem('mock-user-session');
-      if (isMock) {
-        setTecnicoNombre('Usuario Prueba');
-      } else {
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            const { data: userData } = await supabase.from('usuarios').select('nombre').eq('id', user.id).single();
-            setTecnicoNombre(userData?.nombre || user.user_metadata?.nombre || user.email?.split('@')[0] || 'Técnico');
-          }
-        } catch { /* silencioso */ }
-      }
+      // Nombre y cargo del técnico: de IndexedDB si no hay señal (lib/perfil.js).
+      // Se guardan como snapshot en la evaluación al enviar, para que el PDF
+      // regenerado meses después diga quién hizo la visita.
+      try {
+        const perfil = await obtenerPerfilTecnico(getMockSession() ? null : supabase);
+        if (perfil) {
+          setPerfilTecnico(perfil);
+          setTecnicoNombre(perfil.nombre || 'Técnico');
+        }
+      } catch { /* silencioso */ }
 
       setLoading(false);
     }
@@ -302,7 +301,14 @@ function EvaluacionContent() {
 
   // Cierre real de la visita: marca enviada, avisa por Telegram y pasa a resultados.
   const finalizarEvaluacion = async () => {
-    const enviada = { ...evaluacion, estado: 'enviada' };
+    const enviada = {
+      ...evaluacion,
+      estado: 'enviada',
+      // Snapshot de quién hizo la visita (ver lib/perfil.js). No se pisa si
+      // ya venía de un envío anterior.
+      tecnico_nombre: evaluacion.tecnico_nombre || perfilTecnico?.nombre || null,
+      tecnico_cargo: evaluacion.tecnico_cargo || perfilTecnico?.cargo || null,
+    };
     await saveRecord('evaluaciones', enviada);
     // El estado en memoria debe reflejar el envío: la pantalla de resultados
     // vuelve a guardar la evaluación al firmar y, con la copia vieja, la
@@ -414,6 +420,7 @@ function EvaluacionContent() {
       <ResultadosEvaluacion
         evaluacionId={evalId}
         evaluacion={evaluacion}
+        perfilTecnico={perfilTecnico}
         productor={productor} indicadores={indicadores} dimensiones={dimensiones}
         detalles={detalles} lastResults={lastResults}
         currentAvgs={currentAvgs} lastAvgs={lastAvgs}

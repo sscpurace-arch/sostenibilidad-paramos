@@ -34,7 +34,9 @@ export async function GET(request) {
     return NextResponse.redirect(`${origin}/login?error=oauth`);
   }
 
-  const { data: fila } = await supabase.from('usuarios').select('id').eq('id', data.user.id).maybeSingle();
-  const destino = fila ? '/' : '/completar-registro';
+  // Sin fila, o fila sin nombre/cargo → completar datos antes de trabajar
+  const { data: fila } = await supabase.from('usuarios').select('id, nombre, cargo').eq('id', data.user.id).maybeSingle();
+  const completo = fila && String(fila.nombre || '').trim() && String(fila.cargo || '').trim();
+  const destino = completo ? '/' : '/completar-registro';
   return NextResponse.redirect(`${origin}${destino}`);
 }

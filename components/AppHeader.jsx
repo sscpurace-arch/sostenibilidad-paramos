@@ -27,7 +27,7 @@ export default function AppHeader({ title, subtitle }) {
     setIsMock(!!mockSession);
 
     if (mockSession) {
-      setUser({ nombre: 'Modo Prueba', email: 'demo@purace.test', rol: 'Visitante' });
+      setUser({ nombre: 'Modo Prueba', email: 'demo@purace.test', rol: 'Visitante', cargo: null });
       return;
     }
 
@@ -38,14 +38,14 @@ export default function AppHeader({ title, subtitle }) {
           // Buscar primero por id, luego por email como respaldo
           let { data: userData } = await supabase
             .from('usuarios')
-            .select('nombre, rol')
+            .select('nombre, rol, cargo')
             .eq('id', authUser.id)
             .single();
 
           if (!userData?.rol) {
             const { data: byEmail } = await supabase
               .from('usuarios')
-              .select('nombre, rol')
+              .select('nombre, rol, cargo')
               .eq('email', authUser.email)
               .single();
             if (byEmail) userData = byEmail;
@@ -56,6 +56,7 @@ export default function AppHeader({ title, subtitle }) {
           setUser({
             email: authUser.email,
             nombre: userData?.nombre || authUser.user_metadata?.nombre || authUser.email.split('@')[0],
+            cargo: userData?.cargo || null,
             rol: rolFinal
           });
         } catch {
@@ -190,6 +191,9 @@ export default function AppHeader({ title, subtitle }) {
               </div>
 
               <h2 className="text-xl font-black text-white">{user?.nombre || 'Técnico Puracé'}</h2>
+              {user?.cargo && (
+                <p className="text-sm text-white/80 font-semibold mt-0.5">{user.cargo}</p>
+              )}
               <p className="text-sm text-white/50 font-medium mt-1">{user?.email || 'Cargando correo...'}</p>
               
               <div className="mt-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-pnn-azul-claro uppercase tracking-widest">

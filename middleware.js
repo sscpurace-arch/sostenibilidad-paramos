@@ -104,7 +104,9 @@ export async function middleware(request) {
   }
 
   // Aprobación de usuarios reales (no aplica al modo prueba): sin fila en
-  // `usuarios` → falta completar registro; con activo=false → pendiente.
+  // `usuarios` → falta completar registro; fila sin nombre o sin cargo →
+  // también (registrados antes de que el cargo fuera obligatorio, o entrada
+  // por Google); con activo=false → pendiente.
   // También aplica aquí (no solo en el cliente) la restricción real del rol
   // supervisor: de nada sirve ocultarle el menú si puede escribir la URL a mano.
   if (user && !esMock) {
@@ -112,8 +114,8 @@ export async function middleware(request) {
     const exenta = rutasExentas.some((r) => request.nextUrl.pathname.startsWith(r))
     if (!exenta) {
       try {
-        const { data: ud } = await supabase.from('usuarios').select('rol, activo').eq('id', user.id).maybeSingle()
-        if (!ud) {
+        const { data: ud } = await supabase.from('usuarios').select('rol, activo, nombre, cargo').eq('id', user.id).maybeSingle()
+        if (!ud || !String(ud.nombre || '').trim() || !String(ud.cargo || '').trim()) {
           return NextResponse.redirect(new URL('/completar-registro', request.url))
         }
         if (ud.activo === false) {
