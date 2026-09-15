@@ -1,5 +1,8 @@
 ﻿'use client';
 
+const tieneNumero = (v) => v !== null && v !== undefined && v !== '' && !isNaN(Number(v));
+const formatoHa = (v) => (tieneNumero(v) ? `${Number(v).toLocaleString('es-CO', { maximumFractionDigits: 2 })} ha` : '—');
+
 /**
  * Card con información básica del productor.
  */
@@ -18,6 +21,21 @@ export default function ProductorInfoCard({ productor, onVerMapa }) {
             : '-'}
         </p>
       </div>
+
+      {/* Hectáreas: vienen de la Base Maestra del diagnóstico SSP (cruce por
+          cédula) o del registro del productor. Se ocultan si no hay dato. */}
+      {(tieneNumero(productor.area_total_ha) || tieneNumero(productor.area_ganaderia_ha)) && (
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="bg-gray-50 rounded-xl px-3 py-2">
+            <p className="text-[10px] text-gray-500 uppercase font-bold">Área total</p>
+            <p className="text-base font-black text-gray-800">{formatoHa(productor.area_total_ha)}</p>
+          </div>
+          <div className="bg-green-50 rounded-xl px-3 py-2">
+            <p className="text-[10px] text-green-700 uppercase font-bold">En ganadería</p>
+            <p className="text-base font-black text-[#03A64A]">{formatoHa(productor.area_ganaderia_ha)}</p>
+          </div>
+        </div>
+      )}
 
       <button
         onClick={onVerMapa}

@@ -15,7 +15,9 @@ export default function NuevoProductorPage() {
     nombre_tecnico: '',
     nombre_facilitador: '',
     ubicacion_lat: null,
-    ubicacion_lng: null
+    ubicacion_lng: null,
+    area_total_ha: '',
+    area_ganaderia_ha: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -55,9 +57,18 @@ export default function NuevoProductorPage() {
         userId = user.id;
       }
 
+      // Hectáreas opcionales: texto vacío → null (la columna es numeric)
+      const aNumero = (v) => {
+        if (v === null || v === undefined || String(v).trim() === '') return null;
+        const n = parseFloat(String(v).replace(',', '.'));
+        return isNaN(n) ? null : n;
+      };
+
       const newId = crypto.randomUUID();
       const newProductor = {
         ...form,
+        area_total_ha: aNumero(form.area_total_ha),
+        area_ganaderia_ha: aNumero(form.area_ganaderia_ha),
         id: newId,
         created_by: userId,
         created_at: new Date().toISOString(),
@@ -140,6 +151,34 @@ export default function NuevoProductorPage() {
             value={form.vereda}
             onChange={e => setForm({...form, vereda: e.target.value})}
           />
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-gray-400 uppercase font-black">Área total (ha)</label>
+              <input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="0.1"
+                placeholder="Opcional"
+                className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-gray-900 placeholder-gray-400"
+                value={form.area_total_ha}
+                onChange={e => setForm({...form, area_total_ha: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="text-[10px] text-gray-400 uppercase font-black">En ganadería (ha)</label>
+              <input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="0.1"
+                placeholder="Opcional"
+                className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-gray-900 placeholder-gray-400"
+                value={form.area_ganaderia_ha}
+                onChange={e => setForm({...form, area_ganaderia_ha: e.target.value})}
+              />
+            </div>
+          </div>
           <div className="mt-4">
             <label className="text-[10px] text-gray-400 uppercase font-black">Municipio</label>
             <select 

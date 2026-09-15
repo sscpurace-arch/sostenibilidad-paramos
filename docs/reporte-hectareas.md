@@ -1,0 +1,115 @@
+# Importación de hectáreas — 2026-09-15
+
+Fuente: `Base_Maestra_Consolidada_2026-06-22.xlsx`, hoja **Maestra**.
+Cruce por cédula (solo dígitos) contra **productores.json** (271 productores).
+
+| | |
+|---|---|
+| Filas en el XLSX | 361 |
+| Cédulas únicas con hectáreas | 361 |
+| Filas sin cédula | 0 |
+| Cédulas repetidas en el XLSX | 0 |
+| **Productores que cruzaron** | **269 / 271** |
+| Productores sin hectáreas | 2 |
+| Cédulas del XLSX sin productor en la app | 92 |
+| Productores del seed parcheados | 269 / 270 |
+
+## Productores de la app SIN hectáreas (no están en la hoja Maestra)
+- 1061758574 — Hector Ignacio Narvaez Bolaños
+- 41644094 — María Ángela Charo Calapsu
+
+## Cédulas del XLSX que NO tienen productor en la app
+- 31526986 — OLGA YACUMAL ASTAIZA (12 ha total, 6 ha ganadería)
+- 001 —  (1.5 ha total, 1.3 ha ganadería)
+- 003 —  (2 ha total, 1 ha ganadería)
+- 004 —  (2.7 ha total, 2.2 ha ganadería)
+- 005 —  (4 ha total, 3 ha ganadería)
+- 006 —  (3 ha total, 3 ha ganadería)
+- 010 —  (4 ha total, 4 ha ganadería)
+- 012 —  (15 ha total, 6 ha ganadería)
+- 013 —  (100 ha total, 90 ha ganadería)
+- 014 —  (4 ha total, 3 ha ganadería)
+- 015 —  (15 ha total, 10 ha ganadería)
+- 016 —  (4 ha total, 3 ha ganadería)
+- 017 —  (16 ha total, 11.5 ha ganadería)
+- 019 —  (18 ha total, 14 ha ganadería)
+- 021 —  (4 ha total, 3 ha ganadería)
+- 022 —  (15 ha total, 10 ha ganadería)
+- 023 —  (18 ha total, 12 ha ganadería)
+- 024 —  (5 ha total, 4 ha ganadería)
+- 025 —  (3 ha total, 3 ha ganadería)
+- 026 —  (10 ha total, 3 ha ganadería)
+- 027 —  (4 ha total, 4 ha ganadería)
+- 030 —  (5 ha total, 4 ha ganadería)
+- 031 —  (20 ha total, 18 ha ganadería)
+- 032 —  (5 ha total, 5 ha ganadería)
+- 034 —  (12 ha total, 8 ha ganadería)
+- 038 —  (20 ha total, 19 ha ganadería)
+- 039 —  (8 ha total, 7 ha ganadería)
+- 040 —  (3.5 ha total, 1.5 ha ganadería)
+- 041 —  (12 ha total, 8 ha ganadería)
+- 042 —  (15.6 ha total, 11 ha ganadería)
+- 043 —  (9 ha total, 8 ha ganadería)
+- 044 —  (5 ha total, 2 ha ganadería)
+- 045 —  (10 ha total, 5 ha ganadería)
+- 048 —  (30 ha total, 12 ha ganadería)
+- 050 —  (3 ha total, 1 ha ganadería)
+- 051 —  (5 ha total, 5 ha ganadería)
+- 052 —  (3 ha total, 2.5 ha ganadería)
+- 054 —  (3 ha total, 2 ha ganadería)
+- 055 —  (10 ha total, 7 ha ganadería)
+- 056 —  (5 ha total, 3 ha ganadería)
+- 057 —  (6 ha total, 5 ha ganadería)
+- 059 —  (14 ha total, 8 ha ganadería)
+- 060 —  (8 ha total, 5 ha ganadería)
+- 061 —  (1 ha total, 0.5 ha ganadería)
+- 062 —  (8 ha total, 5 ha ganadería)
+- 063 —  (7 ha total, 4 ha ganadería)
+- 065 —  (12 ha total, 9 ha ganadería)
+- 066 —  (2.5 ha total, 2.3 ha ganadería)
+- 067 —  (3 ha total, 2 ha ganadería)
+- 068 —  (8.5 ha total, 5 ha ganadería)
+- 070 —  (30 ha total, 20 ha ganadería)
+- 071 —  (1.3 ha total, 1.3 ha ganadería)
+- 072 —  (2 ha total, 2.5 ha ganadería)
+- 073 —  (3.5 ha total, 3 ha ganadería)
+- 074 —  (5 ha total, 3 ha ganadería)
+- 077 —  (12 ha total, 10 ha ganadería)
+- 078 —  (15 ha total, 7 ha ganadería)
+- 079 —  (10 ha total, 4 ha ganadería)
+- 081 —  (8 ha total, 6 ha ganadería)
+- 082 —  (7 ha total, 5 ha ganadería)
+- 084 —  (45 ha total, 8 ha ganadería)
+- 086 —  (12 ha total, 6 ha ganadería)
+- 087 —  (12 ha total, 11.5 ha ganadería)
+- 088 —  (13 ha total, 9 ha ganadería)
+- 089 —  (18 ha total, 16 ha ganadería)
+- 092 —  (6 ha total, 4.5 ha ganadería)
+- 093 —  (4.5 ha total, 3 ha ganadería)
+- 094 —  (4 ha total, 3.5 ha ganadería)
+- 095 —  (1.3 ha total, 1 ha ganadería)
+- 097 —  (4 ha total, 3.5 ha ganadería)
+- 099 —  (14 ha total, 11 ha ganadería)
+- 100 —  (3 ha total, 3 ha ganadería)
+- 101 —  (3 ha total, 3 ha ganadería)
+- 102 —  (2.5 ha total, 2 ha ganadería)
+- 104 —  (4 ha total, 3 ha ganadería)
+- 105 —  (5 ha total, 3 ha ganadería)
+- 106 —  (13 ha total, 8 ha ganadería)
+- 107 —  (7 ha total, 6 ha ganadería)
+- 109 —  (3 ha total, 2 ha ganadería)
+- 110 —  (3 ha total, 3 ha ganadería)
+- 111 —  (12 ha total, 7 ha ganadería)
+- 112 —  (10 ha total, 8 ha ganadería)
+- 114 —  (3 ha total, 1 ha ganadería)
+- 115 —  (4 ha total, 3 ha ganadería)
+- 116 —  (15 ha total, 8 ha ganadería)
+- 117 —  (12 ha total, 8 ha ganadería)
+- 118 —  (6 ha total, 5 ha ganadería)
+- 119 —  (16 ha total, 10 ha ganadería)
+- 120 —  (1.6 ha total, 1.6 ha ganadería)
+- 121 —  (12 ha total, 10 ha ganadería)
+- 122 —  (5 ha total, 4.5 ha ganadería)
+- 123 —  (3 ha total, 3 ha ganadería)
+
+
