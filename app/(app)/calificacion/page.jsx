@@ -302,7 +302,12 @@ function EvaluacionContent() {
 
   // Cierre real de la visita: marca enviada, avisa por Telegram y pasa a resultados.
   const finalizarEvaluacion = async () => {
-    await saveRecord('evaluaciones', { ...evaluacion, estado: 'enviada' });
+    const enviada = { ...evaluacion, estado: 'enviada' };
+    await saveRecord('evaluaciones', enviada);
+    // El estado en memoria debe reflejar el envío: la pantalla de resultados
+    // vuelve a guardar la evaluación al firmar y, con la copia vieja, la
+    // devolvía a 'borrador' — pasó en producción (visita del 31-jul-2026).
+    setEvaluacion(enviada);
 
     const avgs = calculateAverages(detalles);
     const puntajeGlobal = formatoPromedio(promedioGlobal(avgs));

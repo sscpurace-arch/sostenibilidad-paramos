@@ -7,6 +7,7 @@ import FirmaModal from '@/components/FirmaModal';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
 import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
 import { saveRecord } from '@/lib/sync-engine';
+import { db } from '@/lib/db-offline';
 import { formatoPromedio } from '@/lib/validation';
 
 export default function ResultadosEvaluacion({
@@ -57,7 +58,12 @@ export default function ResultadosEvaluacion({
     if (campo === 'firma_tecnico') setFirmaTecnico(dataUrl);
     else setFirmaProductor(dataUrl);
     if (!evaluacion) return;
-    await saveRecord('evaluaciones', { ...evaluacion, ...firmasRef.current });
+    // Se parte de la fila que está en el celular, no del prop: el prop puede
+    // ser la copia de antes de enviar, y guardarla entera devolvía la visita
+    // a 'borrador'. Esta pantalla solo existe para evaluaciones enviadas.
+    let base = evaluacion;
+    try { base = (await db.evaluaciones.get(evaluacion.id)) || evaluacion; } catch { /* sin Dexie, el prop */ }
+    await saveRecord('evaluaciones', { ...base, estado: 'enviada', ...firmasRef.current });
   };
 
   const handleDescargarPdf = async () => {
