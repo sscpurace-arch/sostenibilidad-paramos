@@ -2,6 +2,41 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
+// Recorta el contenido de un canvas a su contorno real (con margen) y lo
+// devuelve como PNG, reducido si supera `maxLado` px. Devuelve '' si está
+// vacío.
+function recortarContenido(src, maxLado = Infinity) {
+  const { width, height } = src;
+  if (!width || !height) return '';
+  const datos = src.getContext('2d').getImageData(0, 0, width, height).data;
+  let minX = width, minY = height, maxX = 0, maxY = 0, hay = false;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (datos[(y * width + x) * 4 + 3] > 0) {
+        hay = true;
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (!hay) return '';
+  const pad = 14;
+  minX = Math.max(0, minX - pad);
+  minY = Math.max(0, minY - pad);
+  maxX = Math.min(width - 1, maxX + pad);
+  maxY = Math.min(height - 1, maxY + pad);
+  const cw = maxX - minX + 1;
+  const ch = maxY - minY + 1;
+  const escala = Math.min(1, maxLado / Math.max(cw, ch));
+  const off = document.createElement('canvas');
+  off.width = Math.round(cw * escala);
+  off.height = Math.round(ch * escala);
+  off.getContext('2d').drawImage(src, minX, minY, cw, ch, 0, 0, off.width, off.height);
+  return off.toDataURL('image/png');
+}
+
 /**
  * Firma a pantalla completa, un firmante a la vez (técnico → productor).
  * Pensado para el campo: canvas grande, se puede girar el teléfono para tener
@@ -42,6 +77,18 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
 
   const getCtx = () => canvasRef.current?.getContext('2d');
 
+  // Dibuja `img` dentro de w×h conservando su proporción (como object-fit:
+  // contain), centrada, ocupando como máximo `factor` del área.
+  const dibujarEncajada = (ctx, img, w, h, factor = 1) => {
+    const iw = img.naturalWidth || img.width;
+    const ih = img.naturalHeight || img.height;
+    if (!iw || !ih) return;
+    const escala = Math.min((w * factor) / iw, (h * factor) / ih);
+    const dw = iw * escala;
+    const dh = ih * escala;
+    ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  };
+
   const configurarEstilo = (ctx) => {
     ctx.lineWidth = 3;
     ctx.lineCap = 'round';
@@ -60,8 +107,11 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
     const w = cont.clientWidth;
     const h = cont.clientHeight;
     if (w === 0 || h === 0) return;
+    // Al girar se conserva solo el TRAZO recortado a su contorno (no el lienzo
+    // entero): así, encajado en el lienzo nuevo, la firma sigue grande y con
+    // su proporción, en vez de quedar diminuta en una esquina.
     let snapshot = null;
-    if (preservarTrazoActual && tieneTrazoRef.current) snapshot = canvas.toDataURL();
+    if (preservarTrazoActual && tieneTrazoRef.current) snapshot = recortarContenido(canvas) || null;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     const ctx = canvas.getContext('2d');
@@ -71,7 +121,12 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
     const fuente = snapshot || (borradoRef.current ? null : valoresRef.current?.[paso.key]);
     if (fuente) {
       const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0, w, h);
+      // SIN deformar: antes se hacía drawImage(img, 0, 0, w, h) y al girar el
+      // teléfono (el lienzo pasa de vertical a horizontal) la firma salía
+      // estirada o achatada. Se encaja conservando la proporción y centrada.
+      // La firma guardada viene recortada a su contorno, así que se le deja
+      // un margen para que no quede pegada a los bordes.
+      img.onload = () => dibujarEncajada(ctx, img, w, h, snapshot ? 0.85 : 0.7);
       img.src = fuente;
     }
   }, [paso.key]);
@@ -136,41 +191,11 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
     setTieneTrazo(false);
   };
 
-  // Recorta la firma a su contorno real y la reduce (máx. 600px). El canvas es
-  // enorme (pantalla completa) y en su mayoría transparente; sin esto el PNG
-  // pesaría megas y el PDF aplastaría la firma vertical en la casilla ancha.
-  const exportarFirma = () => {
-    const src = canvasRef.current;
-    const { width, height } = src;
-    if (!width || !height) return '';
-    const datos = src.getContext('2d').getImageData(0, 0, width, height).data;
-    let minX = width, minY = height, maxX = 0, maxY = 0, hay = false;
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        if (datos[(y * width + x) * 4 + 3] > 0) {
-          hay = true;
-          if (x < minX) minX = x;
-          if (x > maxX) maxX = x;
-          if (y < minY) minY = y;
-          if (y > maxY) maxY = y;
-        }
-      }
-    }
-    if (!hay) return '';
-    const pad = 14;
-    minX = Math.max(0, minX - pad);
-    minY = Math.max(0, minY - pad);
-    maxX = Math.min(width - 1, maxX + pad);
-    maxY = Math.min(height - 1, maxY + pad);
-    const cw = maxX - minX + 1;
-    const ch = maxY - minY + 1;
-    const escala = Math.min(1, 600 / Math.max(cw, ch));
-    const off = document.createElement('canvas');
-    off.width = Math.round(cw * escala);
-    off.height = Math.round(ch * escala);
-    off.getContext('2d').drawImage(src, minX, minY, cw, ch, 0, 0, off.width, off.height);
-    return off.toDataURL('image/png');
-  };
+  // Firma para guardar: recortada a su contorno y reducida (máx. 600px). El
+  // canvas es enorme (pantalla completa) y en su mayoría transparente; sin
+  // esto el PNG pesaría megas y el PDF aplastaría la firma vertical en la
+  // casilla ancha.
+  const exportarFirma = () => recortarContenido(canvasRef.current, 600);
 
   // Con trazo nuevo se guarda esa firma. Sin trazo: si el técnico tocó Borrar,
   // la firma previa se elimina de verdad (para eso está el botón); si solo
