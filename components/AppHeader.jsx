@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { createClient, getMockSession, clearMockSession } from '@/lib/supabase';
+import { actualizarApp } from '@/lib/actualizar-app';
 import { useRouter } from 'next/navigation';
 
 /**
@@ -19,6 +20,7 @@ export default function AppHeader({ title, subtitle }) {
   const [isMock, setIsMock] = useState(false);
   const [logoParqueVisible, setLogoParqueVisible] = useState(true);
   const [logoPnnVisible, setLogoPnnVisible] = useState(true);
+  const [estadoActualizacion, setEstadoActualizacion] = useState(null); // texto mientras actualiza
   const supabase = createClient();
   const router = useRouter();
 
@@ -72,6 +74,19 @@ export default function AppHeader({ title, subtitle }) {
     }
     getSessionUser();
   }, [supabase]);
+
+  // Traer la última versión sin pasar por /diagnostico (ver lib/actualizar-app.js)
+  const handleActualizar = async () => {
+    if (estadoActualizacion) return;
+    setEstadoActualizacion('Buscando versión nueva…');
+    try {
+      const r = await actualizarApp(setEstadoActualizacion);
+      if (r === 'sin-red') setTimeout(() => setEstadoActualizacion(null), 3500);
+    } catch {
+      setEstadoActualizacion('No se pudo actualizar. Intenta de nuevo con señal.');
+      setTimeout(() => setEstadoActualizacion(null), 3500);
+    }
+  };
 
   const handleSalirPrueba = () => {
     clearMockSession();
@@ -216,6 +231,26 @@ export default function AppHeader({ title, subtitle }) {
                 </svg>
                 <span>Descargar guía de calificación</span>
               </a>
+
+              {/* Actualizar la app: para cuando el celular sigue con una versión vieja.
+                  Conserva las calificaciones y fotos sin subir (solo limpia el caché). */}
+              <button
+                onClick={handleActualizar}
+                disabled={!!estadoActualizacion}
+                className="w-full mb-3 bg-pnn-azul/15 hover:bg-pnn-azul/25 border border-pnn-azul/40 text-white font-bold py-3 px-6 rounded-2xl transition-all flex flex-col items-center justify-center gap-0.5 disabled:opacity-70"
+              >
+                <span className="flex items-center gap-2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={estadoActualizacion ? 'animate-spin' : ''}>
+                    <polyline points="23 4 23 10 17 10" />
+                    <polyline points="1 20 1 14 7 14" />
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                  </svg>
+                  <span>{estadoActualizacion || 'Actualizar la app'}</span>
+                </span>
+                <span className="text-[9px] font-medium text-white/40 tracking-wider">
+                  versión {process.env.NEXT_PUBLIC_BUILD_ID || '—'} · tus datos no se borran
+                </span>
+              </button>
 
               {/* Botón Panel Admin — solo para administrador */}
               {!isMock && (user?.rol === 'admin' || user?.email === 'sscpurace@gmail.com') && (
