@@ -5,7 +5,12 @@
  */
 export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancelar, todosCompletos, totalRespondidos, totalIndicadores, fotosFaltantes = 0 }) {
   return (
-    <footer className="fixed bottom-16 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-gray-100 z-20">
+    // bottom-0: en esta pantalla la barra de navegación no se muestra (ver
+    // Navbar.jsx), así que el pie ocupa el borde inferior con su margen seguro.
+    <footer
+      className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-gray-100 z-30"
+      style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
+    >
       <div className="flex flex-col gap-3 max-w-md mx-auto">
         <div className="flex gap-2 w-full">
           <button
