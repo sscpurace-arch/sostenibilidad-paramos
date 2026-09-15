@@ -138,12 +138,19 @@ export function tieneCalculadora(indicadorId) {
 
 // ---------------------------------------------------------------------------
 
-export default function CalculadoraIndicador({ indicadorId, onAplicar }) {
+// valoresIniciales: { [key]: string } — p. ej. las hectáreas en ganadería del
+// predio, cuando la app las conoce. Solo es el punto de partida: el técnico
+// puede corregirlas si en la visita el dato es otro.
+export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIniciales = null }) {
   const def = CALCULADORAS[indicadorId];
 
   const [valores, setValores] = useState(() => {
     const inicial = {};
-    (def?.campos || []).forEach(c => { inicial[c.key] = c.defecto || ''; });
+    (def?.campos || []).forEach(c => {
+      inicial[c.key] = (valoresIniciales && valoresIniciales[c.key] != null && valoresIniciales[c.key] !== '')
+        ? String(valoresIniciales[c.key])
+        : (c.defecto || '');
+    });
     return inicial;
   });
 

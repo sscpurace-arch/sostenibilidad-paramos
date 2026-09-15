@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
-import { crearSchemaEvaluacion } from '@/lib/validation';
+import { crearSchemaEvaluacion, estaCalificado, promedioDimension, promedioGlobal, formatoPromedio } from '@/lib/validation';
 import { useFotos } from '@/lib/hooks/useFotos';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -65,18 +65,31 @@ function EvaluacionContent() {
 
   useEffect(() => { detallesRef.current = detalles; }, [detalles]);
 
+  /**
+   * Fila de respuestas_indicadores tal como viaja a Supabase. Un solo sitio
+   * para que TODOS los guardados lleven la misma regla de N/A: si no aplica,
+   * valor va en null (el CHECK de la base lo exige) y no_aplica en true.
+   */
+  const payloadRespuesta = useCallback((indId, det) => ({
+    id: det.id || idsRef.current[String(indId)],
+    evaluacion_id: evalId,
+    indicador_id: indId,
+    valor: det.no_aplica ? null : (typeof det.valor === 'number' ? det.valor : null),
+    no_aplica: det.no_aplica === true,
+    observacion: det.observacion || '',
+    motivo_sin_foto: det.motivo_sin_foto || null,
+    entradas: det.entradas || null,
+  }), [evalId]);
+
+
   // ─── Autosave cada 30 segundos ──────────────────────────
   useEffect(() => {
     const interval = setInterval(async () => {
       if (!dirtyRef.current) return;
       try {
-        const entries = Object.entries(detallesRef.current).filter(([_, d]) => d.valor);
+        const entries = Object.entries(detallesRef.current).filter(([_, d]) => estaCalificado(d));
         for (const [indId, det] of entries) {
-          await saveRecord('respuestas_indicadores', {
-            id: det.id || idsRef.current[indId], evaluacion_id: evalId,
-            indicador_id: indId, valor: det.valor, observacion: det.observacion || '',
-            motivo_sin_foto: det.motivo_sin_foto || null, entradas: det.entradas || null
-          });
+          await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
         }
         dirtyRef.current = false;
         setAutoSaveMsg('Guardado automático ✓');
@@ -84,7 +97,7 @@ function EvaluacionContent() {
       } catch (e) { console.error('[autosave] Error:', e); }
     }, 30000);
     return () => clearInterval(interval);
-  }, [evalId]);
+  }, [evalId, payloadRespuesta]);
 
   useEffect(() => {
     async function cargarDatos() {
@@ -151,7 +164,8 @@ function EvaluacionContent() {
         idsRef.current[String(d.indicador_id)] = d.id;
         detMap[d.indicador_id] = {
           id: d.id, valor: d.valor, observacion: d.observacion,
-          motivo_sin_foto: d.motivo_sin_foto || '', entradas: d.entradas || null
+          motivo_sin_foto: d.motivo_sin_foto || '', entradas: d.entradas || null,
+          no_aplica: d.no_aplica === true
         };
       });
       setDetalles(detMap);
@@ -184,46 +198,49 @@ function EvaluacionContent() {
   }, [evalId, router, supabase]);
 
   // ─── Handlers ───────────────────────────────────────────
+
   const handleScoreChange = useCallback(async (indId, score) => {
     const recordId = idDeIndicador(indId);
-    setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: score } }));
+    // Elegir un número siempre quita el N/A
+    const det = { ...detalles[indId], id: recordId, valor: score, no_aplica: false };
+    setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: score, no_aplica: false } }));
     dirtyRef.current = true;
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
-    await saveRecord('respuestas_indicadores', {
-      id: recordId, evaluacion_id: evalId, indicador_id: indId,
-      valor: score, observacion: detalles[indId]?.observacion || '',
-      motivo_sin_foto: detalles[indId]?.motivo_sin_foto || null,
-      entradas: detalles[indId]?.entradas || null
-    });
-  }, [detalles, evalId, validationErrors, idDeIndicador]);
+    await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
+  }, [detalles, validationErrors, idDeIndicador, payloadRespuesta]);
+
+  // "No aplica": valor null + marca. Quitarlo deja el indicador sin calificar.
+  const handleNoAplicaChange = useCallback(async (indId, noAplica) => {
+    const recordId = idDeIndicador(indId);
+    const det = { ...detalles[indId], id: recordId, valor: null, no_aplica: noAplica, entradas: null };
+    setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: null, no_aplica: noAplica, entradas: null } }));
+    dirtyRef.current = true;
+    if (noAplica && validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
+    // Al quitar el N/A sin poner puntaje no hay nada válido que guardar: la fila
+    // local queda sin valor y el guardado ocurre cuando elija un número.
+    if (noAplica) await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
+  }, [detalles, validationErrors, idDeIndicador, payloadRespuesta]);
 
   const handleObservationChange = useCallback(async (indId, text) => {
     const recordId = idDeIndicador(indId);
+    const det = { ...detalles[indId], id: recordId, observacion: text };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, observacion: text } }));
     dirtyRef.current = true;
-    if (detalles[indId]?.valor) {
-      await saveRecord('respuestas_indicadores', {
-        id: recordId, evaluacion_id: evalId, indicador_id: indId,
-        valor: detalles[indId].valor, observacion: text,
-        motivo_sin_foto: detalles[indId]?.motivo_sin_foto || null,
-        entradas: detalles[indId]?.entradas || null
-      });
+    if (estaCalificado(det)) {
+      await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
     }
-  }, [detalles, evalId, idDeIndicador]);
+  }, [detalles, idDeIndicador, payloadRespuesta]);
 
   // Por qué no se pudo tomar la foto de un indicador crítico (ver validation.js)
   const handleMotivoSinFotoChange = useCallback(async (indId, text) => {
     const recordId = idDeIndicador(indId);
+    const det = { ...detalles[indId], id: recordId, motivo_sin_foto: text };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, motivo_sin_foto: text } }));
     dirtyRef.current = true;
-    if (detalles[indId]?.valor) {
-      await saveRecord('respuestas_indicadores', {
-        id: recordId, evaluacion_id: evalId, indicador_id: indId,
-        valor: detalles[indId].valor, observacion: detalles[indId]?.observacion || '',
-        motivo_sin_foto: text, entradas: detalles[indId]?.entradas || null
-      });
+    if (estaCalificado(det)) {
+      await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
     }
-  }, [detalles, evalId, idDeIndicador]);
+  }, [detalles, idDeIndicador, payloadRespuesta]);
 
   /**
    * Una calculadora aplicó su resultado: puntaje, desglose y entradas crudas
@@ -234,18 +251,15 @@ function EvaluacionContent() {
    */
   const handleCalculoAplicado = useCallback(async (indId, { valor, observacion, entradas }) => {
     const recordId = idDeIndicador(indId);
+    const det = { ...detalles[indId], id: recordId, valor, observacion, entradas, no_aplica: false };
     setDetalles(prev => ({
       ...prev,
-      [indId]: { ...prev[indId], id: recordId, valor, observacion, entradas }
+      [indId]: { ...prev[indId], id: recordId, valor, observacion, entradas, no_aplica: false }
     }));
     dirtyRef.current = true;
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
-    await saveRecord('respuestas_indicadores', {
-      id: recordId, evaluacion_id: evalId, indicador_id: indId,
-      valor, observacion, entradas,
-      motivo_sin_foto: detalles[indId]?.motivo_sin_foto || null
-    });
-  }, [detalles, evalId, validationErrors, idDeIndicador]);
+    await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
+  }, [detalles, validationErrors, idDeIndicador, payloadRespuesta]);
 
   const handleFinalizar = async () => {
     const { validate } = crearSchemaEvaluacion(indicadores);
@@ -262,13 +276,15 @@ function EvaluacionContent() {
     // las fotos quedan opcionales, no impiden enviar la calificación.
     setFotosFaltantes([]);
 
+    await finalizarEvaluacion();
+  };
+
+  // Cierre real de la visita: marca enviada, avisa por Telegram y pasa a resultados.
+  const finalizarEvaluacion = async () => {
     await saveRecord('evaluaciones', { ...evaluacion, estado: 'enviada' });
 
     const avgs = calculateAverages(detalles);
-    const puntajeGlobal = (
-      Object.values(avgs).reduce((a, b) => a + parseFloat(b), 0) /
-      Object.values(avgs).length
-    ).toFixed(1);
+    const puntajeGlobal = formatoPromedio(promedioGlobal(avgs));
 
     fetch('/api/notificar', {
       method: 'POST',
@@ -290,12 +306,8 @@ function EvaluacionContent() {
   };
 
   const handleGuardarSalir = async () => {
-    for (const [indId, det] of Object.entries(detalles).filter(([_, d]) => d.valor)) {
-      await saveRecord('respuestas_indicadores', {
-        id: det.id || idsRef.current[indId], evaluacion_id: evalId,
-        indicador_id: indId, valor: det.valor, observacion: det.observacion || '',
-        motivo_sin_foto: det.motivo_sin_foto || null, entradas: det.entradas || null
-      });
+    for (const [indId, det] of Object.entries(detalles).filter(([_, d]) => estaCalificado(d))) {
+      await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
     }
     router.push('/');
   };
@@ -353,15 +365,16 @@ function EvaluacionContent() {
     );
   }
 
-  const totalRespondidos = Object.keys(detalles).filter(id => detalles[id]?.valor).length;
+  const totalRespondidos = Object.keys(detalles).filter(id => estaCalificado(detalles[id])).length;
   const totalIndicadores = indicadores.length;
   const todosCompletos = totalRespondidos === totalIndicadores;
 
+  // Promedios por dimensión con la regla de N/A (fuera del denominador).
+  // Una dimensión sin ningún puntaje queda en null, no en 0.
   const calculateAverages = (dets) => {
     const results = {};
     dimensiones.forEach(d => {
-      const scores = indicadores.filter(i => i.dimension === d.nombre).map(i => dets[i.id]?.valor).filter(s => s);
-      results[d.nombre] = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 0;
+      results[d.nombre] = promedioDimension(indicadores, dets, d.nombre);
     });
     return results;
   };
@@ -369,7 +382,7 @@ function EvaluacionContent() {
   if (showResults) {
     const currentAvgs = calculateAverages(detalles);
     const lastAvgs = lastResults ? calculateAverages(
-      lastResults.reduce((acc, d) => ({ ...acc, [d.indicador_id]: { valor: d.valor } }), {})
+      lastResults.reduce((acc, d) => ({ ...acc, [d.indicador_id]: { valor: d.valor, no_aplica: d.no_aplica === true } }), {})
     ) : null;
     return (
       <ResultadosEvaluacion
@@ -417,9 +430,12 @@ function EvaluacionContent() {
               <IndicadorCard
                 indicador={ind} score={detalles[ind.id]?.valor}
                 onScoreChange={(s) => handleScoreChange(ind.id, s)}
+                noAplica={detalles[ind.id]?.no_aplica === true}
+                onNoAplicaChange={(v) => handleNoAplicaChange(ind.id, v)}
                 observation={detalles[ind.id]?.observacion}
                 onObservationChange={(t) => handleObservationChange(ind.id, t)}
-                showError={showErrors && !detalles[ind.id]?.valor}
+                showError={showErrors && !estaCalificado(detalles[ind.id])}
+                hectareasPredio={productor?.area_ganaderia_ha ?? null}
                 fotos={fotos.porIndicador[ind.id] || []}
                 fotoUrls={fotos.urls}
                 onAgregarFoto={fotos.agregar}

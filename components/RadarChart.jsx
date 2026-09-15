@@ -98,18 +98,38 @@ function RadarChartComponent({
     setAnimatedDatasets(datasets ?? []);
   }, [datasets]);
 
+  // "No aplica" llega como null. Un eje donde NINGUNA serie tiene dato se
+  // quita del radar (no se dibuja como 0: hundiría el polígono sin razón).
+  // Se conserva la numeración original (1..29) para que coincida con la
+  // leyenda de abajo y con la guía impresa. Si alguna serie sí tiene dato en
+  // ese eje, el eje se mantiene y la serie sin dato lleva null.
+  const ejesVisibles = useMemo(() => {
+    const n = (labels ?? []).length;
+    const idx = [];
+    for (let i = 0; i < n; i++) {
+      const hayDato = animatedDatasets.some((ds) => typeof (ds.data ?? [])[i] === 'number');
+      if (hayDato) idx.push(i);
+    }
+    // Sin ningún dato (evaluación vacía) se dejan todos los ejes para que el
+    // radar se vea, aunque sea en cero.
+    return idx.length > 0 ? idx : Array.from({ length: n }, (_, i) => i);
+  }, [labels, animatedDatasets]);
+
   const series = useMemo(
     () =>
       animatedDatasets.map((ds) => ({
         name: ds.name ?? 'Serie',
-        data: ds.data ?? [],
+        data: ejesVisibles.map((i) => {
+          const v = (ds.data ?? [])[i];
+          return typeof v === 'number' ? v : null;
+        }),
       })),
-    [animatedDatasets]
+    [animatedDatasets, ejesVisibles]
   );
 
   const shortLabels = useMemo(
-    () => (labels ?? []).map((_, i) => String(i + 1)),
-    [labels]
+    () => ejesVisibles.map((i) => String(i + 1)),
+    [ejesVisibles]
   );
 
   const axisLabelColors = useMemo(
@@ -185,7 +205,7 @@ function RadarChartComponent({
           title: {
             formatter: (seriesName) => seriesName + ':',
           },
-          formatter: (val) => `${val} / 5`,
+          formatter: (val) => (val === null || val === undefined ? 'No aplica' : `${val} / 5`),
         },
         marker: { show: true },
       },

@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
     }
 
     let evaluacion, productor, respuestas;
-    let respuestasPrevias: { valor: number; indicador_id: number }[] = [];
+    let respuestasPrevias: { valor: number | null; indicador_id: number; no_aplica?: boolean }[] = [];
 
     if (is_mock && datos_locales) {
       // ─── Modo prueba: la evaluación vive solo en el celular (es_prueba
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
         const [prodRes, respRes] = await Promise.all([
           supabase.from("productores").select("*").eq("id", evaluacion.finca_id).single(),
           supabase.from("respuestas_indicadores")
-            .select("valor, observacion, indicador_id")
+            .select("valor, observacion, indicador_id, no_aplica")
             .eq("evaluacion_id", evaluacion_id),
         ]);
 
@@ -157,7 +157,7 @@ Deno.serve(async (req) => {
       if (evalAnterior?.id) {
         const { data: prev } = await supabase
           .from("respuestas_indicadores")
-          .select("valor, indicador_id")
+          .select("valor, indicador_id, no_aplica")
           .eq("evaluacion_id", evalAnterior.id);
         respuestasPrevias = prev || [];
       }
@@ -170,28 +170,42 @@ Deno.serve(async (req) => {
     // ve el productor y deja de decir "primera visita" cuando hay histórico. ───
     if (respuestasPrevias.length === 0 && Array.isArray(respuestas_previas) && respuestas_previas.length) {
       respuestasPrevias = respuestas_previas
-        .filter((r: any) => r && r.valor != null && r.indicador_id != null)
-        .map((r: any) => ({ valor: Number(r.valor), indicador_id: Number(r.indicador_id) }));
+        .filter((r: any) => r && r.indicador_id != null && (r.valor != null || r.no_aplica === true))
+        .map((r: any) => ({
+          valor: r.valor != null ? Number(r.valor) : null,
+          indicador_id: Number(r.indicador_id),
+          no_aplica: r.no_aplica === true,
+        }));
     }
 
     // ─── Combinar respuestas con nombres e indicadores ───
-    const respuestasConNombre = (respuestas || []).map((r) => {
+    // "No aplica" (valor null + no_aplica): el sistema productivo del predio
+    // no permite medir ese indicador (leche en una finca sin ordeño). NO es un
+    // indicador faltante ni un cero: se muestra a la IA como tal, queda fuera
+    // del score y de la comparación con la visita anterior.
+    const respuestasConNombre = (respuestas || []).map((r: any) => {
       const ind = (indicadores || []).find((i) => i.id === r.indicador_id);
       const prev = respuestasPrevias.find((p) => p.indicador_id === r.indicador_id);
+      const noAplica = r.no_aplica === true;
       return {
-        nombre: ind?.nombre || "N/A",
-        dimension: ind?.dimension || "N/A",
+        nombre: ind?.nombre || "Indicador",
+        dimension: ind?.dimension || "Sin dimensión",
         descripcion: ind?.descripcion || "",
-        valor: r.valor,
-        valorAnterior: prev?.valor ?? null,
+        valor: typeof r.valor === "number" ? r.valor : null,
+        noAplica,
+        valorAnterior: prev && typeof prev.valor === "number" ? prev.valor : null,
         observacion: r.observacion || null,
       };
     });
 
+    const respuestasCalificadas = respuestasConNombre.filter((r) => !r.noAplica && typeof r.valor === "number");
+    const respuestasNoAplica = respuestasConNombre.filter((r) => r.noAplica);
+
     // ─── Score global: cálculo exacto en código, NO se le pide a Gemini
     // (un LLM promediando hasta 29 números a mano comete errores; este
-    // puntaje queda guardado como dato oficial del productor) ───
-    const valoresValidos = respuestasConNombre
+    // puntaje queda guardado como dato oficial del productor).
+    // Los N/A quedan fuera del denominador: nunca valen 0 ni 1. ───
+    const valoresValidos = respuestasCalificadas
       .map((r) => r.valor)
       .filter((v): v is number => typeof v === "number");
     const scoreGlobal = valoresValidos.length
@@ -202,7 +216,7 @@ Deno.serve(async (req) => {
     const tieneComparacion = respuestasPrevias.length > 0;
     const comparacionTexto = tieneComparacion
       ? `\nCOMPARACIÓN CON VISITA ANTERIOR (cambios relevantes):\n` +
-        respuestasConNombre
+        respuestasCalificadas
           .filter((r) => r.valorAnterior !== null && r.valor !== r.valorAnterior)
           .map((r) => {
             const diff = (r.valor as number) - (r.valorAnterior as number);
@@ -236,16 +250,24 @@ DATOS DE LA VISITA:
 - Fecha de evaluación: ${fechaEval}
 
 INDICADORES EVALUADOS (escala 1 a 5). Interpreta los puntajes así: 1-2 = situación crítica que necesita atención pronto; 3 = en camino, con avances y cosas por mejorar; 4-5 = buen manejo que hay que reconocer y mantener.
-${respuestasConNombre
+${respuestasCalificadas
   .map((r) => {
     const obs = r.observacion ? ` [Nota del técnico: "${r.observacion}"]` : "";
     return `- [${r.dimension}] ${r.nombre}: ${r.valor}/5${obs}`;
   })
   .join("\n")}
-
+${respuestasNoAplica.length > 0 ? `
+INDICADORES QUE NO APLICAN EN ESTE PREDIO (el técnico los marcó como "No aplica" porque el sistema productivo no permite medirlos; NO son debilidades, NO son ceros, NO los cuentes como faltantes ni propongas mejorarlos — como mucho, menciónalos en una frase si el motivo aporta contexto):
+${respuestasNoAplica
+  .map((r) => {
+    const motivo = r.observacion ? ` [Motivo: "${r.observacion}"]` : "";
+    return `- [${r.dimension}] ${r.nombre}: No aplica${motivo}`;
+  })
+  .join("\n")}
+` : ""}
 ${comparacionTexto}
 
-PUNTAJE GLOBAL YA CALCULADO (no lo recalcules, solo úsalo como referencia): ${scoreGlobal}/5
+PUNTAJE GLOBAL YA CALCULADO (no lo recalcules, solo úsalo como referencia; los indicadores "No aplica" están excluidos del promedio): ${scoreGlobal}/5
 
 CÓMO ESCRIBIR (obligatorio):
 - Lenguaje sencillo y directo, oraciones cortas. Todo tecnicismo se explica en la misma frase (no "UGG" a secas, sino "carga animal, es decir, cuántos animales por hectárea").

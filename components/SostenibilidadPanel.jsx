@@ -59,7 +59,8 @@ export default function SostenibilidadPanel({
                     d.evaluacion_id === ev.id &&
                     (d.indicador_id === i.id || parseInt(d.indicador_id) === i.id)
                   );
-                  return det ? det.valor : 0;
+                  // Sin respuesta o "No aplica" → null (nunca 0): el radar quita el eje
+                  return det && typeof det.valor === 'number' ? det.valor : null;
                 })
               }))}
               colors={['#03A64A', '#1976D2', '#F57C00', '#7B1FA2']}
@@ -75,10 +76,11 @@ export default function SostenibilidadPanel({
               const scores = indsInDim
                 .map(i => {
                   const det = radarData?.find(d => d.evaluacion_id === ultimaEval.id && (d.indicador_id === i.id || parseInt(d.indicador_id) === i.id));
-                  return det ? det.valor : null;
+                  return det && typeof det.valor === 'number' ? det.valor : null;
                 })
                 .filter(s => s !== null);
-              const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '0';
+              // N/A fuera del denominador; dimensión sin dato → "—", no 0
+              const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '—';
               return (
                 <div key={dim.nombre} className="p-3 rounded-xl text-center" style={{ backgroundColor: dim.color + '15' }}>
                   <p className="text-[10px] font-bold uppercase" style={{ color: dim.color }}>{abreviarDimension(dim.nombre)}</p>

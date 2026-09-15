@@ -7,6 +7,7 @@ import FirmaModal from '@/components/FirmaModal';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
 import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
 import { saveRecord } from '@/lib/sync-engine';
+import { formatoPromedio } from '@/lib/validation';
 
 export default function ResultadosEvaluacion({
   evaluacionId,
@@ -103,6 +104,8 @@ export default function ResultadosEvaluacion({
           <div className="bg-gray-50 rounded-2xl p-4 mb-6 border border-gray-100">
             <h3 className="text-xs font-black uppercase text-gray-400 mb-4 text-center tracking-widest">Balance de Sostenibilidad</h3>
             <div className="mb-4">
+              {/* N/A va como null, nunca 0: RadarChart descarta los ejes sin dato
+                  para que el polígono no se hunda hacia el centro sin razón. */}
               <RadarChart
                 labels={indicadores.map(i => i.nombre)}
                 datasets={[
@@ -110,10 +113,10 @@ export default function ResultadosEvaluacion({
                     name: 'Anterior',
                     data: indicadores.map(i => {
                       const prev = lastResults?.find(d => d.indicador_id === i.id || parseInt(d.indicador_id) === i.id);
-                      return prev ? prev.valor : 0;
+                      return prev && typeof prev.valor === 'number' ? prev.valor : null;
                     })
                   }] : []),
-                  { name: 'Actual', data: indicadores.map(i => detalles[i.id]?.valor || 0) }
+                  { name: 'Actual', data: indicadores.map(i => (typeof detalles[i.id]?.valor === 'number' ? detalles[i.id].valor : null)) }
                 ]}
                 colors={lastAvgs ? ['#94a3b8', '#42A5F5'] : ['#42A5F5']}
                 height={300}
@@ -123,7 +126,7 @@ export default function ResultadosEvaluacion({
               {dimensiones.map(d => (
                 <div key={d.nombre} className="text-center p-2 bg-white rounded-lg border border-gray-100">
                   <p className="text-[9px] uppercase font-bold" style={{ color: d.color }}>{d.nombre.split(' ')[0].substring(0, 6)}</p>
-                  <p className="text-lg font-black" style={{ color: d.color }}>{currentAvgs[d.nombre]}</p>
+                  <p className="text-lg font-black" style={{ color: d.color }}>{formatoPromedio(currentAvgs[d.nombre])}</p>
                 </div>
               ))}
             </div>
@@ -169,8 +172,17 @@ export default function ResultadosEvaluacion({
                     <h4 className="text-[10px] font-black uppercase text-blue-400 mb-2 tracking-widest">Evolución desde la visita anterior</h4>
                     <div className="grid grid-cols-3 gap-2">
                       {dimensiones.map(d => {
-                        const actual = parseFloat(currentAvgs[d.nombre]) || 0;
-                        const anterior = parseFloat(lastAvgs[d.nombre]) || 0;
+                        const actual = currentAvgs[d.nombre];
+                        const anterior = lastAvgs[d.nombre];
+                        // Sin dato en alguna de las dos visitas (todo N/A) no hay comparación
+                        if (typeof actual !== 'number' || typeof anterior !== 'number') {
+                          return (
+                            <div key={d.nombre} className="text-center">
+                              <p className="text-[8px] uppercase font-bold text-gray-400 truncate">{d.nombre.split(' ')[0].substring(0, 6)}</p>
+                              <p className="text-xs font-black text-gray-300">—</p>
+                            </div>
+                          );
+                        }
                         const diff = actual - anterior;
                         const signo = diff > 0.05 ? '↑' : diff < -0.05 ? '↓' : '→';
                         const color = diff > 0.05 ? '#16A34A' : diff < -0.05 ? '#DC2626' : '#9CA3AF';

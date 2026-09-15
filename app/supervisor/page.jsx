@@ -47,7 +47,7 @@ export default function SupervisorDashboard() {
       const countPorDim = {};
       respuestasValidas.forEach(r => {
         const dim = dimensionPorIndicador[r.indicador_id];
-        if (!dim || !r.valor) return;
+        if (!dim || typeof r.valor !== 'number') return; // N/A (valor null) fuera del promedio
         sumaPorDim[dim] = (sumaPorDim[dim] || 0) + r.valor;
         countPorDim[dim] = (countPorDim[dim] || 0) + 1;
       });
@@ -73,7 +73,7 @@ export default function SupervisorDashboard() {
         .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
         .slice(0, 10)
         .map(e => {
-          const resp = respuestasValidas.filter(r => r.evaluacion_id === e.id);
+          const resp = respuestasValidas.filter(r => r.evaluacion_id === e.id && typeof r.valor === 'number');
           const prom = resp.length > 0 ? (resp.reduce((a, r) => a + r.valor, 0) / resp.length).toFixed(1) : '—';
           return {
             id: e.id,
