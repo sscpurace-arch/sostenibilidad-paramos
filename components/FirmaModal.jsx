@@ -21,6 +21,22 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
   const tieneTrazoRef = useRef(false);
   tieneTrazoRef.current = tieneTrazo;
 
+  /**
+   * `valores` vive en un ref y NO en las dependencias de ajustarCanvas.
+   *
+   * El padre lo construye inline (objeto nuevo en cada render). Con `valores`
+   * como dependencia, cualquier re-render del padre —el contador del sync
+   * justo después de guardar la primera firma, un timer— disparaba el efecto
+   * de montaje otra vez: borraba el canvas y volvía a pintar la firma
+   * GUARDADA encima del trazo nuevo. Era el "borrar y volver a firmar falla".
+   */
+  const valoresRef = useRef(valores);
+  valoresRef.current = valores;
+
+  // Tras "Borrar", este paso queda en limpio: ni un resize ni un re-render
+  // deben repintar la firma anterior, y confirmar sin trazo nuevo la elimina.
+  const borradoRef = useRef(false);
+
   const paso = pasos[indice];
   const esUltimo = indice >= pasos.length - 1;
 
@@ -51,18 +67,22 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
     const ctx = canvas.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     configurarEstilo(ctx);
-    const fuente = snapshot || valores?.[paso.key];
+    // Si el paso se borró, la firma guardada NO vuelve: solo el trazo actual
+    const fuente = snapshot || (borradoRef.current ? null : valoresRef.current?.[paso.key]);
     if (fuente) {
       const img = new Image();
       img.onload = () => ctx.drawImage(img, 0, 0, w, h);
       img.src = fuente;
     }
-  }, [paso.key, valores]);
+  }, [paso.key]);
 
-  // Al montar, al cambiar de paso y al rotar / redimensionar la ventana
+  // Al montar, al cambiar de paso y al rotar / redimensionar la ventana.
+  // Depende SOLO del índice: cambiar de firmante es lo único que debe
+  // reiniciar el lienzo.
   useEffect(() => {
+    borradoRef.current = false;
     ajustarCanvas(false);
-    setTieneTrazo(!!valores?.[paso.key]);
+    setTieneTrazo(!!valoresRef.current?.[paso.key]);
     const onResize = () => ajustarCanvas(true);
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
@@ -110,6 +130,9 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
+    ctx.beginPath(); // cierra cualquier trazo a medias para que el siguiente arranque limpio
+    dibujando.current = false;
+    borradoRef.current = true;
     setTieneTrazo(false);
   };
 
@@ -149,12 +172,16 @@ export default function FirmaModal({ pasos, valores, onGuardar, onCerrar }) {
     return off.toDataURL('image/png');
   };
 
-  // Solo sobrescribe si hay trazo nuevo; un paso dejado vacío NO borra una firma
-  // previa (para eso está el botón Borrar explícito).
+  // Con trazo nuevo se guarda esa firma. Sin trazo: si el técnico tocó Borrar,
+  // la firma previa se elimina de verdad (para eso está el botón); si solo
+  // pasó de largo, la firma previa se conserva.
   const guardarPasoActual = () => {
-    if (!tieneTrazoRef.current) return;
-    const firma = exportarFirma();
-    if (firma) onGuardar(paso.key, firma);
+    if (tieneTrazoRef.current) {
+      const firma = exportarFirma();
+      if (firma) onGuardar(paso.key, firma);
+      return;
+    }
+    if (borradoRef.current && valoresRef.current?.[paso.key]) onGuardar(paso.key, '');
   };
 
   const continuar = () => {

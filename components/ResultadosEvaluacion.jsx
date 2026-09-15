@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import RadarChart from '@/components/RadarChart';
 import PlanAccionSMART from '@/components/PlanAccionSMART';
@@ -44,6 +44,13 @@ export default function ResultadosEvaluacion({
   const labelProductor = evaluacion?.receptor_es_otro && evaluacion?.receptor_nombre
     ? `${evaluacion.receptor_nombre.split(' ')[0]} (${evaluacion.receptor_parentesco || 'receptor'})`
     : 'Productor';
+
+  // Identidad estable: FirmaModal lo lee por ref, pero no hay razón para
+  // fabricar un objeto nuevo en cada render de esta pantalla.
+  const valoresFirmas = useMemo(
+    () => ({ firma_tecnico: firmaTecnico, firma_productor: firmaProductor }),
+    [firmaTecnico, firmaProductor]
+  );
 
   const guardarFirma = async (campo, dataUrl) => {
     firmasRef.current = { ...firmasRef.current, [campo]: dataUrl };
@@ -322,7 +329,7 @@ export default function ResultadosEvaluacion({
             { key: 'firma_tecnico', label: 'Firma del técnico' },
             { key: 'firma_productor', label: `Firma del ${labelProductor === 'Productor' ? 'productor' : labelProductor}` },
           ]}
-          valores={{ firma_tecnico: firmaTecnico, firma_productor: firmaProductor }}
+          valores={valoresFirmas}
           onGuardar={guardarFirma}
           onCerrar={() => setModalFirmasAbierto(false)}
         />
