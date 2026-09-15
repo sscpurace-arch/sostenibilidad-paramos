@@ -26,9 +26,12 @@ export default function NuevaEvalForm({
           />
         </div>
 
+        {/* La pregunta se hace en positivo (¿la recibe el propietario?) porque
+            así la formulan los técnicos en campo. El dato guardado sigue siendo
+            receptor_es_otro: "Sí" = false, "No" = true. */}
         <div>
           <label className="block text-[10px] text-gray-400 uppercase font-bold mb-2">
-            ¿La visita la recibe otra persona (no el propietario)?
+            ¿La visita la recibe el propietario?
           </label>
           <div className="flex gap-2">
             <button
@@ -38,7 +41,7 @@ export default function NuevaEvalForm({
                 !receptorEsOtro ? 'bg-[#03A64A] text-white' : 'bg-gray-50 text-gray-500 border border-gray-200'
               }`}
             >
-              No
+              Sí
             </button>
             <button
               type="button"
@@ -47,13 +50,14 @@ export default function NuevaEvalForm({
                 receptorEsOtro ? 'bg-[#03A64A] text-white' : 'bg-gray-50 text-gray-500 border border-gray-200'
               }`}
             >
-              Sí
+              No
             </button>
           </div>
         </div>
 
         {receptorEsOtro && (
           <div className="flex flex-col gap-3 bg-amber-50/50 border border-amber-100 rounded-xl p-3">
+            <p className="text-[11px] text-amber-800 font-medium">¿Quién recibe la visita?</p>
             <div>
               <label className="block text-[10px] text-gray-400 uppercase font-bold mb-1">Nombre completo</label>
               <input
