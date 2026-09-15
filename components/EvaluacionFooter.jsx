@@ -33,13 +33,13 @@ export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancel
           {todosCompletos ? '✅ ENVIAR CALIFICACIÓN FINAL' : `Enviar (${totalRespondidos}/${totalIndicadores})`}
         </button>
 
-        {/* Aviso, no bloqueo: el botón sigue siendo pulsable y valida al
-            presionar. Un botón muerto sin explicación deja al técnico varado. */}
+        {/* Aviso, no bloqueo: el botón sigue siendo pulsable. Al enviar se
+            listan los indicadores sin foto y el técnico decide. */}
         {fotosFaltantes > 0 && (
           <p className="text-[11px] text-amber-700 text-center -mt-1">
-            ⚠ {fotosFaltantes === 1
-              ? 'Un indicador crítico sin foto'
-              : `${fotosFaltantes} indicadores críticos sin foto`}
+            📷 {fotosFaltantes === 1
+              ? 'Un indicador sin foto'
+              : `${fotosFaltantes} indicadores sin foto`}
           </p>
         )}
       </div>

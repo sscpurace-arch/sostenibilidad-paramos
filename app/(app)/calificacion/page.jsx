@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
-import { crearSchemaEvaluacion, estaCalificado, promedioDimension, promedioGlobal, formatoPromedio } from '@/lib/validation';
+import { crearSchemaEvaluacion, validarEvidenciaFotografica, estaCalificado, promedioDimension, promedioGlobal, formatoPromedio } from '@/lib/validation';
 import { useFotos } from '@/lib/hooks/useFotos';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -14,6 +14,7 @@ import EvaluacionHeader from '@/components/EvaluacionHeader';
 import EvaluacionFooter from '@/components/EvaluacionFooter';
 import ValidationBanner from '@/components/ValidationBanner';
 import PanoramicaCard from '@/components/PanoramicaCard';
+import FotosFaltantesModal from '@/components/FotosFaltantesModal';
 
 // Ruta estática + parámetro por query (?id=EVAL) para funcionar sin conexión.
 function EvaluacionContent() {
@@ -34,6 +35,7 @@ function EvaluacionContent() {
   const [autoSaveMsg, setAutoSaveMsg] = useState(null);
   const [tecnicoNombre, setTecnicoNombre] = useState('Técnico');
   const [fotosFaltantes, setFotosFaltantes] = useState([]);
+  const [modalFotosAbierto, setModalFotosAbierto] = useState(false);
 
   const detallesRef = useRef(detalles);
   const dirtyRef = useRef(false);
@@ -272,10 +274,29 @@ function EvaluacionContent() {
       return;
     }
 
-    // Evidencia fotográfica desactivada temporalmente como bloqueo (taller 2026-09-07):
-    // las fotos quedan opcionales, no impiden enviar la calificación.
-    setFotosFaltantes([]);
+    // Fotos: aviso, no bloqueo (taller 2026-09-07). Si algún indicador
+    // calificado quedó sin foto, se listan y el técnico decide. Guardar
+    // borrador nunca pasa por aquí.
+    const evidencia = validarEvidenciaFotografica(indicadores, detalles, fotos.porIndicador);
+    setFotosFaltantes(evidencia.faltantes);
+    if (!evidencia.success) {
+      setModalFotosAbierto(true);
+      return;
+    }
 
+    await finalizarEvaluacion();
+  };
+
+  // "Volver a tomar fotos": cierra el aviso y lleva al primer indicador sin foto
+  const handleVolverAFotos = () => {
+    setModalFotosAbierto(false);
+    const primero = fotosFaltantes[0];
+    const el = primero ? document.getElementById(`ind-${primero.indicador_id}`) : null;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const handleEnviarSinFotos = async () => {
+    setModalFotosAbierto(false);
     await finalizarEvaluacion();
   };
 
@@ -465,6 +486,14 @@ function EvaluacionContent() {
         totalIndicadores={totalIndicadores}
         fotosFaltantes={fotosFaltantes.length}
       />
+
+      {modalFotosAbierto && (
+        <FotosFaltantesModal
+          faltantes={fotosFaltantes}
+          onVolver={handleVolverAFotos}
+          onEnviarSinFotos={handleEnviarSinFotos}
+        />
+      )}
 
     </div>
   );
