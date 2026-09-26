@@ -22,6 +22,7 @@ import FotosFaltantesModal from '@/components/FotosFaltantesModal';
 function EvaluacionContent() {
   const searchParams = useSearchParams();
   const evalId = searchParams.get('id');
+  const abrirResultados = searchParams.get('resultados') === '1';
 
   const [evaluacion, setEvaluacion] = useState(null);
   const [productor, setProductor] = useState(null);
@@ -206,11 +207,18 @@ function EvaluacionContent() {
         }
       } catch { /* silencioso */ }
 
+      // Desde "En proceso → Diagnóstico pendiente": abrir directo en resultados
+      // una evaluación ya enviada, para generar el diagnóstico con IA que quedó
+      // pendiente por falta de señal.
+      if (abrirResultados && eval_.estado === 'enviada') {
+        setShowResults(true);
+      }
+
       setLoading(false);
     }
 
     cargarDatos();
-  }, [evalId, router, supabase]);
+  }, [evalId, abrirResultados, router, supabase]);
 
   // ─── Handlers ───────────────────────────────────────────
 

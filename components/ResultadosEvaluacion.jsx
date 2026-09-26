@@ -5,6 +5,7 @@ import RadarChart from '@/components/RadarChart';
 import PlanAccionSMART from '@/components/PlanAccionSMART';
 import FirmaModal from '@/components/FirmaModal';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
+import { useEnLinea } from '@/lib/hooks/useEnLinea';
 import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
 import { saveRecord } from '@/lib/sync-engine';
 import { guardarReportePdf } from '@/lib/reporte-sync';
@@ -30,6 +31,7 @@ export default function ResultadosEvaluacion({
   const [firmaProductor, setFirmaProductor] = useState(evaluacion?.firma_productor || '');
   const [modalFirmasAbierto, setModalFirmasAbierto] = useState(false);
   const { diagnostico, isLoading, isStale, error: errorIA, generarNuevo } = useDiagnostico(evaluacionId);
+  const enLinea = useEnLinea();
   // Espejo: si firmaTecnico se guarda y luego firmaProductor, el segundo guardado
   // no debe pisar el primero con el `evaluacion` prop (que nunca se refresca aquí).
   const firmasRef = useRef({ firma_tecnico: evaluacion?.firma_tecnico || '', firma_productor: evaluacion?.firma_productor || '' });
@@ -160,7 +162,19 @@ export default function ResultadosEvaluacion({
 
           {/* Diagnóstico IA */}
           <div className="mb-6">
-            {!diagnostico ? (
+            {!diagnostico && !enLinea && !isLoading ? (
+              // Sin señal no hay IA. No es un error: la evaluación ya quedó
+              // guardada y el diagnóstico (y su PDF) se generan después, desde
+              // "En proceso" → "Diagnóstico pendiente".
+              <div className="w-full rounded-2xl p-4 bg-amber-50 border-2 border-amber-200 text-amber-900">
+                <p className="font-bold text-sm flex items-center gap-2"><span>⏳</span> Diagnóstico con IA pendiente</p>
+                <p className="text-xs mt-1 leading-snug">
+                  Necesita señal. La evaluación ya quedó guardada en el celular. Cuando haya internet,
+                  entra a <strong>En proceso → Diagnóstico pendiente</strong> para generarlo y descargar su PDF.
+                  El plan de acción sí puedes llenarlo y descargarlo ahora.
+                </p>
+              </div>
+            ) : !diagnostico ? (
               <button
                 onClick={() => generarNuevo({ productor, detalles, lastResults })}
                 disabled={isLoading}

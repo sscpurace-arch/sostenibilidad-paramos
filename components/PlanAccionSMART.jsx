@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { usePlanAccion } from '@/lib/hooks/usePlanAccion';
+import { useEnLinea } from '@/lib/hooks/useEnLinea';
 import { DIMENSION_COLORS } from '@/lib/db-offline';
 import { descargarPlanAccionPdf } from '@/lib/pdf-plan-accion';
 import { guardarReportePdf } from '@/lib/reporte-sync';
@@ -41,6 +42,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
 
   const { planes, isLoading, isLoadingIA, error, setError, savingState, sugerirConIA, guardarPlan, eliminarPlan } =
     usePlanAccion(evaluacionId, { esPrueba: !!evaluacion?.es_prueba });
+  // Sin señal el plan se llena a mano (y su PDF sale igual); la IA queda para después
+  const enLinea = useEnLinea();
 
   // Indicadores en el plan: top-5 por defecto + los que el técnico agregue/tengan plan guardado
   const [seleccionados, setSeleccionados] = useState([]);
@@ -215,21 +218,25 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
       {/* Botón Sugerir con IA */}
       <button
         onClick={handleSugerirIA}
-        disabled={isLoadingIA || indsSeleccionados.length === 0}
+        disabled={isLoadingIA || indsSeleccionados.length === 0 || !enLinea}
         className={`w-full py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-md ${
-          isLoadingIA || indsSeleccionados.length === 0
+          isLoadingIA || indsSeleccionados.length === 0 || !enLinea
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
             : 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white active:scale-95'
         }`}
       >
         {isLoadingIA ? (
           <><span className="animate-spin text-lg">✨</span> Generando plan...</>
+        ) : !enLinea ? (
+          <><span>⏳</span> Plan con IA: necesita señal</>
         ) : (
           <><span>✨</span> Generar plan con IA</>
         )}
       </button>
       <p className="text-[10px] text-gray-400 text-center -mt-1">
-        Usa la idea que hayas escrito en cada indicador; si no escribiste nada, la IA propone la meta desde cero.
+        {enLinea
+          ? 'Usa la idea que hayas escrito en cada indicador; si no escribiste nada, la IA propone la meta desde cero.'
+          : 'Sin señal puedes escribir el plan a mano y descargar su PDF. La IA se puede usar después, cuando haya internet.'}
       </p>
 
       {error && (
