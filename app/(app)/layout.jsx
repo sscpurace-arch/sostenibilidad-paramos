@@ -1,12 +1,13 @@
 'use client';
 import { useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
-import { initSyncEngine } from '@/lib/sync-engine';
+import { initSyncEngine, datosIniciales } from '@/lib/sync-engine';
 import { initFotoSync } from '@/lib/foto-sync';
 import { initReporteSync } from '@/lib/reporte-sync';
 import { pedirPersistencia } from '@/lib/foto-utils';
 import { prefetchDemoTiles } from '@/lib/tile-prefetch';
 import { calentarPantallas } from '@/lib/data-prefetch';
+import { enviarNotificacionesPendientes } from '@/lib/notificar';
 import OfflineBanner from '@/components/OfflineBanner';
 import UpdateBanner from '@/components/UpdateBanner';
 import NavBar from '@/components/NavBar';
@@ -21,6 +22,10 @@ export default function AppLayout({ children }) {
     initFotoSync();
     initReporteSync();
 
+    // Avisos de Telegram que quedaron en cola por falta de señal
+    enviarNotificacionesPendientes();
+    window.addEventListener('online', enviarNotificacionesPendientes);
+
     // Sin esto, Android puede desalojar IndexedDB cuando se llene el disco y
     // llevarse fotos que todavía no han subido.
     pedirPersistencia().catch(() => {});
@@ -28,8 +33,9 @@ export default function AppLayout({ children }) {
     // Preparar el modo offline en segundo plano mientras hay conexión:
     // teselas del mapa de la zona Puracé (idempotente) y datos críticos.
     if (navigator.onLine) {
-      prefetchDemoTiles().catch(() => {});
-      fetch('/seed-data.json').catch(() => {});
+      // Después de cargar los productores: la zona sale de sus coordenadas
+      datosIniciales().then(() => prefetchDemoTiles()).catch(() => {});
+      if (isMock) fetch('/seed-demo.json').catch(() => {});
       fetch('/purace-boundary.json').catch(() => {});
       // Guardar las pantallas apenas hay señal, sin esperar a que el usuario
       // toque "Preparar sin conexión". Con señal intermitente —lo normal en el

@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const sqlFilePath = path.join(__dirname, '..', '02_import_datos_historicos.sql');
 const sotaraSqlFilePath = path.join(__dirname, 'import_sotara.sql');
 const fixSqlFilePath = path.join(__dirname, '..', 'scratch', 'fix_projects.sql');
-const outputFilePath = path.join(__dirname, '..', 'public', 'seed-data.json');
+const outputFilePath = path.join(__dirname, '..', 'data', 'seed-data.json');
 
 // Helper to generate UUIDs
 function getUUID() {

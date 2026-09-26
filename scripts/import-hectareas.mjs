@@ -4,7 +4,7 @@
  * productores de la app.
  *
  * Produce tres cosas:
- *   1. public/seed-data.json parcheado (area_total_ha / area_ganaderia_ha en
+ *   1. data/seed-data.json parcheado (area_total_ha / area_ganaderia_ha en
  *      cada productor que cruzó). Hay que subir SEED_VERSION en
  *      lib/sync-engine.js y hacer commit del seed.
  *   2. docs/sql-hectareas-datos.sql — UPDATE por cédula para Supabase.
@@ -72,7 +72,7 @@ for (const f of filas) {
 }
 
 // ── 2. Parchear el seed ─────────────────────────────────────────────────────
-const rutaSeed = path.join(RAIZ, 'public', 'seed-data.json');
+const rutaSeed = path.join(RAIZ, 'data', 'seed-data.json');
 const seed = JSON.parse(fs.readFileSync(rutaSeed, 'utf8'));
 let seedCruzados = 0;
 const seedSinHectareas = [];
@@ -157,4 +157,4 @@ fs.writeFileSync(path.join(RAIZ, 'docs', 'reporte-hectareas.md'), reporte);
 console.log(`XLSX: ${filas.length} filas, ${lineas.length} con hectáreas`);
 console.log(`Seed: ${seedCruzados}/${seed.productores.length} productores parcheados`);
 console.log(`Cruce contra ${fuenteProductores}: ${cruzan.length}/${productores.length} cruzaron, ${productoresSinHectareas.length} sin hectáreas, ${xlsxSinProductor.length} cédulas del XLSX sin productor`);
-console.log('Escrito: public/seed-data.json, docs/sql-hectareas-datos.sql, docs/reporte-hectareas.md');
+console.log('Escrito: data/seed-data.json, docs/sql-hectareas-datos.sql, docs/reporte-hectareas.md');

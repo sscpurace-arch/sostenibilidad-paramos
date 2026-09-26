@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
-import { saveRecord, deleteRecord, deleteRecordBulk, waitForSync } from '@/lib/sync-engine';
+import { saveRecord, deleteRecord, deleteRecordBulk, guardarDesdeServidor } from '@/lib/sync-engine';
 import { eliminarFotosDeEvaluacion } from '@/lib/foto-sync';
 import { eliminarReportesDeEvaluacion } from '@/lib/reporte-sync';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -116,14 +116,14 @@ function PerfilProductorContent() {
 
         if (evals && evals.length > 0) {
           // Guardar en IndexedDB para asegurar persistencia local
-          await db.evaluaciones.bulkPut(evals);
+          await guardarDesdeServidor('evaluaciones', evals);
 
           const { data: respuestas } = await supabase
             .from('respuestas_indicadores').select('*')
             .in('evaluacion_id', evals.map(e => e.id));
 
           if (respuestas && respuestas.length > 0) {
-            await db.respuestas_indicadores.bulkPut(respuestas);
+            await guardarDesdeServidor('respuestas_indicadores', respuestas);
           }
 
           // Actualizar estado de React con los datos frescos

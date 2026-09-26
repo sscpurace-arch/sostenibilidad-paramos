@@ -1,7 +1,7 @@
 ﻿'use client';
 import { useState, useEffect, useMemo } from 'react';
 import { db } from '@/lib/db-offline';
-import { prefetchDemoTiles, tilesYaDescargadas } from '@/lib/tile-prefetch';
+import { prefetchDemoTiles } from '@/lib/tile-prefetch';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
@@ -38,7 +38,7 @@ export default function MapaGlobalPage() {
 
   // Pre-descargar teselas de la zona Puracé para uso offline (una sola vez, con conexión)
   useEffect(() => {
-    if (!navigator.onLine || tilesYaDescargadas()) return;
+    if (!navigator.onLine) return; // prefetchDemoTiles no repite si la zona no cambió
     let activo = true;
     prefetchDemoTiles((done, total) => {
       if (activo) setTileProgress({ done, total });

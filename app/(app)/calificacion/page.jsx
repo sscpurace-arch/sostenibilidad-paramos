@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
+import { notificarEnvio } from '@/lib/notificar';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
 import { crearSchemaEvaluacion, validarEvidenciaFotografica, estaCalificado, promedioDimension, promedioGlobal, formatoPromedio } from '@/lib/validation';
 import { useFotos } from '@/lib/hooks/useFotos';
@@ -40,7 +41,8 @@ function EvaluacionContent() {
   const [modalFotosAbierto, setModalFotosAbierto] = useState(false);
 
   const detallesRef = useRef(detalles);
-  const dirtyRef = useRef(false);
+  // Indicadores tocados desde el último autoguardado (no todos los 29)
+  const dirtyRef = useRef(new Set());
 
   /**
    * Id de la fila de cada indicador, en un ref y no en el estado.
@@ -96,13 +98,18 @@ function EvaluacionContent() {
   // ─── Autosave cada 30 segundos ──────────────────────────
   useEffect(() => {
     const interval = setInterval(async () => {
-      if (!dirtyRef.current) return;
+      if (dirtyRef.current.size === 0) return;
       try {
-        const entries = Object.entries(detallesRef.current).filter(([_, d]) => estaCalificado(d));
-        for (const [indId, det] of entries) {
-          await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
+        // Solo los que cambiaron: antes se volvían a encolar las 29 respuestas
+        // cada 30 s y, sin señal, la cola crecía a miles de filas en una visita.
+        const tocados = [...dirtyRef.current];
+        dirtyRef.current = new Set();
+        for (const indId of tocados) {
+          const det = detallesRef.current[indId];
+          if (det && estaCalificado(det)) {
+            await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
+          }
         }
-        dirtyRef.current = false;
         setAutoSaveMsg('Guardado automático ✓');
         setTimeout(() => setAutoSaveMsg(null), 2000);
       } catch (e) { console.error('[autosave] Error:', e); }
@@ -212,7 +219,7 @@ function EvaluacionContent() {
     // Elegir un número siempre quita el N/A
     const det = { ...detalles[indId], id: recordId, valor: score, no_aplica: false };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: score, no_aplica: false } }));
-    dirtyRef.current = true;
+    dirtyRef.current.add(indId);
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
   }, [detalles, validationErrors, idDeIndicador, payloadRespuesta]);
@@ -222,7 +229,7 @@ function EvaluacionContent() {
     const recordId = idDeIndicador(indId);
     const det = { ...detalles[indId], id: recordId, valor: null, no_aplica: noAplica, entradas: null };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: null, no_aplica: noAplica, entradas: null } }));
-    dirtyRef.current = true;
+    dirtyRef.current.add(indId);
     if (noAplica && validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     // Al quitar el N/A sin poner puntaje no hay nada válido que guardar: la fila
     // local queda sin valor y el guardado ocurre cuando elija un número.
@@ -233,7 +240,7 @@ function EvaluacionContent() {
     const recordId = idDeIndicador(indId);
     const det = { ...detalles[indId], id: recordId, observacion: text };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, observacion: text } }));
-    dirtyRef.current = true;
+    dirtyRef.current.add(indId);
     if (estaCalificado(det)) {
       await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
     }
@@ -244,7 +251,7 @@ function EvaluacionContent() {
     const recordId = idDeIndicador(indId);
     const det = { ...detalles[indId], id: recordId, motivo_sin_foto: text };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, motivo_sin_foto: text } }));
-    dirtyRef.current = true;
+    dirtyRef.current.add(indId);
     if (estaCalificado(det)) {
       await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
     }
@@ -264,7 +271,7 @@ function EvaluacionContent() {
       ...prev,
       [indId]: { ...prev[indId], id: recordId, valor, observacion, entradas, no_aplica: false }
     }));
-    dirtyRef.current = true;
+    dirtyRef.current.add(indId);
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
   }, [detalles, validationErrors, idDeIndicador, payloadRespuesta]);
@@ -325,21 +332,15 @@ function EvaluacionContent() {
     const avgs = calculateAverages(detalles);
     const puntajeGlobal = formatoPromedio(promedioGlobal(avgs));
 
-    fetch('/api/notificar', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-notify-key': process.env.NEXT_PUBLIC_NOTIFY_KEY || '',
-      },
-      body: JSON.stringify({
-        productor: productor.nombre_completo,
-        fecha: new Date(evaluacion.fecha).toLocaleDateString('es-CO'),
-        puntaje: `${puntajeGlobal} / 5`,
-        sector: productor.sector,
-        tecnico: tecnicoNombre,
-        es_prueba: !!evaluacion.es_prueba,
-      }),
-    }).catch(() => {});
+    // Sin señal queda en cola y sale al volver la conexión (lib/notificar.js)
+    notificarEnvio({
+      productor: productor.nombre_completo,
+      fecha: new Date(evaluacion.fecha).toLocaleDateString('es-CO'),
+      puntaje: `${puntajeGlobal} / 5`,
+      sector: productor.sector,
+      tecnico: tecnicoNombre,
+      es_prueba: !!evaluacion.es_prueba,
+    });
 
     setShowResults(true);
   };

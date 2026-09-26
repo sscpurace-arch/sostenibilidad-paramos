@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const SEED_PATH = path.join(__dirname, '..', 'public', 'seed-data.json');
+const SEED_PATH = path.join(__dirname, '..', 'data', 'seed-data.json');
 const MOCK_USER_ID = 'e81ba52c-23df-4f4e-808d-937fd606426c';
 const DEMO_TAG = '__DEMO_BORRADOR__'; // marca en observaciones para identificarlos
 const NUM_PRODUCTORES = 10;

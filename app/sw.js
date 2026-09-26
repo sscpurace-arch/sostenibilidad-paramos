@@ -51,13 +51,17 @@ const serwist = new Serwist({
         plugins: [new ExpirationPlugin({ maxEntries: 32 })],
       }),
     },
-    // Teselas de OpenStreetMap — CacheFirst para que el mapa funcione sin conexión
+    // Teselas de OpenStreetMap — CacheFirst para que el mapa funcione sin conexión.
+    // SIN vencimiento por edad: antes vencían a los 60 días y, como la marca de
+    // "ya descargadas" no vencía, el mapa quedaba en gris sin aviso. El mapa
+    // del páramo casi no cambia; solo se limita la cantidad (las menos usadas
+    // salen primero). lib/tile-prefetch.js baja ~1.000 para la zona de trabajo.
     {
       matcher: /^https:\/\/tile\.openstreetmap\.org\/.*/i,
       handler: new CacheFirst({
         cacheName: 'osm-tiles',
         plugins: [
-          new ExpirationPlugin({ maxEntries: 3000, maxAgeSeconds: 60 * 24 * 60 * 60 }),
+          new ExpirationPlugin({ maxEntries: 4000, purgeOnQuotaError: true }),
           new CacheableResponsePlugin({ statuses: [0, 200] }),
         ],
       }),
@@ -73,9 +77,11 @@ const serwist = new Serwist({
         ],
       }),
     },
-    // Datos críticos para arranque sin conexión (semilla y perímetro del parque)
+    // Datos críticos para arranque sin conexión (semilla del modo prueba y
+    // perímetro del parque). Los datos reales van por /api/seed, que exige
+    // sesión y no se cachea aquí.
     {
-      matcher: /\/(seed-data|purace-boundary)\.json$/i,
+      matcher: /\/(seed-demo|purace-boundary)\.json$/i,
       handler: new StaleWhileRevalidate({
         cacheName: 'datos-criticos',
         plugins: [new ExpirationPlugin({ maxEntries: 4 })],
