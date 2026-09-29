@@ -21,7 +21,13 @@ export default function LoginPage() {
     localStorage.removeItem('mock-user-session');
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        // Siempre mostrar la lista de cuentas de Google. Sin esto, al cerrar
+        // sesión y volver a entrar Google reutilizaba la cuenta recordada en
+        // el celular y no dejaba escoger otra (admin ↔ técnico de prueba).
+        queryParams: { prompt: 'select_account' },
+      },
     });
   };
 
