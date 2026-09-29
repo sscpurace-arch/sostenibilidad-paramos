@@ -18,78 +18,49 @@ function KpiCard({ value, label, color }) {
 
 export default function SupervisorDashboard() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [kpis, setKpis] = useState({ productores: 0, completadas: 0, pendientes: 0, promedioGlobal: 0 });
   const [promediosDimension, setPromediosDimension] = useState([]);
   const [ultimasEvals, setUltimasEvals] = useState([]);
   const supabase = createClient();
 
   useEffect(() => {
+    // Las cifras las calcula la base (función resumen_supervisor): antes se
+    // bajaban las tablas completas y el servidor cortaba en 1.000 filas, así
+    // que los promedios salían de una fracción de los datos.
     async function cargar() {
-      const [prodRes, evalRes, indRes, respRes] = await Promise.all([
-        supabase.from('productores').select('id, nombre_completo, vereda, municipio'),
-        supabase.from('evaluaciones').select('id, finca_id, fecha, estado, es_prueba'),
-        supabase.from('indicadores').select('id, dimension'),
-        supabase.from('respuestas_indicadores').select('evaluacion_id, indicador_id, valor'),
-      ]);
+      const { data, error: err } = await supabase.rpc("resumen_supervisor");
+      if (err || !data) {
+        setError(navigator.onLine
+          ? "No se pudo cargar el resumen del proyecto. Intenta de nuevo en un momento."
+          : "Este panel necesita conexión a internet.");
+        setLoading(false);
+        return;
+      }
 
-      const productores = prodRes.data || [];
-      const productorPorId = Object.fromEntries(productores.map(p => [p.id, p]));
-
-      const evalsValidas = (evalRes.data || []).filter(e => e.estado === 'enviada' && !e.es_prueba);
-      const evalsPendientes = (evalRes.data || []).filter(e => e.estado === 'borrador' && !e.es_prueba);
-      const idsValidas = new Set(evalsValidas.map(e => e.id));
-
-      const dimensionPorIndicador = Object.fromEntries((indRes.data || []).map(i => [i.id, i.dimension]));
-      const respuestasValidas = (respRes.data || []).filter(r => idsValidas.has(r.evaluacion_id));
-
-      // Promedio por dimensión (a nivel de todo el proyecto)
-      const sumaPorDim = {};
-      const countPorDim = {};
-      respuestasValidas.forEach(r => {
-        const dim = dimensionPorIndicador[r.indicador_id];
-        if (!dim || typeof r.valor !== 'number') return; // N/A (valor null) fuera del promedio
-        sumaPorDim[dim] = (sumaPorDim[dim] || 0) + r.valor;
-        countPorDim[dim] = (countPorDim[dim] || 0) + 1;
-      });
-      const dims = Object.keys(sumaPorDim).map(dim => ({
-        dimension: dim,
-        promedio: sumaPorDim[dim] / countPorDim[dim],
-      }));
-      setPromediosDimension(dims);
-
-      const promedioGlobal = dims.length > 0
-        ? (dims.reduce((a, d) => a + d.promedio, 0) / dims.length).toFixed(1)
-        : '0.0';
-
+      setPromediosDimension((data.dimensiones || []).map(d => ({ dimension: d.dimension, promedio: Number(d.promedio) })));
       setKpis({
-        productores: productores.length,
-        completadas: evalsValidas.length,
-        pendientes: evalsPendientes.length,
-        promedioGlobal,
+        productores: data.productores || 0,
+        completadas: data.completadas || 0,
+        pendientes: data.pendientes || 0,
+        promedioGlobal: data.promedio_global != null ? Number(data.promedio_global).toFixed(1) : "0.0",
       });
-
-      // Últimas 10 evaluaciones completadas
-      const ultimas = [...evalsValidas]
-        .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-        .slice(0, 10)
-        .map(e => {
-          const resp = respuestasValidas.filter(r => r.evaluacion_id === e.id && typeof r.valor === 'number');
-          const prom = resp.length > 0 ? (resp.reduce((a, r) => a + r.valor, 0) / resp.length).toFixed(1) : '—';
-          return {
-            id: e.id,
-            fecha: e.fecha,
-            productor: productorPorId[e.finca_id]?.nombre_completo || 'Productor',
-            vereda: productorPorId[e.finca_id]?.vereda,
-            promedio: prom,
-          };
-        });
-      setUltimasEvals(ultimas);
-
+      setUltimasEvals((data.ultimas || []).map(e => ({
+        id: e.id,
+        fecha: e.fecha,
+        productor: e.productor || "Productor",
+        vereda: e.vereda,
+        promedio: e.promedio != null ? Number(e.promedio).toFixed(1) : "—",
+      })));
       setLoading(false);
     }
     cargar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (error) {
+    return <div className="text-center py-16 text-amber-300 text-sm">{error}</div>;
+  }
 
   if (loading) {
     return <div className="text-center py-16 text-white/40 text-sm">Cargando indicadores del proyecto...</div>;

@@ -130,6 +130,7 @@ export default function EnProcesoPage() {
             <h2 className="text-lg font-bold text-white">Diagnóstico pendiente</h2>
             <p className="text-xs text-white/60">
               Evaluaciones enviadas sin señal: falta generar el diagnóstico con IA y su PDF.
+              En la pestaña «Plan de Acción» de cada una también puedes pedir las sugerencias de plan con IA.
             </p>
           </div>
           {sinDiagnostico.map(item => (
