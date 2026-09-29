@@ -27,13 +27,29 @@ const seed = JSON.parse(fs.readFileSync(entrada, 'utf8'));
 // ~1 km de precisión: el mapa sigue ubicando la vereda, no la casa
 const redondear = (v) => (v === null || v === undefined || v === '' ? null : Math.round(Number(v) * 100) / 100);
 
+// Nombres FICTICIOS con aire local, para que la demostración se vea real sin
+// exponer a nadie. Combinación determinista por posición: no hay dos iguales
+// y no corresponden a los productores verdaderos (se asignan por orden, no por
+// parecido). Cualquier coincidencia con una persona real es casual.
+const NOMBRES = ['Aurelio', 'Marleny', 'Efraín', 'Luz Dary', 'Hernando', 'Gladys', 'Wilson', 'Nubia', 'Arnulfo', 'Rosalba',
+  'Gerardo', 'Ligia', 'Fabio', 'Yolanda', 'Néstor', 'Bertha', 'Ovidio', 'Mireya', 'Ramiro', 'Esperanza'];
+const APELLIDOS = ['Muñoz', 'Chicangana', 'Ipia', 'Bolaños', 'Quinayás', 'Tombé', 'Pillimué', 'Cerón', 'Guzmán', 'Paz',
+  'Anacona', 'Dorado', 'Cuetia', 'Sánchez', 'Mosquera', 'Ortega', 'Zúñiga', 'Imbachí', 'Timaná', 'Velasco', 'Yalanda', 'Camayo'];
+const PREDIOS = ['La Esperanza', 'El Mirador', 'Buenavista', 'La Cumbre', 'El Paraíso', 'Villa Rosa', 'El Roble', 'La Palma',
+  'San Isidro', 'El Recuerdo', 'La Aurora', 'Los Frailejones', 'El Retiro', 'La Playa', 'Alto Bonito'];
+
 const productores = (seed.productores || []).map((p, i) => {
   const n = String(i + 1).padStart(3, '0');
+  const nombre = NOMBRES[i % NOMBRES.length];
+  // El paso por 7 evita que apellidos consecutivos se repitan con el mismo nombre
+  const ap1 = APELLIDOS[(i * 7 + 3) % APELLIDOS.length];
+  let ap2 = APELLIDOS[(Math.floor(i / NOMBRES.length) * 5 + i * 3 + 1) % APELLIDOS.length];
+  if (ap2 === ap1) ap2 = APELLIDOS[(APELLIDOS.indexOf(ap1) + 5) % APELLIDOS.length];
   return {
     id: p.id,
     cedula: `DEMO-${n}`,
-    nombre_completo: `Productor de prueba ${n}`,
-    nombre_predio: `Predio de prueba ${n}`,
+    nombre_completo: `${nombre} ${ap1} ${ap2}`,
+    nombre_predio: `${PREDIOS[(i * 4 + 1) % PREDIOS.length]}`,
     vereda: p.vereda,
     municipio: p.municipio,
     proyecto: p.proyecto,

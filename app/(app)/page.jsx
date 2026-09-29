@@ -50,7 +50,11 @@ export default function Dashboard() {
       {user && (
         <div className="animate-entry">
           <h2 className="text-2xl font-black text-white drop-shadow-sm">
-            Hola, {user.nombre?.split(' ')[0] || 'Técnico'}
+            {/* El visitante del modo prueba se llama "Modo Prueba": saludarlo por
+                la primera palabra daba "Hola, Modo". */}
+            {user.rol === 'visitante' || user.nombre === 'Modo Prueba'
+              ? 'Bienvenido'
+              : `Hola, ${user.nombre?.split(' ')[0] || 'Técnico'}`}
           </h2>
           {/* Quién firma los documentos: nombre completo y cargo, también sin señal */}
           <p className="text-xs text-white/60 font-medium mt-0.5 truncate">

@@ -15,12 +15,12 @@ function getUUID() {
 
 // 1. Indicators Catalog
 const indicators = [
-  { id: 1, dimension_id: 1, dimension: 'Ambiental', orden: 1, nombre: 'Protección de fuentes de agua', rango_min: 1, rango_max: 5, descripcion: 'Estado y protección de nacimientos y cursos de agua.' },
-  { id: 2, dimension_id: 1, dimension: 'Ambiental', orden: 2, nombre: 'Disponibilidad y calidad de agua', rango_min: 1, rango_max: 5, descripcion: 'Acceso a agua potable y de riego.' },
-  { id: 3, dimension_id: 1, dimension: 'Ambiental', orden: 3, nombre: 'Manejo de agua', rango_min: 1, rango_max: 5, descripcion: 'Uso eficiente y almacenamiento de agua.' },
-  { id: 4, dimension_id: 1, dimension: 'Ambiental', orden: 4, nombre: 'Disposición y tratamiento de aguas residuales', rango_min: 1, rango_max: 5, descripcion: 'Tratamiento de aguas grises y negras.' },
-  { id: 5, dimension_id: 1, dimension: 'Ambiental', orden: 5, nombre: 'Manejo del suelo', rango_min: 1, rango_max: 5, descripcion: 'Prácticas de conservación y no erosión.' },
-  { id: 6, dimension_id: 1, dimension: 'Ambiental', orden: 6, nombre: 'Fertilidad del suelo', rango_min: 1, rango_max: 5, descripcion: 'Uso de abonos orgánicos y análisis del suelo.' },
+  { id: 1, dimension_id: 4, dimension: 'Socioambiental', orden: 1, nombre: 'Protección de fuentes de agua', rango_min: 1, rango_max: 5, descripcion: 'Estado y protección de nacimientos y cursos de agua.' },
+  { id: 2, dimension_id: 4, dimension: 'Socioambiental', orden: 2, nombre: 'Disponibilidad y calidad de agua', rango_min: 1, rango_max: 5, descripcion: 'Acceso a agua potable y de riego.' },
+  { id: 3, dimension_id: 4, dimension: 'Socioambiental', orden: 3, nombre: 'Manejo de agua', rango_min: 1, rango_max: 5, descripcion: 'Uso eficiente y almacenamiento de agua.' },
+  { id: 4, dimension_id: 4, dimension: 'Socioambiental', orden: 4, nombre: 'Disposición y tratamiento de aguas residuales', rango_min: 1, rango_max: 5, descripcion: 'Tratamiento de aguas grises y negras.' },
+  { id: 5, dimension_id: 4, dimension: 'Socioambiental', orden: 5, nombre: 'Manejo del suelo', rango_min: 1, rango_max: 5, descripcion: 'Prácticas de conservación y no erosión.' },
+  { id: 6, dimension_id: 4, dimension: 'Socioambiental', orden: 6, nombre: 'Fertilidad del suelo', rango_min: 1, rango_max: 5, descripcion: 'Uso de abonos orgánicos y análisis del suelo.' },
   { id: 7, dimension_id: 1, dimension: 'Ambiental', orden: 7, nombre: 'Manejo del bosque', rango_min: 1, rango_max: 5, descripcion: 'Conservación de áreas boscosas nativas.' },
   { id: 8, dimension_id: 1, dimension: 'Ambiental', orden: 8, nombre: 'Árboles en potrero', rango_min: 1, rango_max: 5, descripcion: 'Sistemas silvopastoriles, árboles dispersos.' },
   { id: 9, dimension_id: 1, dimension: 'Ambiental', orden: 9, nombre: 'Cercas vivas', rango_min: 1, rango_max: 5, descripcion: 'Delimitación con especies arbóreas o arbustivas.' },

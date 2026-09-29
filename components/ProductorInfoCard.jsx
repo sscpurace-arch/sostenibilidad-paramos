@@ -13,7 +13,9 @@ export default function ProductorInfoCard({ productor, onVerMapa }) {
       <p className="text-sm text-gray-500 mt-1">CC: {productor.cedula}</p>
       <div className="mt-6">
         <p className="text-[10px] text-gray-700 uppercase font-bold">Nombre del predio</p>
-        <p className="text-sm">
+        {/* Color explícito: sin él heredaba el blanco del fondo oscuro de la app
+            y el nombre del predio no se leía sobre la tarjeta blanca. */}
+        <p className="text-sm text-gray-800 font-medium">
           {productor.nombre_predio
             ? productor.vereda
               ? `${productor.nombre_predio} • ${productor.vereda}`

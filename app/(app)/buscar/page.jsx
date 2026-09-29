@@ -57,10 +57,18 @@ export default function BuscarPage() {
     return true;
   }
 
-  const filtered = productores.filter(p => 
-    p.nombre_completo?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-    p.cedula?.includes(debouncedQuery)
-  );
+  // Sin tildes ni mayúsculas: "pena" encuentra "Peña", "jose" encuentra "José"
+  const normalizar = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const consulta = normalizar(debouncedQuery).trim();
+  const filtered = productores
+    .filter(p =>
+      !consulta ||
+      normalizar(p.nombre_completo).includes(consulta) ||
+      normalizar(p.nombre_predio).includes(consulta) ||
+      String(p.cedula || '').includes(consulta)
+    )
+    // Alfabético por nombre (antes salían en el orden en que se descargaron)
+    .sort((a, b) => String(a.nombre_completo || '').localeCompare(String(b.nombre_completo || ''), 'es', { sensitivity: 'base', numeric: true }));
 
   return (
     <div className="flex flex-col gap-4 pb-20">

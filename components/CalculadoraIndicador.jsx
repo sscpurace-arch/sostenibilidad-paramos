@@ -20,10 +20,10 @@ import { useState, useMemo } from 'react';
 // ---------------------------------------------------------------------------
 // Bandas oficiales (Anexo A de la matriz)
 //
-// Los rangos publicados tienen huecos: el ind. 25 no cubre 0,8-0,9 ni 1,0-1,1,
-// y el 27 no cubre 2,0-2,5 %. Se cierran hacia la banda superior (favorable al
-// productor) y queda anotado — el rediseño del ind. 25 ya estaba previsto para
-// la v2.0 de la matriz.
+// Los rangos publicados tienen huecos: el ind. 25 no cubre 0,6-0,7, 0,8-0,9 ni
+// 1,0-1,1, y el 27 no cubre 2,0-2,5 %. Desde la Guía v1.1 (sep 2026) se cierran
+// hacia la BANDA INFERIOR en ambos, en aplicación de la regla 2 ("si duda, el
+// inferior"). El rediseño del ind. 25 sigue previsto para la v2.0 de la matriz.
 // ---------------------------------------------------------------------------
 
 function porBandas(bandas, valor) {
@@ -111,7 +111,8 @@ export const CALCULADORAS = {
       };
     },
     // Acá menos es mejor: se evalúa al revés que las demás
-    puntaje: (v) => (v < 2.5 ? 5 : v < 5 ? 4 : v < 7.5 ? 3 : v < 10 ? 2 : 1),
+    // 2,0-2,5 % cae al nivel 4 (banda inferior); 10 % exacto sigue en nivel 2.
+    puntaje: (v) => (v < 2 ? 5 : v < 5 ? 4 : v < 7.5 ? 3 : v <= 10 ? 2 : 1),
   },
 
   // ---- 28 · Intervalo entre partos ----------------------------------------

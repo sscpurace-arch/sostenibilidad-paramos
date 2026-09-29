@@ -16,6 +16,9 @@ export default function BaseDatosPage() {
   async function cargarProductores() {
     setLoading(true);
     const all = await db.productores.toArray();
+    // Ordenados por nombre desde el inicio: la cabecera ya marcaba "↑" pero la
+    // lista salía en el orden en que llegaron de la base.
+    all.sort((a, b) => String(a.nombre_completo || '').localeCompare(String(b.nombre_completo || ''), 'es', { sensitivity: 'base', numeric: true }));
     setProductores(all);
     setLoading(false);
   }

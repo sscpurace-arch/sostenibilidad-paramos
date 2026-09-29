@@ -150,10 +150,11 @@ export default function ResultadosEvaluacion({
                 height={300}
               />
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className={`grid gap-2 ${dimensiones.length === 4 ? 'grid-cols-2' : 'grid-cols-3'}`}>
               {dimensiones.map(d => (
                 <div key={d.nombre} className="text-center p-2 bg-white rounded-lg border border-gray-100">
-                  <p className="text-[9px] uppercase font-bold" style={{ color: d.color }}>{d.nombre.split(' ')[0].substring(0, 6)}</p>
+                  {/* Nombre completo: antes se recortaba a 6 letras ("AMBIEN", "SOCIOE") */}
+                  <p className="text-[9px] uppercase font-bold leading-tight" style={{ color: d.color }}>{d.nombre}</p>
                   <p className="text-lg font-black" style={{ color: d.color }}>{formatoPromedio(currentAvgs[d.nombre])}</p>
                 </div>
               ))}

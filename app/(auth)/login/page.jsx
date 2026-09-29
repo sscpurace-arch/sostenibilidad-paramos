@@ -122,7 +122,7 @@ export default function LoginPage() {
             <div className="flex justify-center">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 text-[10px] font-black uppercase tracking-widest">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                Versión de Prueba
+                Herramienta de campo
               </span>
             </div>
 
@@ -132,7 +132,7 @@ export default function LoginPage() {
             </p>
 
             <p className="text-xs text-white/40 text-center leading-relaxed bg-white/5 rounded-2xl px-4 py-3 border border-white/10">
-              Estás viendo una versión de prueba. Puedes explorarla libremente — los datos que ingreses{' '}
+              Los técnicos entran con su cuenta de Google. Si solo quieres conocerla, usa el modo demostración: los datos que ingreses{' '}
               <span className="text-amber-300/80 font-semibold">quedan marcados como prueba</span> y no afectan la base de datos real.
             </p>
           </div>
@@ -144,7 +144,7 @@ export default function LoginPage() {
               onClick={handleMockLogin}
               className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider bg-gradient-to-r from-[#03A64A] to-[#049DD9] text-white shadow-glow-green hover:shadow-card-hover hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300"
             >
-              🌿 Entrar a probarla
+              🌿 Ver modo demostración
             </button>
 
             {/* Botón Google — acceso real para técnicos y equipo de PNN */}

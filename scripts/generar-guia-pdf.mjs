@@ -1,7 +1,7 @@
 // Genera public/docs/guia-calificacion-matriz.pdf a partir del contenido ya
 // corregido del Anexo A (scripts/anexo-a-indicadores.json) y la paleta
 // institucional (misma línea visual de lib/pdf-utils.js, pero autocontenida
-// porque este script corre en Node —build time—, no en el navegador).
+// porque este script corre en Node -build time-, no en el navegador).
 //
 // Uso: node scripts/generar-guia-pdf.mjs
 // Se debe volver a correr cada vez que cambie el contenido del Anexo A.
@@ -103,7 +103,7 @@ function piePagina(doc) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(...GRIS_CLARO);
-    doc.text('Guía de Calificación — Matriz de Sostenibilidad · PNN Puracé', MARGEN, alto - 8);
+    doc.text('Guía de Calificación · Matriz de Sostenibilidad · PNN Puracé', MARGEN, alto - 8);
     doc.text(`${i}/${total}`, ancho - MARGEN - 8, alto - 8);
   }
 }
@@ -166,7 +166,7 @@ const DIMENSIONES = [
 ];
 
 const TITULO_DOC = 'Guía de Calificación';
-const SUBTITULO_DOC = 'Matriz de Sostenibilidad de 29 Indicadores — PNN Puracé';
+const SUBTITULO_DOC = 'Matriz de Sostenibilidad de 29 Indicadores · PNN Puracé';
 
 // ─── Construcción del PDF ───
 const doc = new jsPDF();
@@ -190,8 +190,7 @@ doc.setLineWidth(0.2);
 doc.setFont('helvetica', 'normal');
 doc.setFontSize(9);
 doc.setTextColor(...GRIS_CLARO);
-const fechaHoy = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
-doc.text(`Versión actualizada — ${fechaHoy}`, A4_W / 2, 168, { align: 'center' });
+doc.text('Versión 1.1 · Septiembre de 2026', A4_W / 2, 168, { align: 'center' });
 doc.setFillColor(...VERDE);
 doc.rect(0, A4_H - ALTO_FRANJA, A4_W, ALTO_FRANJA, 'F');
 
@@ -260,11 +259,11 @@ cR.avanzar(2);
 cR.lista([
   'Califique lo observado, no lo declarado. Si no lo puede verificar, regístrelo como discrepancia.',
   'Si duda entre dos niveles, elija el inferior.',
-  'Tome fotografías: al menos una por cada indicador calificado en 2 o menos, y una panorámica del predio. La herramienta digital las exige y no permite cerrar la visita sin ellas.',
+  'Tome fotografías: al menos una por cada indicador calificado en 2 o menos, y una panorámica del predio al llegar. Antes de enviar, la app muestra los indicadores que quedaron sin foto y pide confirmar; si de verdad no se pudo tomar, escriba el motivo en el indicador. Nunca suba la nota para evitar la foto: eso daña el dato en silencio.',
   'Entreviste solo lo no observable (registros, ingresos, créditos, historial sanitario). Lo físico se observa.',
   'Recorra el predio completo. No califique desde la casa. Es válido observar durante el recorrido y consignar al cierre, bajo techo, cuando las condiciones climáticas lo impidan.',
-  'Registre "no aplica" con justificación. La herramienta digital todavía no dispone de esa casilla: califique 1 y escriba NO APLICA junto con el motivo en el campo de observación.',
-  'Firme al cerrar: evaluador y productor.',
+  'Registre "no aplica" con justificación. Márquelo en la app con el motivo (por ejemplo, litros de leche en un predio de ceba). El indicador queda fuera del promedio de su dimensión y del global; nunca cuenta como 0 ni como 1, y no pide foto.',
+  'Firme al cerrar: técnico y productor, en la app. Quedan registrados el nombre y el cargo del técnico. Si acompaña un facilitador, la Guardia Indígena o una entidad aliada, su nombre va en las observaciones de la visita.',
 ], { marcador: '>' });
 
 cR.avanzar(4);
@@ -276,11 +275,18 @@ cR.parrafo(
 );
 cR.avanzar(2);
 cR.lista([
-  'Familia A — Estimación visual de proporción o densidad: indicadores 1, 5, 8, 9, 12 y 20. El ojo se entrena; por eso los talleres incluyen ejercicios de calibración.',
-  'Familia B — Verificación de existencia y funcionamiento: indicadores 2, 3, 4, 6, 10, 11, 18, 19 y 21. El trabajo consiste en pedir que se lo muestren. Si no se lo pueden mostrar, no cuenta.',
-  'Familia C — Entrevista y cálculo: indicadores 13 a 17 y 22 a 29. Los indicadores 22 a 28 dependen de que existan registros (indicador 29); sin registros se estima por entrevista y aplica con más fuerza la regla de elegir el nivel inferior.',
+  'Familia A · Estimación visual de proporción o densidad: indicadores 1, 5, 8, 9, 12 y 20. El ojo se entrena; por eso los talleres incluyen ejercicios de calibración.',
+  'Familia B · Verificación de existencia y funcionamiento: indicadores 2, 3, 4, 6, 10, 11, 18, 19 y 21. El trabajo consiste en pedir que se lo muestren. Si no se lo pueden mostrar, no cuenta.',
+  'Familia C · Entrevista y cálculo: indicadores 13 a 17 y 22 a 29. Los indicadores 22 a 28 dependen de que existan registros (indicador 29); sin registros se estima por entrevista y aplica con más fuerza la regla de elegir el nivel inferior.',
 ], { marcador: '•' });
 
+cR.avanzar(4);
+cR.parrafo('Entrevista con contrapreguntas', { tamano: 13, color: VERDE, negrita: true, interlineado: 5.5 });
+cR.avanzar(1);
+cR.parrafo(
+  'En la familia C la calidad del dato depende de cómo se pregunta. Una cifra declarada sin registros (litros por día, intervalo entre partos, muertes del año) se contrasta con otros datos del mismo predio antes de consignarla: vacas en ordeño frente a litros declarados, edad de las novillas preñadas frente a la edad al primer parto declarada, terneros presentes frente a partos del año. Si los datos no cierran entre sí, se registra la discrepancia y se aplica la regla 2.',
+  { tamano: 10, interlineado: 5.2 }
+);
 cR.avanzar(4);
 cR.parrafo('Cálculos que resuelve la herramienta digital', { tamano: 13, color: VERDE, negrita: true, interlineado: 5.5 });
 cR.avanzar(1);
@@ -290,11 +296,20 @@ cR.parrafo(
 );
 cR.avanzar(2);
 cR.lista([
-  'Indicador 8 — árboles establecidos y vivos por hectárea.',
-  'Indicador 22 — litros de leche por hectárea al año.',
-  'Indicador 25 — carga animal en UGG por hectárea.',
-  'Indicador 27 — tasa de mortalidad anual.',
-  'Indicador 28 — intervalo entre partos.',
+  'Indicador 8 · árboles establecidos y vivos por hectárea.',
+  'Indicador 22 · litros de leche por hectárea al año.',
+  'Indicador 25 · carga animal en UGG por hectárea.',
+  'Indicador 27 · tasa de mortalidad anual.',
+  'Indicador 28 · intervalo entre partos.',
+], { marcador: '•' });
+cR.avanzar(4);
+cR.parrafo('Otros apoyos de la app en el predio', { tamano: 13, color: VERDE, negrita: true, interlineado: 5.5 });
+cR.avanzar(1);
+cR.lista([
+  '"¿Cómo califico esto?": en cada indicador muestra el descriptor de los cinco niveles con el texto de esta guía. Se consulta antes de calificar, no se adivina.',
+  'Hectáreas precargadas: el área total y el área en ganadería de cada productor vienen de la Base Maestra y aparecen en las calculadoras 22 y 25; son editables si en campo se verifica otra cifra.',
+  'Guardado automático y trabajo sin señal: se prepara la app con señal antes de salir ("Preparar sin conexión"), se trabaja sin conexión y los datos y las fotos suben solos al recuperar señal. Con lluvia, se observa caminando y se consigna al cerrar, bajo techo.',
+  'Diagnóstico y propuesta de plan de mejora al cerrar, que el técnico revisa con la familia; la app produce dos PDF (diagnóstico y plan de acción) con la fecha de la visita.',
 ], { marcador: '•' });
 
 // Fichas de indicador, agrupadas por dimensión
@@ -310,7 +325,7 @@ DIMENSIONES.forEach((dim) => {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(255, 255, 255);
-  doc.text(`DIMENSIÓN ${dim.nombre.toUpperCase()} — Indicadores ${dim.rango[0]} a ${dim.rango[1]}`, MARGEN + 4, c.y + 6.2);
+  doc.text(`DIMENSIÓN ${dim.nombre.toUpperCase()} · Indicadores ${dim.rango[0]} a ${dim.rango[1]}`, MARGEN + 4, c.y + 6.2);
   c.y += 14;
 
   const delDim = indicadores.filter((ind) => ind.numero >= dim.rango[0] && ind.numero <= dim.rango[1]);

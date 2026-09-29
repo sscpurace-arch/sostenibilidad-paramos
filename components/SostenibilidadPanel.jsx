@@ -3,6 +3,7 @@ import RadarChart from '@/components/RadarChart';
 
 // Mapa de abreviaciones para etiquetas de dimensión en la cuadrícula de resumen
 const ABREV_DIMENSION = {
+  'Socioambiental': 'S.Amb.',
   'Ambiental': 'Amb.',
   'Socioeconómica': 'Socio.',
   'Sociocultural': 'Socio.',
@@ -70,7 +71,7 @@ export default function SostenibilidadPanel({
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {dimensiones.map(dim => {
               const indsInDim = indicadores.filter(i => i.dimension === dim.nombre);
               const scores = indsInDim

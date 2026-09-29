@@ -56,6 +56,7 @@ export default function MultiMap({ producers }) {
   const router = useRouter();
   const [boundary, setBoundary] = useState(null);
   const [selectedVeredas, setSelectedVeredas] = useState([]);
+  const [leyendaAbierta, setLeyendaAbierta] = useState(false);
 
   useEffect(() => {
     fetch('/purace-boundary.json')
@@ -173,10 +174,22 @@ export default function MultiMap({ producers }) {
         ))}
       </MapContainer>
 
-      {/* Leyenda de Veredas */}
-      <div className="absolute bottom-6 left-6 z-[1000] bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-100 max-h-[350px] overflow-hidden flex flex-col min-w-[160px]">
+      {/* Leyenda de Veredas. Plegable: en el celular abierta tapaba casi medio
+          mapa y las fincas quedaban debajo. Arranca cerrada. */}
+      {!leyendaAbierta && (
+        <button
+          onClick={() => setLeyendaAbierta(true)}
+          className="absolute bottom-24 left-4 z-[1000] bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-gray-100 px-4 py-2.5 text-xs font-black text-gray-700 active:scale-95 transition-all"
+        >
+          🗂️ Veredas{selectedVeredas.length > 0 ? ` (${selectedVeredas.length})` : ''}
+        </button>
+      )}
+      <div className={`absolute bottom-24 left-4 z-[1000] bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-100 max-h-[45vh] overflow-hidden flex-col min-w-[160px] ${leyendaAbierta ? 'flex' : 'hidden'}`}>
         <div className="sticky top-0 bg-white/95 p-3 border-b pb-1">
-          <h4 className="text-[10px] font-black uppercase text-gray-400 mb-2">Veredas</h4>
+          <div className="flex items-center justify-between gap-3">
+            <h4 className="text-[10px] font-black uppercase text-gray-400 mb-2">Veredas</h4>
+            <button onClick={() => setLeyendaAbierta(false)} aria-label="Cerrar leyenda" className="text-gray-400 text-lg leading-none -mt-1 px-1">✕</button>
+          </div>
           {selectedVeredas.length > 0 && (
             <button onClick={() => setSelectedVeredas([])} className="text-[10px] font-bold text-[#03A64A] hover:underline text-left py-1.5">
               ✕ Mostrar todas
