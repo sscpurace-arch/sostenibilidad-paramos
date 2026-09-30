@@ -43,7 +43,13 @@ Deno.serve(async (req) => {
       return jsonResponse({ success: false, error: "JSON inválido en request" }, 400);
     }
 
-    const { evaluacion_id, is_mock, datos_locales, respuestas_previas } = body;
+    const { evaluacion_id, is_mock, datos_locales, respuestas_previas, solo_local } = body;
+    // "Modo local": los datos de la evaluación vienen en la petición y NO se
+    // leen ni se guardan en la base. Aplica al modo prueba (sin cuenta) y,
+    // con sesión real, a evaluaciones de prueba o que aún no han subido:
+    // antes la función las buscaba en Supabase, no las encontraba y el
+    // diagnóstico fallaba (una calificación de prueba nunca sube al servidor).
+    const modoLocal = (is_mock === true || solo_local === true) && !!datos_locales;
     if (!evaluacion_id) {
       return jsonResponse({ success: false, error: "evaluacion_id requerido" }, 400);
     }
@@ -97,8 +103,8 @@ Deno.serve(async (req) => {
     let evaluacion, productor, respuestas;
     let respuestasPrevias: { valor: number | null; indicador_id: number; no_aplica?: boolean }[] = [];
 
-    if (is_mock && datos_locales) {
-      // ─── Modo prueba: la evaluación vive solo en el celular (es_prueba
+    if (modoLocal) {
+      // ─── Modo local: la evaluación vive solo en el celular (es_prueba
       // nunca se sincroniza a Supabase) → los datos vienen en el request ───
       productor = datos_locales.productor || {};
       respuestas = Array.isArray(datos_locales.respuestas)
@@ -361,7 +367,7 @@ Responde ESTRICTAMENTE en JSON plano (SIN markdown, SIN bloques de código, SOLO
 
     // ─── Modo prueba: no guardar en BD (la evaluación no existe allá);
     // devolver el diagnóstico completo para que el cliente lo guarde local ───
-    if (is_mock && datos_locales) {
+    if (modoLocal) {
       return jsonResponse({
         success: true,
         diagnostico: {

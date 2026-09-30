@@ -101,6 +101,12 @@ export default function NuevaEvalForm({
           />
           <label htmlFor="esPrueba" className="text-sm font-medium text-gray-700">Esta es una calificación de prueba</label>
         </div>
+        {/* Aclarar qué implica: los testers la marcaban creyendo que sí subía. */}
+        <p className="text-[11px] text-gray-500 leading-snug -mt-1 mb-2">
+          {esPrueba
+            ? 'Una calificación de prueba se queda solo en este celular: no sube al servidor ni cuenta en el panel, y sus fotos tampoco se suben.'
+            : 'Déjala sin marcar para una visita real: sube al servidor con sus fotos.'}
+        </p>
         <button
           onClick={onIniciar}
           className="bg-[#03A64A] text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-all"
