@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback, Suspense } from 'react';
+import { abrirPantalla, leerParametro } from "@/lib/navegar";
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
 import { saveRecord, deleteRecord, deleteRecordBulk, guardarDesdeServidor } from '@/lib/sync-engine';
@@ -17,7 +18,7 @@ import NuevaEvalForm from '@/components/NuevaEvalForm';
 // rompen offline. El id se lee en el cliente y los datos salen de IndexedDB.
 function PerfilProductorContent() {
   const searchParams = useSearchParams();
-  const productorId = searchParams.get('productor');
+  const productorId = leerParametro(searchParams, 'productor');
 
   const [productor, setProductor] = useState(null);
   const [ultimaEval, setUltimaEval] = useState(null);
@@ -164,7 +165,7 @@ function PerfilProductorContent() {
       receptor_parentesco: receptorEsOtro ? receptorParentesco.trim() : '',
     };
     await saveRecord('evaluaciones', newEval);
-    router.push(`/calificacion?id=${newEval.id}`);
+    abrirPantalla(`/calificacion?id=${newEval.id}`);
   };
 
   const handleEliminar = async (evalId) => {
@@ -238,7 +239,7 @@ function PerfilProductorContent() {
         <h1 className="text-xl font-bold">Perfil del Productor</h1>
       </header>
 
-      <ProductorInfoCard productor={productor} onVerMapa={() => router.push(`/mapa/detalle?id=${productor.id}`)} />
+      <ProductorInfoCard productor={productor} onVerMapa={() => abrirPantalla(`/mapa/detalle?id=${productor.id}`)} />
 
       <SostenibilidadPanel
         ultimaEval={ultimaEval} todasEvals={todasEvals} radarData={radarData}

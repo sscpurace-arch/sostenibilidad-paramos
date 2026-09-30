@@ -1,5 +1,6 @@
 ﻿'use client';
 import 'leaflet/dist/leaflet.css';
+import { abrirPantalla } from "@/lib/navegar";
 import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import { useEffect, useState, useMemo } from 'react';
@@ -163,7 +164,7 @@ export default function MultiMap({ producers }) {
                    <div className="text-[10px] text-gray-400">Predio: {p.nombre_predio || '-'}</div>
                 </div>
                 <button 
-                  onClick={() => router.push(`/calificacion/nueva?productor=${p.id}`)}
+                  onClick={() => abrirPantalla(`/calificacion/nueva?productor=${p.id}`)}
                   className="w-full bg-[#03A64A] text-white py-2 rounded-lg text-xs font-bold shadow-sm active:scale-95 transition-all"
                 >
                   Ver Perfil

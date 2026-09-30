@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { abrirPantalla } from "@/lib/navegar";
 import { db } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import { createClient } from '@/lib/supabase';
@@ -94,7 +95,7 @@ export default function NuevoProductorPage() {
         <h2 className="text-2xl font-bold">Productor Registrado</h2>
         <div className="flex flex-col gap-2 w-full">
           <button 
-            onClick={() => router.push(`/calificacion/nueva?productor=${form.id || ''}`)}
+            onClick={() => abrirPantalla(`/calificacion/nueva?productor=${form.id || ''}`)}
             className="bg-[#03A64A] text-white py-4 rounded-xl font-bold"
           >
             Evaluar ahora

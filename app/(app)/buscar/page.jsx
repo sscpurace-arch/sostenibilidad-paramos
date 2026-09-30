@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { abrirPantalla } from "@/lib/navegar";
 import { db } from '@/lib/db-offline';
 import { subscribe } from '@/lib/sync-engine';
 import { useRouter } from 'next/navigation';
@@ -104,7 +105,7 @@ export default function BuscarPage() {
           filtered.map(p => (
             <div 
               key={p.id}
-              onClick={() => router.push(`/calificacion/nueva?productor=${p.id}`)}
+              onClick={() => abrirPantalla(`/calificacion/nueva?productor=${p.id}`)}
               className="card-solid cursor-pointer"
             >
               <h3 className="font-bold text-gray-800">{p.nombre_completo}</h3>

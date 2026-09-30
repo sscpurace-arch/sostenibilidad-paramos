@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { abrirPantalla } from "@/lib/navegar";
 import { db } from '@/lib/db-offline';
 import { createClient, getMockSession, MOCK_USER } from '@/lib/supabase';
 import { useEnLinea } from '@/lib/hooks/useEnLinea';
@@ -104,7 +105,7 @@ export default function EnProcesoPage() {
               </div>
 
               <button
-                onClick={() => router.push(`/calificacion?id=${item.id}`)}
+                onClick={() => abrirPantalla(`/calificacion?id=${item.id}`)}
                 className="w-full mt-4 bg-pnn-azul/10 text-pnn-azul py-3 rounded-xl font-bold text-sm hover:bg-pnn-azul/20 transition-colors"
               >
                 Continuar Evaluación →
@@ -145,7 +146,7 @@ export default function EnProcesoPage() {
                 </span>
               </div>
               <button
-                onClick={() => router.push(`/calificacion?id=${item.id}&resultados=1`)}
+                onClick={() => abrirPantalla(`/calificacion?id=${item.id}&resultados=1`)}
                 disabled={!enLinea}
                 className="w-full mt-4 py-3 rounded-xl font-bold text-sm transition-colors bg-amber-100 text-amber-900 hover:bg-amber-200 disabled:bg-gray-100 disabled:text-gray-400"
               >

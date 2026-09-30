@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
+import { leerParametro } from "@/lib/navegar";
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import { notificarEnvio } from '@/lib/notificar';
@@ -21,8 +22,8 @@ import FotosFaltantesModal from '@/components/FotosFaltantesModal';
 // Ruta estática + parámetro por query (?id=EVAL) para funcionar sin conexión.
 function EvaluacionContent() {
   const searchParams = useSearchParams();
-  const evalId = searchParams.get('id');
-  const abrirResultados = searchParams.get('resultados') === '1';
+  const evalId = leerParametro(searchParams, 'id');
+  const abrirResultados = leerParametro(searchParams, 'resultados') === '1';
 
   const [evaluacion, setEvaluacion] = useState(null);
   const [productor, setProductor] = useState(null);

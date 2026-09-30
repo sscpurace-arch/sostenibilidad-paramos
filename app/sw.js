@@ -18,6 +18,9 @@ const soloRespuestasLimpias = {
     response && response.status === 200 && !response.redirected ? response : null,
 };
 
+// Debe coincidir con lib/data-prefetch.js (calentarPantallas)
+const RSC_CACHE = 'rsc-paginas-v2';
+
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   // No activar la versión nueva automáticamente: queda en estado "waiting"
@@ -42,13 +45,21 @@ const serwist = new Serwist({
     // son estáticas y leen sus datos de IndexedDB (el ?productor=/?id= se lee
     // en el cliente), se sirven ignorando el query para que la navegación a
     // calificación/mapa funcione sin conexión.
+    //
+    // RED PRIMERO (antes era StaleWhileRevalidate): con señal siempre se usa la
+    // respuesta fresca del servidor, y la copia guardada solo cuando no hay
+    // red. Servir la copia guardada con señal hizo que en iPhone la pantalla
+    // del productor abriera sin el ?productor= ("No se indicó qué productor
+    // abrir", 30-sep-2026). Nombre nuevo del caché para descartar las copias
+    // viejas que pudieran estar dañadas (ver el 'activate' al final).
     {
       matcher: ({ url, request, sameOrigin }) =>
         sameOrigin && (url.searchParams.has('_rsc') || request.headers.has('RSC')),
-      handler: new StaleWhileRevalidate({
-        cacheName: 'rsc-paginas',
+      handler: new NetworkFirst({
+        cacheName: RSC_CACHE,
+        networkTimeoutSeconds: 4,
         matchOptions: { ignoreSearch: true, ignoreVary: true },
-        plugins: [new ExpirationPlugin({ maxEntries: 32 })],
+        plugins: [soloRespuestasLimpias, new ExpirationPlugin({ maxEntries: 32 })],
       }),
     },
     // Teselas de OpenStreetMap — CacheFirst para que el mapa funcione sin conexión.
@@ -115,6 +126,13 @@ serwist.addEventListeners();
 
 // Activar la versión en espera bajo demanda, cuando el cliente lo pide
 // (botón "Actualizar" en components/UpdateBanner.jsx).
+// Borrar el caché RSC anterior (podía contener copias que perdían el
+// parámetro de la dirección). Solo son copias de pantallas: los datos del
+// técnico viven en IndexedDB y no se tocan.
+self.addEventListener('activate', (event) => {
+  event.waitUntil(caches.delete('rsc-paginas').catch(() => {}));
+});
+
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();

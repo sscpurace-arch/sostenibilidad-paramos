@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, Suspense } from 'react';
+import { leerParametro } from "@/lib/navegar";
 import { db } from '@/lib/db-offline';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -13,7 +14,7 @@ const Map = dynamic(() => import('@/components/Map'), {
 // Ruta estática + parámetro por query (?id=ID) para funcionar sin conexión.
 function MapaDetalleContent() {
   const searchParams = useSearchParams();
-  const productorId = searchParams.get('id');
+  const productorId = leerParametro(searchParams, 'id');
 
   const [productor, setProductor] = useState(null);
   const [loading, setLoading] = useState(true);
