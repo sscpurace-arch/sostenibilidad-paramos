@@ -28,14 +28,27 @@ export default function UpdateBanner() {
     let arranque = true;
     setTimeout(() => { arranque = false; }, 8000);
 
+    // Pantallas donde hay algo a medio llenar (evaluación, perfil con su
+    // formulario de visita, productor nuevo): ahí no se recarga solo.
+    const pantallaConFormulario = () => {
+      const p = window.location.pathname;
+      return p.startsWith('/calificacion') || p.startsWith('/nuevo-productor');
+    };
+
     const checkWaiting = () => {
       if (!reg?.waiting || !navigator.serviceWorker.controller) return;
-      if (arranque) {
+      // Al arrancar, o en cualquier pantalla sin formulario (inicio, búsqueda,
+      // mapa…), se activa sola. Antes solo se hacía en los primeros 8 s: si la
+      // versión nueva terminaba de instalarse después, el celular quedaba con
+      // las pantallas guardadas de una versión y el código guardado de otra, y
+      // sin señal la pantalla del productor se quedaba en "Cargando perfil…"
+      // (prueba de campo, 19-oct-2026).
+      if (arranque || !pantallaConFormulario()) {
         reg.waiting.postMessage({ type: 'SKIP_WAITING' });
         return;   // controllerchange recarga sola
       }
-      // A mitad de sesión sí se pregunta: cambiar el código bajo un formulario
-      // a medio llenar sería peor que esperar.
+      // En una pantalla con formulario sí se pregunta: cambiar el código bajo
+      // algo a medio llenar sería peor que esperar.
       setUpdateReady(true);
     };
 

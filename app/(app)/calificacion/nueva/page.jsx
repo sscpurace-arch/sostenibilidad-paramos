@@ -45,7 +45,7 @@ function PerfilProductorContent() {
   const router = useRouter();
   const supabase = createClient();
 
-  const cargarDatos = useCallback(async () => {
+  const cargarDatosInterno = useCallback(async () => {
     setLoading(true);
     setErrorCarga(null);
     if (!productorId) {
@@ -137,6 +137,19 @@ function PerfilProductorContent() {
       }
     }
   }, [productorId, router, supabase]);
+
+  // Nunca dejar la pantalla en "Cargando perfil…" para siempre: si la lectura
+  // de los datos del celular falla, se dice el motivo (antes una falla aquí
+  // dejaba el cargador girando sin explicación).
+  const cargarDatos = useCallback(async () => {
+    try {
+      await cargarDatosInterno();
+    } catch (e) {
+      console.error('Error cargando el perfil:', e);
+      setErrorCarga(`No se pudieron leer los datos guardados en el celular. (${String(e?.message || e).slice(0, 120)})`);
+      setLoading(false);
+    }
+  }, [cargarDatosInterno]);
 
   useEffect(() => {
     cargarDatos();

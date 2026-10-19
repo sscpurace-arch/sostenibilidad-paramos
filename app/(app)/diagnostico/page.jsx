@@ -75,7 +75,16 @@ export default function DiagnosticoPage() {
     setPendientes(cola);
   };
 
-  useEffect(() => { cargar(); }, []);
+  useEffect(() => {
+    cargar();
+    // Al abrir la app se vuelven a guardar solas las pantallas que falten
+    // (layout); releer el estado un rato después para que no quede el aviso
+    // viejo en pantalla.
+    const t = setTimeout(() => {
+      estadoPantallas().then(p => setInfo(i => (i ? { ...i, pantallas: p } : i)));
+    }, 15000);
+    return () => clearTimeout(t);
+  }, []);
 
   /**
    * Prueba cada cambio atascado contra el servidor, de a uno, y guarda el
@@ -137,6 +146,7 @@ export default function DiagnosticoPage() {
       `Almacenamiento: ${info?.almacenamiento || 'n/d'}`,
       `Local: ${info?.productores} productores, ${info?.evaluaciones} evaluaciones (${info?.enviadas} enviadas), ${info?.respuestas} respuestas`,
       `Pantallas sin señal: ${info?.pantallas ? (info.pantallas.falta.length ? 'faltan ' + info.pantallas.falta.join(', ') : 'todas guardadas') : 'n/d'}`,
+      `Archivos de código: ${info?.pantallas ? (info.pantallas.archivosFaltan.length ? 'faltan ' + info.pantallas.archivosFaltan.join(', ') : 'completos') : 'n/d'} · versión nueva esperando: ${info?.pantallas?.versionNueva ?? 'n/d'}`,
       `Navegador: ${info?.navegador}`,
       `Cambios pendientes: ${pendientes.length}`,
       `Sesión: ${info?.usuario || 'n/d'}`,
@@ -177,18 +187,30 @@ export default function DiagnosticoPage() {
           k="Pantallas para usar sin señal"
           v={info?.pantallas
             ? (info.pantallas.falta.length === 0
-              ? `${info.pantallas.total} de ${info.pantallas.total} guardadas`
+              ? `${info.pantallas.guardadas} de ${info.pantallas.total} guardadas`
               : `FALTAN ${info.pantallas.falta.length}: ${info.pantallas.falta.join(', ')}`)
+            : '…'}
+        />
+        <Fila
+          k="Archivos de código de esas pantallas"
+          v={info?.pantallas
+            ? (info.pantallas.archivosFaltan.length === 0
+              ? 'completos'
+              : `FALTAN ${info.pantallas.archivosFaltan.length}: ${info.pantallas.archivosFaltan.slice(0, 3).map(a => a.split('/').pop()).join(', ')}…`)
             : '…'}
         />
       </div>
 
-      {info?.pantallas?.falta.length > 0 && (
+      {(info?.pantallas?.falta.length > 0 || info?.pantallas?.archivosFaltan.length > 0) && (
         <button
           onClick={async () => {
             setMensaje('Guardando pantallas…');
             const r = await calentarPantallas();
-            setMensaje(r.ok ? 'Listo: todas las pantallas quedaron guardadas.' : `No se pudieron guardar: ${r.falta.join(', ')}. Revisa la conexión.`);
+            setMensaje(
+              r.versionNueva ? 'Había una versión nueva de la app: se está activando, la pantalla se recargará sola. Después toca de nuevo.'
+                : r.ok ? 'Listo: todas las pantallas y sus archivos quedaron guardados.'
+                  : `No se pudo guardar todo (${r.falta.length} pantallas, ${r.archivosFaltan.length} archivos). Revisa la conexión y toca de nuevo.`
+            );
             await cargar();
           }}
           className="w-full h-12 rounded-xl bg-[#03A64A] text-white font-bold text-sm active:scale-95 transition-all"

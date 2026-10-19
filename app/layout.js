@@ -1,4 +1,5 @@
 import './globals.css';
+import HidratadoMarca from '@/components/HidratadoMarca';
 import { Nunito_Sans } from 'next/font/google';
 import fs from 'fs';
 import path from 'path';
@@ -82,10 +83,44 @@ export const viewport = {
   viewportFit: 'cover',
 };
 
+// Vigilante de carga. Corre ANTES de los archivos de la app y no depende de
+// ellos: si una pantalla no termina de arrancar (típico sin señal cuando falta
+// algún archivo de código guardado), la página se queda en "Cargando…" sin
+// decir nada. Pasados 12 s sin que la app avise que arrancó, muestra un aviso
+// con los archivos que no cargaron, para que el técnico (y nosotros) sepan por
+// qué en lugar de esperar a ciegas.
+const VIGILANTE_CARGA = `
+(function () {
+  var fallos = [];
+  window.__hidratado = false;
+  window.addEventListener('error', function (e) {
+    var t = e && e.target;
+    if (t && t !== window && (t.src || t.href)) {
+      fallos.push(String(t.src || t.href).split('/').slice(-2).join('/'));
+    }
+  }, true);
+  setTimeout(function () {
+    if (window.__hidratado || document.getElementById('aviso-carga-fallida')) return;
+    var d = document.createElement('div');
+    d.id = 'aviso-carga-fallida';
+    d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#7a1f1f;color:#fff;padding:12px 14px;font:13px/1.35 sans-serif';
+    var txt = '<b>La pantalla no terminó de cargar.</b> ';
+    if (!navigator.onLine) txt += 'Estás sin internet y faltan archivos guardados en el celular. ';
+    if (fallos.length) txt += 'No cargaron: ' + fallos.slice(0, 4).join(', ') + '. ';
+    txt += '<br>Con internet entra a /diagnostico y toca "Guardar pantallas ahora".' +
+      ' <button onclick="location.reload()" style="margin-left:6px;padding:3px 10px;border-radius:6px;border:0">Reintentar</button>';
+    d.innerHTML = txt;
+    document.body.appendChild(d);
+  }, 12000);
+})();
+`;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className={`${nunito.variable} font-sans`}>
+        <script dangerouslySetInnerHTML={{ __html: VIGILANTE_CARGA }} />
+        <HidratadoMarca />
         {children}
       </body>
     </html>

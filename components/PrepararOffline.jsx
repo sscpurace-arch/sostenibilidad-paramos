@@ -53,6 +53,8 @@ export default function PrepararOffline() {
       setError(
         msg === 'SIN_CONEXION'
           ? 'Necesitas conexión a internet para preparar los datos.'
+          : msg === 'VERSION_NUEVA'
+            ? 'Había una versión nueva de la app. Se está activando y la pantalla se recargará sola; después toca de nuevo.'
           : msg === 'PANTALLAS_INCOMPLETAS'
             ? 'No quedaron guardadas todas las pantallas, así que sin señal algunas no abrirían. Revisa tu conexión y toca de nuevo.'
             : msg === 'HISTORIAL_INCOMPLETO'
@@ -97,9 +99,13 @@ export default function PrepararOffline() {
               <p className="text-[11px] text-white/40 mt-0.5">
                 Actualizado: {fechaCorta(estado.fecha)}
               </p>
-              {pantallas && pantallas.falta.length > 0 && (
+              {pantallas && (pantallas.falta.length > 0 || pantallas.archivosFaltan.length > 0 || pantallas.versionNueva) && (
                 <p className="text-[11px] text-acento-amarillo font-semibold mt-1.5">
-                  ⚠ Faltan {pantallas.falta.length} de {pantallas.total} pantallas guardadas: sin señal podrían no abrir. Toca «Actualizar datos» con internet.
+                  {pantallas.versionNueva
+                    ? '⚠ Hay una versión nueva de la app esperando. Toca «Actualizar datos» con internet.'
+                    : pantallas.falta.length > 0
+                      ? `⚠ Faltan ${pantallas.falta.length} de ${pantallas.total} pantallas guardadas: sin señal podrían no abrir. Toca «Actualizar datos» con internet.`
+                      : `⚠ Faltan ${pantallas.archivosFaltan.length} archivos de la app: sin señal alguna pantalla se quedaría cargando. Toca «Actualizar datos» con internet.`}
                 </p>
               )}
               {vencido && (
