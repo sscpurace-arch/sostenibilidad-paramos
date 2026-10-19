@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { prepararOffline, estadoOffline } from '@/lib/data-prefetch';
+import { prepararOffline, estadoOffline, estadoPantallas } from '@/lib/data-prefetch';
 
 function SignalIcon() {
   return (
@@ -21,9 +21,11 @@ export default function PrepararOffline() {
   const [progreso, setProgreso] = useState(null); // { pct, label } | null
   const [error, setError] = useState(null);
   const [online, setOnline] = useState(true);
+  const [pantallas, setPantallas] = useState(null); // { total, guardadas, falta } | null
 
   useEffect(() => {
     setEstado(estadoOffline());
+    estadoPantallas().then(setPantallas);
     setOnline(navigator.onLine);
     const on = () => setOnline(true);
     const off = () => setOnline(false);
@@ -47,13 +49,19 @@ export default function PrepararOffline() {
       setEstado(estadoOffline());
       setProgreso(null);
     } catch (e) {
+      const msg = e?.message;
       setError(
-        e?.message === 'SIN_CONEXION'
+        msg === 'SIN_CONEXION'
           ? 'Necesitas conexión a internet para preparar los datos.'
-          : 'Hubo un problema al descargar. Revisa tu conexión e intenta de nuevo.'
+          : msg === 'PANTALLAS_INCOMPLETAS'
+            ? 'No quedaron guardadas todas las pantallas, así que sin señal algunas no abrirían. Revisa tu conexión y toca de nuevo.'
+            : msg === 'HISTORIAL_INCOMPLETO'
+              ? 'No se pudieron bajar las evaluaciones anteriores. Revisa tu conexión y toca de nuevo.'
+              : 'Hubo un problema al descargar. Revisa tu conexión e intenta de nuevo.'
       );
       setProgreso(null);
     }
+    setPantallas(await estadoPantallas());
   }
 
   const descargando = progreso !== null;
@@ -89,6 +97,11 @@ export default function PrepararOffline() {
               <p className="text-[11px] text-white/40 mt-0.5">
                 Actualizado: {fechaCorta(estado.fecha)}
               </p>
+              {pantallas && pantallas.falta.length > 0 && (
+                <p className="text-[11px] text-acento-amarillo font-semibold mt-1.5">
+                  ⚠ Faltan {pantallas.falta.length} de {pantallas.total} pantallas guardadas: sin señal podrían no abrir. Toca «Actualizar datos» con internet.
+                </p>
+              )}
               {vencido && (
                 <p className="text-[11px] text-acento-amarillo font-semibold mt-1.5">
                   ⚠ Han pasado varios días. Vuelve a preparar los datos para no perderlos.

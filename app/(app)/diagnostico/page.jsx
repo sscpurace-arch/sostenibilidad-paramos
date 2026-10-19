@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/db-offline';
 import { getClient, retryFailed, syncQueue } from '@/lib/sync-engine';
+import { estadoPantallas, calentarPantallas } from '@/lib/data-prefetch';
 
 /**
  * Pantalla de diagnóstico.
@@ -67,7 +68,9 @@ export default function DiagnosticoPage() {
       navegador: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       productores: await db.productores.count(),
       evaluaciones: await db.evaluaciones.count(),
+      enviadas: await db.evaluaciones.filter(e => e.estado === 'enviada').count(),
       respuestas: await db.respuestas_indicadores.count(),
+      pantallas: await estadoPantallas(),
     });
     setPendientes(cola);
   };
@@ -132,7 +135,8 @@ export default function DiagnosticoPage() {
       `Service worker activo: ${info?.swActivo} · esperando: ${info?.swEsperando}`,
       `Conexión: ${info?.conexion} · sesión real: ${info?.sesionReal}`,
       `Almacenamiento: ${info?.almacenamiento || 'n/d'}`,
-      `Local: ${info?.productores} productores, ${info?.evaluaciones} evaluaciones, ${info?.respuestas} respuestas`,
+      `Local: ${info?.productores} productores, ${info?.evaluaciones} evaluaciones (${info?.enviadas} enviadas), ${info?.respuestas} respuestas`,
+      `Pantallas sin señal: ${info?.pantallas ? (info.pantallas.falta.length ? 'faltan ' + info.pantallas.falta.join(', ') : 'todas guardadas') : 'n/d'}`,
       `Navegador: ${info?.navegador}`,
       `Cambios pendientes: ${pendientes.length}`,
       `Sesión: ${info?.usuario || 'n/d'}`,
@@ -168,8 +172,30 @@ export default function DiagnosticoPage() {
         <Fila k="Conexión" v={info?.conexion} />
         <Fila k="Sesión" v={info?.sesionReal ? `real (sincroniza)${info?.usuario ? ' · ' + info.usuario : ''}` : 'prueba o sin sesión (NO sincroniza)'} />
         <Fila k="Almacenamiento" v={info?.almacenamiento || 'n/d'} />
-        <Fila k="Datos en el celular" v={`${info?.productores ?? '…'} productores · ${info?.evaluaciones ?? '…'} evaluaciones`} />
+        <Fila k="Datos en el celular" v={`${info?.productores ?? '…'} productores · ${info?.evaluaciones ?? '…'} evaluaciones (${info?.enviadas ?? '…'} enviadas)`} />
+        <Fila
+          k="Pantallas para usar sin señal"
+          v={info?.pantallas
+            ? (info.pantallas.falta.length === 0
+              ? `${info.pantallas.total} de ${info.pantallas.total} guardadas`
+              : `FALTAN ${info.pantallas.falta.length}: ${info.pantallas.falta.join(', ')}`)
+            : '…'}
+        />
       </div>
+
+      {info?.pantallas?.falta.length > 0 && (
+        <button
+          onClick={async () => {
+            setMensaje('Guardando pantallas…');
+            const r = await calentarPantallas();
+            setMensaje(r.ok ? 'Listo: todas las pantallas quedaron guardadas.' : `No se pudieron guardar: ${r.falta.join(', ')}. Revisa la conexión.`);
+            await cargar();
+          }}
+          className="w-full h-12 rounded-xl bg-[#03A64A] text-white font-bold text-sm active:scale-95 transition-all"
+        >
+          Guardar pantallas ahora (con internet)
+        </button>
+      )}
 
       <button
         onClick={forzarActualizacion}
