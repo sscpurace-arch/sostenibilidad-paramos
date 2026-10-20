@@ -12,6 +12,7 @@ import ProductorInfoCard from '@/components/ProductorInfoCard';
 import SostenibilidadPanel from '@/components/SostenibilidadPanel';
 import HistorialEvals from '@/components/HistorialEvals';
 import NuevaEvalForm from '@/components/NuevaEvalForm';
+import { usuarioActualId, estadoIAde } from '@/lib/pendientes';
 
 // Ruta estática + parámetro por query (?productor=ID) para que funcione sin
 // conexión: las rutas dinámicas de App Router exigen datos del servidor y se
@@ -42,8 +43,19 @@ function PerfilProductorContent() {
   const [receptorCedula, setReceptorCedula] = useState('');
   const [receptorParentesco, setReceptorParentesco] = useState('');
 
+  // Quién soy y qué le falta a mis evaluaciones (diagnóstico con IA / plan):
+  // el historial deja abrirlas para completarlas cuando haya señal.
+  const [miId, setMiId] = useState(null);
+  const [estadoIA, setEstadoIA] = useState({});
+
   const router = useRouter();
   const supabase = createClient();
+
+  useEffect(() => { usuarioActualId().then(setMiId); }, []);
+  useEffect(() => {
+    if (todasEvals.length === 0) { setEstadoIA({}); return; }
+    estadoIAde(todasEvals.map(e => e.id)).then(setEstadoIA).catch(() => {});
+  }, [todasEvals]);
 
   const cargarDatosInterno = useCallback(async () => {
     setLoading(true);
@@ -261,7 +273,13 @@ function PerfilProductorContent() {
 
       {todasEvals.length > 0 && (
         <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <HistorialEvals evaluaciones={todasEvals} onEliminar={handleEliminar} />
+          <HistorialEvals
+            evaluaciones={todasEvals}
+            onEliminar={handleEliminar}
+            estadoIA={estadoIA}
+            puedeAbrir={(ev) => !!miId && ev.tecnico_id === miId}
+            onAbrir={(ev) => abrirPantalla(`/calificacion?id=${ev.id}&resultados=1`)}
+          />
         </section>
       )}
 

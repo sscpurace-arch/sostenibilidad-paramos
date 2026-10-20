@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { contarPendientes } from '@/lib/pendientes';
 import IconInicio from '@/components/icons/IconInicio';
 import IconBuscar from '@/components/icons/IconBuscar';
 import IconMapa from '@/components/icons/IconMapa';
@@ -16,6 +18,26 @@ const SIN_BARRA = ['/calificacion'];
 
 export default function NavBar() {
   const pathname = usePathname();
+
+  // Cuántas cosas esperan al técnico (borradores + enviadas sin diagnóstico/plan):
+  // se muestra como número sobre «Pendientes». Se recalcula al cambiar de pantalla,
+  // al volver a la app y cada 15 s.
+  const [pendientes, setPendientes] = useState(0);
+  useEffect(() => {
+    let vivo = true;
+    const actualizar = () => contarPendientes().then(n => { if (vivo) setPendientes(n); });
+    actualizar();
+    const t = setInterval(actualizar, 15000);
+    window.addEventListener('focus', actualizar);
+    window.addEventListener('online', actualizar);
+    return () => {
+      vivo = false;
+      clearInterval(t);
+      window.removeEventListener('focus', actualizar);
+      window.removeEventListener('online', actualizar);
+    };
+  }, [pathname]);
+
   if (SIN_BARRA.includes(pathname)) return null;
 
   const leftLinks = [
@@ -48,6 +70,14 @@ export default function NavBar() {
             : 'text-white/70 hover:text-white/90'
         }`}>
           <link.CustomIcon size={isActive ? 28 : 24} />
+          {link.href === '/en-proceso' && pendientes > 0 && (
+            <span
+              aria-label={`${pendientes} pendientes`}
+              className="absolute -top-1 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-acento-amarillo text-[#0A2E1C] text-[10px] font-black flex items-center justify-center shadow"
+            >
+              {pendientes > 9 ? '9+' : pendientes}
+            </span>
+          )}
         </div>
         
         {/* Label - Contraste mejorado */}

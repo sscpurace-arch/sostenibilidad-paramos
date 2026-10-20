@@ -2,13 +2,9 @@
 import { useState, useEffect } from 'react';
 import { abrirPantalla } from "@/lib/navegar";
 import { db } from '@/lib/db-offline';
-import { createClient, getMockSession, MOCK_USER } from '@/lib/supabase';
+import { usuarioActualId, pendientesDeIA } from '@/lib/pendientes';
 import { useEnLinea } from '@/lib/hooks/useEnLinea';
 import { useRouter } from 'next/navigation';
-
-// Evaluaciones enviadas en estos últimos días sin diagnóstico con IA: las que
-// se cerraron en finca sin señal. Más atrás no se listan (histórico viejo).
-const DIAS_PENDIENTES = 60;
 
 export default function EnProcesoPage() {
   const [items, setItems] = useState([]);
@@ -44,32 +40,17 @@ export default function EnProcesoPage() {
     setLoading(false);
   }
 
+  // Enviadas (sin señal o no) a las que aún les falta el diagnóstico con IA o el
+  // plan de acción. Sale de lo guardado en el celular: funciona sin señal.
   async function cargarSinDiagnostico() {
     try {
-      // Solo las del usuario de este celular (funciona sin señal: lib/supabase.js)
-      let uid = MOCK_USER.id;
-      if (!getMockSession()) {
-        const { data } = await createClient().auth.getUser();
-        uid = data?.user?.id || null;
-      }
-      if (!uid) return;
-
-      const desde = Date.now() - DIAS_PENDIENTES * 24 * 60 * 60 * 1000;
-      const enviadas = await db.evaluaciones
-        .where('estado').equals('enviada')
-        .and(e => e.tecnico_id === uid && new Date(e.fecha).getTime() >= desde)
-        .toArray();
-
-      const conDiagnostico = new Set(
-        (await db.diagnosticos.toArray()).map(d => d.evaluacion_id)
-      );
-      const faltan = enviadas
-        .filter(e => !conDiagnostico.has(e.id))
-        .sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
-
-      setSinDiagnostico(await Promise.all(faltan.map(async (e) => ({
-        ...e,
-        productor: await db.productores.get(e.finca_id),
+      const uid = await usuarioActualId();
+      const faltan = await pendientesDeIA(uid);
+      setSinDiagnostico(await Promise.all(faltan.map(async ({ ev, sinDiagnostico: sinDiag, sinPlan }) => ({
+        ...ev,
+        sinDiag,
+        sinPlan,
+        productor: await db.productores.get(ev.finca_id),
       }))));
     } catch { /* si falla, la sección simplemente no aparece */ }
   }
@@ -128,10 +109,10 @@ export default function EnProcesoPage() {
       {!loading && sinDiagnostico.length > 0 && (
         <div className="flex flex-col gap-3 mt-2">
           <div>
-            <h2 className="text-lg font-bold text-white">Diagnóstico pendiente</h2>
+            <h2 className="text-lg font-bold text-white">Falta completar ({sinDiagnostico.length})</h2>
             <p className="text-xs text-white/60">
-              Evaluaciones enviadas sin señal: falta generar el diagnóstico con IA y su PDF.
-              En la pestaña «Plan de Acción» de cada una también puedes pedir las sugerencias de plan con IA.
+              Evaluaciones ya enviadas a las que les falta el diagnóstico con IA o el plan de acción.
+              Con señal, ábrelas y genéralos; el PDF sale de ahí mismo.
             </p>
           </div>
           {sinDiagnostico.map(item => (
@@ -145,12 +126,19 @@ export default function EnProcesoPage() {
                   {new Date(item.fecha).toLocaleDateString()}
                 </span>
               </div>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {item.sinDiag && (
+                  <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-1 rounded-full">⏳ Falta el diagnóstico con IA</span>
+                )}
+                {item.sinPlan && (
+                  <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-1 rounded-full">⏳ Falta el plan de acción</span>
+                )}
+              </div>
               <button
                 onClick={() => abrirPantalla(`/calificacion?id=${item.id}&resultados=1`)}
-                disabled={!enLinea}
-                className="w-full mt-4 py-3 rounded-xl font-bold text-sm transition-colors bg-amber-100 text-amber-900 hover:bg-amber-200 disabled:bg-gray-100 disabled:text-gray-400"
+                className="w-full mt-4 py-3 rounded-xl font-bold text-sm transition-colors bg-amber-100 text-amber-900 hover:bg-amber-200"
               >
-                {enLinea ? '✨ Generar diagnóstico →' : '⏳ Necesita señal'}
+                {enLinea ? '✨ Completar ahora →' : 'Abrir (la IA necesita señal) →'}
               </button>
             </div>
           ))}
