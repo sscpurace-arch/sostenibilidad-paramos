@@ -18,6 +18,21 @@ const soloRespuestasLimpias = {
     response && response.status === 200 && !response.redirected ? response : null,
 };
 
+// Guardar UNA sola copia por pantalla, sin el ?productor=/?id=/?_rsc=.
+// Antes cada productor abierto dejaba su propia copia de la pantalla (con el
+// código de la versión de ese día); tras publicar versiones nuevas esas copias
+// quedaban pidiendo archivos que el servidor ya no tiene (404) y, sin señal,
+// el celular servía una de ellas y la pantalla se quedaba en "Cargando
+// perfil…" (prueba de campo, 19-oct-2026). Con una sola copia por pantalla,
+// cada visita con señal la renueva.
+const unaCopiaPorPantalla = {
+  cacheKeyWillBeUsed: async ({ request }) => {
+    const u = new URL(request.url);
+    u.search = '';
+    return u.href;
+  },
+};
+
 // Debe coincidir con lib/data-prefetch.js (calentarPantallas)
 const RSC_CACHE = 'rsc-paginas-v2';
 
@@ -37,7 +52,7 @@ const serwist = new Serwist({
       handler: new NetworkFirst({
         cacheName: 'paginas-html',
         networkTimeoutSeconds: 3,
-        plugins: [soloRespuestasLimpias, new ExpirationPlugin({ maxEntries: 32 })],
+        plugins: [unaCopiaPorPantalla, soloRespuestasLimpias, new ExpirationPlugin({ maxEntries: 32 })],
         matchOptions: { ignoreSearch: true, ignoreVary: true },
       }),
     },
@@ -59,7 +74,7 @@ const serwist = new Serwist({
         cacheName: RSC_CACHE,
         networkTimeoutSeconds: 4,
         matchOptions: { ignoreSearch: true, ignoreVary: true },
-        plugins: [soloRespuestasLimpias, new ExpirationPlugin({ maxEntries: 32 })],
+        plugins: [unaCopiaPorPantalla, soloRespuestasLimpias, new ExpirationPlugin({ maxEntries: 32 })],
       }),
     },
     // Teselas de OpenStreetMap — CacheFirst para que el mapa funcione sin conexión.

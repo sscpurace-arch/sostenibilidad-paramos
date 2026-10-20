@@ -56,7 +56,7 @@ export default function PrepararOffline() {
           : msg === 'VERSION_NUEVA'
             ? 'Había una versión nueva de la app. Se está activando y la pantalla se recargará sola; después toca de nuevo.'
           : msg === 'PANTALLAS_INCOMPLETAS'
-            ? 'No quedaron guardadas todas las pantallas, así que sin señal algunas no abrirían. Revisa tu conexión y toca de nuevo.'
+            ? `No quedaron guardadas todas las pantallas, así que sin señal algunas no abrirían. Revisa tu conexión y toca de nuevo.${e?.detalle?.length ? ` (Falló: ${e.detalle.slice(0, 3).join(', ')}${e.detalle.length > 3 ? '…' : ''})` : ''}`
             : msg === 'HISTORIAL_INCOMPLETO'
               ? 'No se pudieron bajar las evaluaciones anteriores. Revisa tu conexión y toca de nuevo.'
               : 'Hubo un problema al descargar. Revisa tu conexión e intenta de nuevo.'
