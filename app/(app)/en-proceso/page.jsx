@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { abrirPantalla } from "@/lib/navegar";
 import { db } from '@/lib/db-offline';
 import { usuarioActualId, pendientesDeIA } from '@/lib/pendientes';
+import { borradoresVisibles } from '@/lib/ejemplos';
 import { useEnLinea } from '@/lib/hooks/useEnLinea';
 import { useRouter } from 'next/navigation';
 
@@ -24,10 +25,9 @@ export default function EnProcesoPage() {
     const totalInd = indCount > 0 ? indCount : 29;
     setTotalIndicadores(totalInd);
 
-    const evals = await db.evaluaciones
-      .where('estado').equals('borrador')
-      .reverse()
-      .toArray();
+    // Los borradores de ejemplo están apagados (lib/ejemplos.js)
+    const evals = (await borradoresVisibles())
+      .sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
 
     const results = await Promise.all(evals.map(async (e) => {
       const prod = await db.productores.get(e.finca_id);

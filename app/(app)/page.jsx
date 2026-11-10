@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/db-offline';
+import { borradoresVisibles } from '@/lib/ejemplos';
 import { createClient } from '@/lib/supabase';
 import { subscribe } from '@/lib/sync-engine';
 import { obtenerPerfilTecnico } from '@/lib/perfil';
@@ -24,13 +25,13 @@ export default function Dashboard() {
         if (perfil) setUser(perfil);
       } catch { /* sin sesión: el saludo no sale */ }
 
-      const [total, pendientes, completadas] = await Promise.all([
+      const [total, borradores, completadas] = await Promise.all([
         db.productores.count(),
-        db.evaluaciones.where('estado').equals('borrador').count(),
+        borradoresVisibles(),
         db.evaluaciones.where('estado').equals('enviada').count(),
       ]);
 
-      setStats({ total, pendientes, completadas });
+      setStats({ total, pendientes: borradores.length, completadas });
     }
 
     cargarDatos();
