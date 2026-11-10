@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/db-offline';
-import { borradoresVisibles } from '@/lib/ejemplos';
+import { borradoresVisibles, sembrarEjemplosAdmin } from '@/lib/ejemplos';
 import { createClient } from '@/lib/supabase';
 import { subscribe } from '@/lib/sync-engine';
 import { obtenerPerfilTecnico } from '@/lib/perfil';
@@ -23,6 +23,8 @@ export default function Dashboard() {
         // Los supervisores tienen su propio dashboard de solo lectura — no el operativo
         if (perfil?.rol === 'supervisor') { router.replace('/supervisor'); return; }
         if (perfil) setUser(perfil);
+        // El administrador siempre tiene sus borradores de ejemplo a mano (lib/ejemplos.js)
+        await sembrarEjemplosAdmin(perfil);
       } catch { /* sin sesión: el saludo no sale */ }
 
       const [total, borradores, completadas] = await Promise.all([
