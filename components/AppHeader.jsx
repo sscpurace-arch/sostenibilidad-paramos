@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { createClient, getMockSession, clearMockSession } from '@/lib/supabase';
 import { actualizarApp } from '@/lib/actualizar-app';
 import { getState } from '@/lib/sync-engine';
@@ -196,16 +197,23 @@ export default function AppHeader({ title, subtitle }) {
       </div>
 
       {/* Menú Desplegable (Modal Flotante con Glassmorphism) */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      {/* Por portal en <body>: dentro de <main> (z-10) el menú quedaba DEBAJO
+          de la barra inferior (z-40) y en celulares pequeños tapaba
+          "Cerrar sesión". Se puede desplazar si no cabe en la pantalla. */}
+      {menuOpen && createPortal(
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in overflow-y-auto"
+          onClick={() => setMenuOpen(false)}
+        >
           <div 
-            className="w-full max-w-sm rounded-3xl bg-[#0d2a1c]/90 border border-white/10 p-6 shadow-2xl backdrop-blur-xl relative text-white animate-scale-up"
+            className="w-full max-w-sm max-h-full overflow-y-auto my-auto rounded-3xl bg-[#0d2a1c]/90 border border-white/10 p-6 shadow-2xl backdrop-blur-xl relative text-white animate-scale-up"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Botón de cerrar modal */}
-            <button 
+            <button
               onClick={() => setMenuOpen(false)}
-              className="absolute top-4 right-4 text-white/60 hover:text-white p-2 rounded-full hover:bg-white/5 transition-all"
+              aria-label="Cerrar menú"
+              className="absolute top-3 right-3 text-white/70 hover:text-white p-3 rounded-full hover:bg-white/5 transition-all"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -313,7 +321,8 @@ export default function AppHeader({ title, subtitle }) {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );

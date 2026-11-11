@@ -381,7 +381,9 @@ function EvaluacionContent() {
   };
 
   const handleCancelar = () => {
-    if (window.confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados en esta sesión.')) {
+    // Cada respuesta se guarda en el celular apenas se marca: el texto viejo
+    // ("se perderán los cambios") asustaba sin razón.
+    if (window.confirm('¿Salir de la calificación?\n\nLo que ya marcaste queda guardado en el celular como borrador; puedes seguir después desde "Pendientes".')) {
       router.push('/');
     }
   };
