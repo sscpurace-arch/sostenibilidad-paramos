@@ -250,7 +250,7 @@
       "niveles": [
         {
           "valor": 5,
-          "texto": "Entre 70 y 100 árboles por hectárea."
+          "texto": "70 árboles por hectárea o más (referencia: 70 a 100)."
         },
         {
           "valor": 4,
@@ -708,7 +708,7 @@
         },
         {
           "valor": 1,
-          "texto": "Menos de 5 potreros."
+          "texto": "5 potreros o menos."
         }
       ],
       "nota_criterio": "Levantamiento: verificación directa de existencia y funcionamiento en el predio."
@@ -760,23 +760,23 @@
       "niveles": [
         {
           "valor": 5,
-          "texto": "171 kilos promedio o más."
+          "texto": "Doble propósito: 171 kilos promedio o más (cría: 200 kilos o más)."
         },
         {
           "valor": 4,
-          "texto": "Entre 159 y 170 kilos promedio."
+          "texto": "Doble propósito: entre 161 y 170 kilos promedio (cría: 180 a 199)."
         },
         {
           "valor": 3,
-          "texto": "Entre 149 y 160 kilos promedio."
+          "texto": "Doble propósito: entre 151 y 160 kilos promedio (cría: 170 a 179)."
         },
         {
           "valor": 2,
-          "texto": "Entre 140 y 150 kilos promedio."
+          "texto": "Doble propósito: entre 140 y 150 kilos promedio (cría: 160 a 169)."
         },
         {
           "valor": 1,
-          "texto": "Menos de 140 kilos promedio."
+          "texto": "Doble propósito: menos de 140 kilos promedio (cría: menos de 160)."
         }
       ],
       "nota_criterio": "Banda mostrada: Doble Propósito (trópico bajo-alto). Para sistemas de Cría en trópico bajo los rangos son distintos (mayores): 5=≥200, 4=180-199, 3=170-179, 2=160-169, 1=<160 kg. Confirmar con Santiago cuál sistema predomina. Levantamiento: entrevista al productor y cálculo."
@@ -810,7 +810,7 @@
         },
         {
           "valor": 1,
-          "texto": "Más de 45 meses."
+          "texto": "45 meses o más."
         }
       ],
       "nota_criterio": "Levantamiento: entrevista al productor y cálculo."
@@ -862,7 +862,7 @@
       "niveles": [
         {
           "valor": 5,
-          "texto": "De 30 a 36 meses."
+          "texto": "De 30 a 35 meses."
         },
         {
           "valor": 4,
@@ -942,7 +942,7 @@
         },
         {
           "valor": 2,
-          "texto": "De 19 a 21 meses."
+          "texto": "De 19 a 20 meses."
         },
         {
           "valor": 1,
