@@ -127,6 +127,18 @@ export default function DiagnosticoPage() {
    * fotos guardados en el dispositivo se conservan intactos.
    */
   const forzarActualizacion = async () => {
+    // Sin señal esto dejaría el celular sin poder abrir la app hasta volver a
+    // tener internet: se borra la copia guardada y no hay de dónde bajarla.
+    if (!navigator.onLine) {
+      setMensaje('Sin internet no se puede forzar la actualización: la app quedaría sin poder abrirse hasta tener señal.');
+      return;
+    }
+    const seguro = window.confirm(
+      'Esto borra la copia de la app guardada en el celular y la baja completa otra vez.\n\n' +
+      'Hazlo solo con buena señal: mientras termina de bajar, la app no abre sin internet.\n\n' +
+      'Tus productores, evaluaciones y fotos NO se borran.'
+    );
+    if (!seguro) return;
     setMensaje('Actualizando…');
     try {
       const regs = await navigator.serviceWorker.getRegistrations();
@@ -147,6 +159,7 @@ export default function DiagnosticoPage() {
       `Local: ${info?.productores} productores, ${info?.evaluaciones} evaluaciones (${info?.enviadas} enviadas), ${info?.respuestas} respuestas`,
       `Pantallas sin señal: ${info?.pantallas ? (info.pantallas.falta.length ? 'faltan ' + info.pantallas.falta.join(', ') : 'todas guardadas') : 'n/d'}`,
       `Archivos de código: ${info?.pantallas ? (info.pantallas.archivosFaltan.length ? 'faltan ' + info.pantallas.archivosFaltan.join(', ') : 'completos') : 'n/d'} · versión nueva esperando: ${info?.pantallas?.versionNueva ?? 'n/d'}`,
+      `Versión guardada para usar sin señal: ${info?.pantallas?.version || 'ninguna'}${info?.pantallas?.sinServicio ? ' (sin service worker activo)' : ''}`,
       `Navegador: ${info?.navegador}`,
       `Cambios pendientes: ${pendientes.length}`,
       `Sesión: ${info?.usuario || 'n/d'}`,
@@ -178,7 +191,7 @@ export default function DiagnosticoPage() {
       <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col gap-2">
         <h2 className="font-bold text-gray-800 text-sm">Estado de la app</h2>
         <Fila k="Versión instalada" v={info?.version} />
-        <Fila k="Versión nueva esperando" v={info?.swEsperando ? 'SÍ — toca Forzar actualización' : 'no'} />
+        <Fila k="Versión nueva esperando" v={info?.swEsperando ? 'SÍ — cierra la app y vuelve a abrirla para que entre' : 'no'} />
         <Fila k="Conexión" v={info?.conexion} />
         <Fila k="Sesión" v={info?.sesionReal ? `real (sincroniza)${info?.usuario ? ' · ' + info.usuario : ''}` : 'prueba o sin sesión (NO sincroniza)'} />
         <Fila k="Almacenamiento" v={info?.almacenamiento || 'n/d'} />
@@ -186,22 +199,38 @@ export default function DiagnosticoPage() {
         <Fila
           k="Pantallas para usar sin señal"
           v={info?.pantallas
-            ? (info.pantallas.falta.length === 0
-              ? `${info.pantallas.guardadas} de ${info.pantallas.total} guardadas`
-              : `FALTAN ${info.pantallas.falta.length}: ${info.pantallas.falta.join(', ')}`)
+            ? (info.pantallas.sinServicio
+              ? 'La app aún no quedó guardada en este celular (abre con internet y espera un minuto)'
+              : info.pantallas.falta.length === 0
+                ? `${info.pantallas.guardadas} de ${info.pantallas.total} guardadas`
+                : `FALTAN ${info.pantallas.falta.length}: ${info.pantallas.falta.join(', ')}`)
             : '…'}
         />
         <Fila
           k="Archivos de código de esas pantallas"
           v={info?.pantallas
-            ? (info.pantallas.archivosFaltan.length === 0
-              ? 'completos'
-              : `FALTAN ${info.pantallas.archivosFaltan.length}: ${info.pantallas.archivosFaltan.slice(0, 3).map(a => a.split('/').pop()).join(', ')}…`)
+            ? (info.pantallas.sinServicio
+              ? 'sin guardar'
+              : info.pantallas.archivosFaltan.length === 0
+                ? 'completos'
+                : `FALTAN ${info.pantallas.archivosFaltan.length}: ${info.pantallas.archivosFaltan.slice(0, 3).map(a => a.split('/').pop()).join(', ')}…`)
+            : '…'}
+        />
+        <Fila
+          k="Copia para usar sin señal"
+          v={info?.pantallas
+            ? (!info.pantallas.version
+              ? 'ninguna'
+              // El HTML de esta pantalla lleva el identificador interno de su
+              // versión: si coincide, la copia es de la misma versión abierta.
+              : (document.documentElement.innerHTML.includes(info.pantallas.version)
+                ? 'de esta misma versión'
+                : `de otra versión (${info.pantallas.version.slice(0, 8)})`))
             : '…'}
         />
       </div>
 
-      {(info?.pantallas?.falta.length > 0 || info?.pantallas?.archivosFaltan.length > 0) && (
+      {(info?.pantallas?.sinServicio || info?.pantallas?.falta.length > 0 || info?.pantallas?.archivosFaltan.length > 0) && (
         <button
           onClick={async () => {
             setMensaje('Guardando pantallas…');
@@ -209,7 +238,7 @@ export default function DiagnosticoPage() {
             setMensaje(
               r.versionNueva ? 'Había una versión nueva de la app: se está activando, la pantalla se recargará sola. Después toca de nuevo.'
                 : r.ok ? 'Listo: todas las pantallas y sus archivos quedaron guardados.'
-                  : `No se pudo guardar todo (${r.falta.length} pantallas, ${r.archivosFaltan.length} archivos). Revisa la conexión y toca de nuevo.`
+                  : `No se pudo guardar todo (${r.falta.length} pantallas, ${r.archivosFaltan.length} archivos). Revisa la conexión y toca de nuevo.${r.motivos?.length ? ` Motivo: ${r.motivos.slice(0, 2).join('; ')}` : ''}`
             );
             await cargar();
           }}

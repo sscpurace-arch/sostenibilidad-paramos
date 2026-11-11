@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { createClient, getMockSession, clearMockSession } from '@/lib/supabase';
 import { actualizarApp } from '@/lib/actualizar-app';
@@ -81,7 +80,9 @@ export default function AppHeader({ title, subtitle }) {
     setEstadoActualizacion('Buscando versión nueva…');
     try {
       const r = await actualizarApp(setEstadoActualizacion);
-      if (r === 'sin-red') setTimeout(() => setEstadoActualizacion(null), 3500);
+      // 'nueva' y 'sin-sw' recargan la página; en los demás casos el mensaje
+      // final se deja a la vista unos segundos y el botón vuelve a servir.
+      if (r !== 'nueva' && r !== 'sin-sw') setTimeout(() => setEstadoActualizacion(null), 6000);
     } catch {
       setEstadoActualizacion('No se pudo actualizar. Intenta de nuevo con señal.');
       setTimeout(() => setEstadoActualizacion(null), 3500);
@@ -116,13 +117,16 @@ export default function AppHeader({ title, subtitle }) {
           <div className="flex items-center gap-3">
             {logoParqueVisible && (
               <div className="shrink-0 w-11 h-11 rounded-full overflow-hidden ring-2 ring-white/30 shadow-lg">
-                <Image
-                  src="/images/logo-purace.png"
+                {/* Imagen liviana y guardada con la app (next.config.js): con
+                    next/image el logo dependía del servidor y, sin señal,
+                    desaparecía al día siguiente de no usar la app. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/logo-purace-132.png"
                   alt="PNN Puracé"
                   width={44}
                   height={44}
                   className="w-full h-full object-cover"
-                  priority
                   onError={() => setLogoParqueVisible(false)}
                 />
               </div>
@@ -147,8 +151,9 @@ export default function AppHeader({ title, subtitle }) {
             {/* Logo PNN Nacional */}
             {logoPnnVisible && (
               <div className="shrink-0 w-11 h-11 rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm p-1 ring-1 ring-white/20">
-                <Image
-                  src="/images/logo-pnn-nacional.png"
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/logo-pnn-nacional-132.png"
                   alt="Parques Nacionales Naturales"
                   width={44}
                   height={44}
