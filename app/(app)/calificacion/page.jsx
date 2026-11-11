@@ -332,7 +332,12 @@ function EvaluacionContent() {
       tecnico_nombre: evaluacion.tecnico_nombre || perfilTecnico?.nombre || null,
       tecnico_cargo: evaluacion.tecnico_cargo || perfilTecnico?.cargo || null,
     };
-    await saveRecord('evaluaciones', enviada);
+    // Si no quedó guardada en el celular, no se da por enviada: el técnico
+    // creería que la visita quedó cerrada y no es así.
+    if (!(await saveRecord('evaluaciones', enviada))) {
+      window.alert('No se pudo guardar el envío en el celular. Lee el aviso rojo de arriba y vuelve a tocar "Enviar".');
+      return;
+    }
     // El estado en memoria debe reflejar el envío: la pantalla de resultados
     // vuelve a guardar la evaluación al firmar y, con la copia vieja, la
     // devolvía a 'borrador' — pasó en producción (visita del 31-jul-2026).
@@ -355,8 +360,14 @@ function EvaluacionContent() {
   };
 
   const handleGuardarSalir = async () => {
+    let fallaron = 0;
     for (const [indId, det] of Object.entries(detalles).filter(([_, d]) => estaCalificado(d))) {
-      await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
+      if (!(await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det)))) fallaron++;
+    }
+    // Salir con respuestas sin guardar las perdería: se queda en la pantalla
+    if (fallaron > 0) {
+      window.alert(`${fallaron} ${fallaron === 1 ? 'respuesta no quedó guardada' : 'respuestas no quedaron guardadas'} en el celular. No salgas todavía: lee el aviso rojo de arriba y vuelve a tocar "Guardar y salir".`);
+      return;
     }
     router.push('/');
   };

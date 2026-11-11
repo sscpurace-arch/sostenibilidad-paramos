@@ -10,8 +10,25 @@ import { useState } from 'react';
  * solo se podía borrar y una evaluación enviada sin señal quedaba sin forma de
  * completarse.
  */
-export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, puedeAbrir, estadoIA = {} }) {
+export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, puedeAbrir, puedeBorrar, estadoIA = {} }) {
   const [confirmandoId, setConfirmandoId] = useState(null);
+
+  // Una evaluación ENVIADA y real se borra también del servidor, que no tiene
+  // respaldo: así se perdió una evaluación real el 19-oct-2026. Por eso, para
+  // esas, además del "Sí, borrar" hay que escribir la palabra BORRAR.
+  const confirmarYBorrar = (ev) => {
+    setConfirmandoId(null);
+    if (ev.estado === 'enviada' && !ev.es_prueba) {
+      const fecha = new Date(ev.fecha).toLocaleDateString('es-CO');
+      const escrito = window.prompt(
+        `Vas a borrar una evaluación YA ENVIADA (visita del ${fecha}).\n\n` +
+        'Se borra también del servidor y NO se puede recuperar.\n\n' +
+        'Si estás seguro, escribe BORRAR:'
+      );
+      if (String(escrito || '').trim().toUpperCase() !== 'BORRAR') return;
+    }
+    onEliminar(ev.id);
+  };
 
   if (!evaluaciones || evaluaciones.length === 0) return null;
 
@@ -37,20 +54,17 @@ export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, pued
                   </p>
                 </div>
 
-                {confirmandoId === ev.id ? (
+                {!(puedeBorrar ? puedeBorrar(ev) : true) ? null : confirmandoId === ev.id ? (
                   <div className="flex items-center gap-2 animate-in fade-in zoom-in duration-200">
                     <button
                       onClick={() => setConfirmandoId(null)}
-                      className="px-3 py-1 text-[10px] font-bold text-gray-500 bg-gray-200 rounded hover:bg-gray-300 transition-colors"
+                      className="min-h-[40px] px-3 text-xs font-bold text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
                     >
                       Cancelar
                     </button>
                     <button
-                      onClick={() => {
-                        setConfirmandoId(null);
-                        onEliminar(ev.id);
-                      }}
-                      className="px-3 py-1 text-[10px] font-bold text-white bg-red-500 rounded hover:bg-red-600 transition-colors"
+                      onClick={() => confirmarYBorrar(ev)}
+                      className="min-h-[40px] px-3 text-xs font-bold text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
                     >
                       Sí, borrar
                     </button>
@@ -59,7 +73,7 @@ export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, pued
                   <button
                     onClick={() => setConfirmandoId(ev.id)}
                     aria-label="Borrar evaluación"
-                    className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

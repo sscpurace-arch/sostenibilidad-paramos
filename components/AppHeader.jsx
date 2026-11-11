@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { createClient, getMockSession, clearMockSession } from '@/lib/supabase';
 import { actualizarApp } from '@/lib/actualizar-app';
+import { getState } from '@/lib/sync-engine';
 import { useRouter } from 'next/navigation';
 
 /**
@@ -95,6 +96,14 @@ export default function AppHeader({ title, subtitle }) {
   };
 
   const handleLogout = async () => {
+    // Para volver a entrar hace falta señal. En el páramo, cerrar sesión deja
+    // al técnico sin poder trabajar hasta que la tenga; y lo que no ha subido
+    // solo sube con la sesión abierta.
+    const { pendingCount } = getState();
+    const avisos = [];
+    if (!navigator.onLine) avisos.push('No tienes señal: para volver a entrar necesitas internet.');
+    if (pendingCount > 0) avisos.push(`Tienes ${pendingCount} ${pendingCount === 1 ? 'cambio' : 'cambios'} sin subir. Quedan guardados en el celular y suben cuando vuelvas a entrar con tu misma cuenta.`);
+    if (avisos.length > 0 && !window.confirm(`${avisos.join('\n\n')}\n\n¿Cerrar sesión de todas formas?`)) return;
     setLoading(true);
     try {
       await supabase.auth.signOut();

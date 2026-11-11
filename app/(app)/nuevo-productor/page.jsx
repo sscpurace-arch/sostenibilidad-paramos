@@ -77,7 +77,9 @@ export default function NuevoProductorPage() {
       };
 
       // 3. Guardar local y cola de sincronización (e intentar sync inmediato si hay red)
-      await saveRecord('productores', newProductor);
+      if (!(await saveRecord('productores', newProductor))) {
+        throw new Error('El productor no quedó guardado en el celular. Lee el aviso rojo de arriba y vuelve a tocar "Guardar Productor".');
+      }
 
       setForm({ ...form, id: newId });
       setSuccess(true);

@@ -67,7 +67,9 @@ export default function ResultadosEvaluacion({
     // a 'borrador'. Esta pantalla solo existe para evaluaciones enviadas.
     let base = evaluacion;
     try { base = (await db.evaluaciones.get(evaluacion.id)) || evaluacion; } catch { /* sin Dexie, el prop */ }
-    await saveRecord('evaluaciones', { ...base, estado: 'enviada', ...firmasRef.current });
+    if (!(await saveRecord('evaluaciones', { ...base, estado: 'enviada', ...firmasRef.current }))) {
+      window.alert('La firma no quedó guardada en el celular. Lee el aviso rojo de arriba y vuelve a firmar.');
+    }
   };
 
   const handleDescargarPdf = async () => {

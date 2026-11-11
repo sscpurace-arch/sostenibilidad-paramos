@@ -189,7 +189,12 @@ function PerfilProductorContent() {
       receptor_cedula: receptorEsOtro ? receptorCedula.trim() : '',
       receptor_parentesco: receptorEsOtro ? receptorParentesco.trim() : '',
     };
-    await saveRecord('evaluaciones', newEval);
+    // Si no quedó en el celular, abrir el formulario daría "no se encontró la
+    // evaluación" y el técnico no sabría por qué.
+    if (!(await saveRecord('evaluaciones', newEval))) {
+      alert('No se pudo crear la calificación en el celular. Lee el aviso rojo de arriba y vuelve a intentarlo.');
+      return;
+    }
     abrirPantalla(`/calificacion?id=${newEval.id}`);
   };
 
@@ -208,6 +213,11 @@ function PerfilProductorContent() {
       if (respIds.length > 0) {
         await deleteRecordBulk('respuestas_indicadores', respIds);
       }
+
+      // El plan de acción también es hijo de la evaluación: si se queda, su
+      // cambio pendiente intenta subir y el servidor lo rechaza para siempre.
+      const planes = await db.planes_accion.where('evaluacion_id').equals(evalId).primaryKeys();
+      if (planes.length > 0) await deleteRecordBulk('planes_accion', planes);
 
       const diag = await db.diagnosticos?.where('evaluacion_id').equals(evalId).first();
       if (diag) await deleteRecord('diagnosticos', diag.id);
@@ -278,6 +288,11 @@ function PerfilProductorContent() {
             onEliminar={handleEliminar}
             estadoIA={estadoIA}
             puedeAbrir={(ev) => !!miId && ev.tecnico_id === miId}
+            // Borrar: solo lo propio o lo de prueba. Desde oct-2026 todos ven
+            // la línea base de los demás; antes el bote aparecía también ahí.
+            puedeBorrar={(ev) => !!ev.es_prueba
+              || (typeof window !== 'undefined' && !!localStorage.getItem('mock-user-session'))
+              || (!!miId && ev.tecnico_id === miId)}
             onAbrir={(ev) => abrirPantalla(`/calificacion?id=${ev.id}&resultados=1`)}
           />
         </section>
