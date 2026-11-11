@@ -26,16 +26,56 @@ export default function NuevoProductorPage() {
   const router = useRouter();
   const supabase = createClient();
 
+  const [buscandoGps, setBuscandoGps] = useState(false);
+
+  // Antes no tenía manejo de error ni tiempo límite: con el permiso negado o
+  // sin satélites el botón no hacía nada y el técnico no sabía por qué.
   const handleGPS = () => {
-    if (!navigator.geolocation) return alert('GPS no soportado');
-    navigator.geolocation.getCurrentPosition((pos) => {
-      setForm({ ...form, ubicacion_lat: pos.coords.latitude, ubicacion_lng: pos.coords.longitude });
-    });
+    if (!navigator.geolocation) {
+      setError('Este celular no permite usar el GPS desde la app. Escribe la latitud y la longitud a mano.');
+      return;
+    }
+    setBuscandoGps(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setBuscandoGps(false);
+        setForm(f => ({
+          ...f,
+          ubicacion_lat: pos.coords.latitude.toFixed(6),
+          ubicacion_lng: pos.coords.longitude.toFixed(6),
+        }));
+      },
+      (err) => {
+        setBuscandoGps(false);
+        setError(err.code === 1
+          ? 'La app no tiene permiso para usar la ubicación. Actívalo en los ajustes del celular, o escribe la latitud y la longitud a mano.'
+          : 'El GPS no respondió (puede faltar cielo abierto). Inténtalo de nuevo afuera, o escribe la latitud y la longitud a mano.');
+      },
+      { enableHighAccuracy: true, timeout: 30000, maximumAge: 60000 }
+    );
+  };
+
+  // Coordenadas escritas a mano (pedido de agosto-2026): grados decimales,
+  // acepta coma o punto. Vacías = sin ubicación.
+  const leerCoordenada = (v) => {
+    if (v === null || v === undefined || String(v).trim() === '') return null;
+    const n = parseFloat(String(v).trim().replace(',', '.'));
+    return isNaN(n) ? NaN : n;
   };
 
   const handleSave = async () => {
     if (!form.cedula || !form.nombre_completo) {
       return setError('Cédula y Nombre son obligatorios');
+    }
+
+    const lat = leerCoordenada(form.ubicacion_lat);
+    const lng = leerCoordenada(form.ubicacion_lng);
+    if ((lat === null) !== (lng === null)) {
+      return setError('Falta la latitud o la longitud: escribe las dos, o deja las dos vacías.');
+    }
+    // Rango de Colombia: atrapa errores de digitación (signo o punto corrido)
+    if (lat !== null && (isNaN(lat) || isNaN(lng) || lat < -5 || lat > 14 || lng < -82 || lng > -66)) {
+      return setError('Las coordenadas no parecen de Colombia. En la zona de Puracé la latitud es cerca de 2,3 y la longitud cerca de -76,4 (con el signo menos).');
     }
 
     setLoading(true);
@@ -70,6 +110,8 @@ export default function NuevoProductorPage() {
         ...form,
         area_total_ha: aNumero(form.area_total_ha),
         area_ganaderia_ha: aNumero(form.area_ganaderia_ha),
+        ubicacion_lat: lat,
+        ubicacion_lng: lng,
         id: newId,
         created_by: userId,
         created_at: new Date().toISOString(),
@@ -196,12 +238,41 @@ export default function NuevoProductorPage() {
           </div>
         </div>
 
-        <button 
-          onClick={handleGPS}
-          className="flex items-center justify-center gap-2 text-sm text-blue-600 font-bold py-2 bg-blue-50 rounded-lg"
-        >
-          📍 {form.ubicacion_lat ? `${form.ubicacion_lat.toFixed(4)}, ${form.ubicacion_lng.toFixed(4)}` : 'Obtener ubicación GPS'}
-        </button>
+        <div className="flex flex-col gap-2">
+          <label className="text-xs text-gray-400 uppercase font-bold">Ubicación del predio</label>
+          <button
+            onClick={handleGPS}
+            disabled={buscandoGps}
+            className="min-h-[48px] flex items-center justify-center gap-2 text-sm text-blue-700 font-bold bg-blue-50 rounded-lg disabled:opacity-60"
+          >
+            📍 {buscandoGps ? 'Buscando señal GPS…' : 'Tomar ubicación con el GPS'}
+          </button>
+          <p className="text-[11px] text-gray-500">O escríbela a mano, en grados decimales (por ejemplo 2.3421 y -76.3854):</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-gray-400 uppercase font-black">Latitud</label>
+              <input
+                type="text"
+                inputMode="decimal"
+                placeholder="2.3421"
+                className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-base text-gray-900 placeholder-gray-400"
+                value={form.ubicacion_lat ?? ''}
+                onChange={e => setForm({ ...form, ubicacion_lat: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-[10px] text-gray-400 uppercase font-black">Longitud</label>
+              <input
+                type="text"
+                inputMode="text"
+                placeholder="-76.3854"
+                className="w-full py-3 border-b border-gray-100 focus:outline-none focus:border-[#03A64A] text-base text-gray-900 placeholder-gray-400"
+                value={form.ubicacion_lng ?? ''}
+                onChange={e => setForm({ ...form, ubicacion_lng: e.target.value })}
+              />
+            </div>
+          </div>
+        </div>
 
         <button 
           onClick={handleSave}

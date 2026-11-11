@@ -287,6 +287,7 @@ function PerfilProductorContent() {
       <SostenibilidadPanel
         ultimaEval={ultimaEval} todasEvals={todasEvals} radarData={radarData}
         indicadores={indicadores} dimensiones={dimensiones}
+        productor={productor}
       />
 
       {todasEvals.length > 0 && (

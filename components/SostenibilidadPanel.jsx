@@ -1,6 +1,16 @@
 ﻿'use client';
+import { useRef, useState } from 'react';
 import RadarChart from '@/components/RadarChart';
 import { fechaLegible } from '@/lib/pdf-utils';
+
+const COLORES_RADAR = ['#03A64A', '#1976D2', '#F57C00', '#7B1FA2'];
+
+// Nombre de cada telaraña con su año, para leer la gráfica sin adivinar
+// cuál visita es cuál (también en la imagen exportada).
+function nombreSerie(ev, idx, total) {
+  const anio = fechaLegible(ev.fecha, { fallback: '' }).split(' ').pop();
+  return `Evaluación ${total - idx}${anio ? ` (${anio})` : ''}${ev.es_prueba ? ' · prueba' : ''}`;
+}
 
 // Mapa de abreviaciones para etiquetas de dimensión en la cuadrícula de resumen
 const ABREV_DIMENSION = {
@@ -31,9 +41,34 @@ export default function SostenibilidadPanel({
   ultimaEval, 
   todasEvals, 
   radarData, 
-  indicadores, 
-  dimensiones 
+  indicadores,
+  dimensiones,
+  productor = null,
 }) {
+  const radarRef = useRef(null);
+  const [exportando, setExportando] = useState(false);
+
+  const exportarImagen = async () => {
+    setExportando(true);
+    try {
+      const { exportarRadarComoImagen } = await import('@/lib/radar-imagen');
+      await exportarRadarComoImagen({
+        contenedor: radarRef.current,
+        productor,
+        evaluaciones: todasEvals.map((ev, idx) => ({
+          nombre: nombreSerie(ev, idx, todasEvals.length),
+          fecha: ev.fecha,
+          color: COLORES_RADAR[idx % COLORES_RADAR.length],
+        })),
+        indicadores,
+      });
+    } catch (e) {
+      window.alert(e?.message || 'No se pudo crear la imagen del radar.');
+    } finally {
+      setExportando(false);
+    }
+  };
+
   return (
     <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
       <div className="flex justify-between items-center mb-6">
@@ -50,12 +85,12 @@ export default function SostenibilidadPanel({
 
       {ultimaEval ? (
         <div className="flex flex-col gap-6">
-          <div className="w-full bg-gray-50 rounded-3xl p-2">
+          <div ref={radarRef} className="w-full bg-gray-50 rounded-3xl p-2">
             <RadarChart
               key={radarData?.length > 0 ? `data-${todasEvals.map(e => e.id).join('-')}` : 'empty'}
               labels={indicadores.map(i => i.nombre)}
               datasets={todasEvals.map((ev, idx) => ({
-                name: `Evaluación ${todasEvals.length - idx}${ev.es_prueba ? ' (Prueba)' : ''}`,
+                name: nombreSerie(ev, idx, todasEvals.length),
                 data: indicadores.map(i => {
                   const det = radarData?.find(d =>
                     d.evaluacion_id === ev.id &&
@@ -65,12 +100,21 @@ export default function SostenibilidadPanel({
                   return det && typeof det.valor === 'number' ? det.valor : null;
                 })
               }))}
-              colors={['#03A64A', '#1976D2', '#F57C00', '#7B1FA2']}
+              colors={COLORES_RADAR}
               height={400}
               indicadores={indicadores}
               dimensiones={dimensiones}
             />
           </div>
+
+          <button
+            type="button"
+            onClick={exportarImagen}
+            disabled={exportando}
+            className="min-h-[48px] w-full rounded-xl border-2 border-pnn-verde/30 text-pnn-verde-oscuro font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-60"
+          >
+            {exportando ? 'Creando imagen…' : '🖼 Guardar o compartir el radar como imagen'}
+          </button>
 
           <div className="grid grid-cols-4 gap-2">
             {dimensiones.map(dim => {

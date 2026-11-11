@@ -291,6 +291,21 @@ export default function ResultadosEvaluacion({
                 >
                   {descargandoPdf ? 'Generando PDF...' : (<><span>📄</span> Descargar PDF para el productor</>)}
                 </button>
+                {/* Pedido de agosto-2026: volver a generar el diagnóstico de una
+                    evaluación ya guardada (por ejemplo, después de corregir una
+                    calificación). Reemplaza el anterior, no crea otro. */}
+                <button
+                  onClick={() => {
+                    if (!enLinea) { window.alert('Para volver a generar el diagnóstico necesitas señal.'); return; }
+                    if (window.confirm('¿Volver a generar el diagnóstico con IA?\n\nEl texto actual se reemplaza por uno nuevo, hecho con las calificaciones que tiene hoy esta evaluación.')) {
+                      generarNuevo({ productor, detalles, lastResults });
+                    }
+                  }}
+                  disabled={isLoading}
+                  className="w-full mt-2 min-h-[44px] rounded-xl font-bold text-sm text-blue-700 underline disabled:opacity-50"
+                >
+                  {isLoading ? 'Generando…' : 'Volver a generar el diagnóstico'}
+                </button>
               </div>
             )}
             {errorIA && (
