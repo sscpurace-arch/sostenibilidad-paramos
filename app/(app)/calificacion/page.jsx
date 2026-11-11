@@ -6,6 +6,7 @@ import { saveRecord } from '@/lib/sync-engine';
 import { notificarEnvio } from '@/lib/notificar';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
 import { crearSchemaEvaluacion, validarEvidenciaFotografica, estaCalificado, promedioDimension, promedioGlobal, formatoPromedio } from '@/lib/validation';
+import { leerFecha } from '@/lib/pdf-utils';
 import { useFotos } from '@/lib/hooks/useFotos';
 import { createClient, getMockSession } from '@/lib/supabase';
 import { obtenerPerfilTecnico } from '@/lib/perfil';
@@ -190,11 +191,12 @@ function EvaluacionContent() {
       });
       setDetalles(detMap);
 
-      // Visita anterior = enviada, ANTERIOR en fecha y real (las de prueba
-      // solo se comparan con una evaluación que también sea de prueba). Antes
-      // se tomaba la más reciente sin más: al abrir una visita vieja se
-      // comparaba contra una posterior, o contra una prueba.
-      const tiempo = (f) => new Date(String(f || '').replace(' ', 'T')).getTime();
+      // Visita anterior = enviada y ANTERIOR en fecha. Una visita real solo se
+      // compara con otra real; una de prueba puede compararse con cualquiera
+      // (en modo prueba no hay otras). Antes se tomaba la más reciente sin
+      // más: al abrir una visita vieja se comparaba contra una posterior, o
+      // una visita real contra una de prueba.
+      const tiempo = (f) => leerFecha(f)?.getTime() ?? NaN;
       const tActual = tiempo(eval_.fecha);
       const prevEvals = await db.evaluaciones
         .where('finca_id').equals(eval_.finca_id)

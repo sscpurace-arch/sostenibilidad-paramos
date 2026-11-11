@@ -28,7 +28,9 @@ export default function ConteoArboles({ onAplicar, entradas }) {
   const ha = parseFloat(hectareas) || 0;
 
   const completo = ne > 0 && ha > 0;
-  const porHa = completo ? ne / ha : 0;
+  // Un decimal, truncado (regla 2: ante la duda, el nivel inferior): 69,96
+  // cuenta y se muestra como 69,9, nunca como "70" con puntaje 4.
+  const porHa = completo ? Math.floor((ne / ha) * 10 + 1e-6) / 10 : 0;
   const supervivencia = ns > 0 && ne > 0 && ne <= ns ? Math.round((ne / ns) * 100) : null;
   const masQueSembrados = ns > 0 && ne > ns;
   // Se muestra con un decimal: redondeado, 69,5 árboles/ha se leía "70" con

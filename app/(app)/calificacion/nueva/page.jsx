@@ -219,30 +219,34 @@ function PerfilProductorContent() {
 
       // 3. Borrar en bloque (respuestas + evaluacion)
       if (respIds.length > 0) {
-        await deleteRecordBulk('respuestas_indicadores', respIds);
+        if (!(await deleteRecordBulk('respuestas_indicadores', respIds))) throw new Error('NO_GUARDADO');
       }
 
       // El plan de acción también es hijo de la evaluación: si se queda, su
       // cambio pendiente intenta subir y el servidor lo rechaza para siempre.
       const planes = await db.planes_accion.where('evaluacion_id').equals(evalId).primaryKeys();
-      if (planes.length > 0) await deleteRecordBulk('planes_accion', planes);
+      if (planes.length > 0 && !(await deleteRecordBulk('planes_accion', planes))) throw new Error('NO_GUARDADO');
 
       const diag = await db.diagnosticos?.where('evaluacion_id').equals(evalId).first();
-      if (diag) await deleteRecord('diagnosticos', diag.id);
+      if (diag && !(await deleteRecord('diagnosticos', diag.id))) throw new Error('NO_GUARDADO');
 
       // Dexie no tiene claves foráneas: las fotos hay que borrarlas a mano o
       // quedan blobs ocupando espacio sin nada que los referencie.
       await eliminarFotosDeEvaluacion(evalId);
       await eliminarReportesDeEvaluacion(evalId);
 
-      await deleteRecord('evaluaciones', evalId);
+      if (!(await deleteRecord('evaluaciones', evalId))) throw new Error('NO_GUARDADO');
 
       // Recargar datos localmente de forma determinista e inmediata
       await cargarDatos();
 
     } catch (e) {
       console.error('❌ Error en handleEliminar:', e);
-      alert('Error crítico al eliminar la evaluación. Revisa la consola.');
+      // Se corta en el primer paso que no quedó guardado en el celular, para
+      // no dejar la evaluación a medio borrar sin decirlo.
+      alert(e?.message === 'NO_GUARDADO'
+        ? 'No se pudo terminar de borrar la evaluación en el celular. Lee el aviso rojo de arriba y vuelve a intentarlo.'
+        : 'No se pudo borrar la evaluación. Cierra y vuelve a abrir la app, y vuelve a intentarlo.');
       cargarDatos();
     }
   };

@@ -79,10 +79,11 @@ export const CALCULADORAS = {
     calcular: (v) => {
       const kg = v.adultos * v.pesoAdulto + v.jovenes * v.pesoJoven + v.terneros * v.pesoTernero;
       const ugg = kg / UGG_KG;
-      // Redondeado a 2 decimales, lo mismo que se muestra. Sin esto, 0,7 / 0,9
-      // / 1,1 exactos salían 0,6999… por la aritmética del computador y caían
-      // en la banda de abajo aunque la pantalla dijera "0.70 UGG/ha".
-      const valor = Math.round((ugg / v.hectareas) * 100) / 100;
+      // A 2 decimales, lo mismo que se muestra, y truncado (regla 2: ante la
+      // duda, el nivel inferior): 0,699 cuenta como 0,69, no como 0,70. El
+      // margen mínimo evita que 0,7 exacto salga 0,6999… por la aritmética
+      // del computador y caiga en la banda de abajo.
+      const valor = Math.floor((ugg / v.hectareas) * 100 + 1e-6) / 100;
       const cabezas = v.adultos + v.jovenes + v.terneros;
       return {
         valor,
@@ -113,7 +114,10 @@ export const CALCULADORAS = {
       ? 'Las muertes no pueden ser más que el total de animales.'
       : null),
     calcular: ({ muertes, total }) => {
-      const valor = (muertes / total) * 100;
+      // A 2 decimales hacia ARRIBA: aquí más es peor, y la regla 2 manda al
+      // nivel inferior ante la duda. Así 1,996 % se muestra "2.00 %" y
+      // puntúa como 2 % (nivel 4), sin contradicción entre texto y puntaje.
+      const valor = Math.ceil((muertes / total) * 10000 - 1e-6) / 100;
       return {
         valor,
         // Dos decimales: con uno, 1,96 % se leía "2.0 %" y la app daba 5

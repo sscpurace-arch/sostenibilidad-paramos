@@ -264,6 +264,15 @@ async function bajarCopia(ruta, esInterna) {
         headers, cache: 'no-store', credentials: 'same-origin', signal: control.signal,
       });
       if (res.redirected) return { tipo: 'servidor', motivo: 'el servidor la redirigió' };
+      // Un error pasajero del servidor (5xx, 429) se trata como falla de red:
+      // se reintenta y, si sigue, la instalación falla y queda la versión
+      // anterior completa. Antes la versión se instalaba sin esa pantalla.
+      if (res.status >= 500 || res.status === 429) {
+        tipo = 'red';
+        motivo = `el servidor dice ${res.status}`;
+        if (intento < 3) await esperar(800 * intento);
+        continue;
+      }
       if (res.status !== 200) return { tipo: 'servidor', motivo: `el servidor dice ${res.status}` };
       const esperado = esInterna ? 'text/x-component' : 'text/html';
       if (!(res.headers.get('content-type') || '').includes(esperado)) {
@@ -404,10 +413,15 @@ async function estadoActual() {
   };
 }
 
-async function borrarCachesAntiguos() {
+/**
+ * @param {boolean} otrasVersiones  borrar también las pantallas de otras
+ *   versiones. SOLO al activar: desde un mensaje, la versión activa borraba
+ *   las pantallas que la versión nueva estaba guardando en ese momento.
+ */
+async function borrarCachesAntiguos(otrasVersiones = false) {
   try {
     for (const nombre of await caches.keys()) {
-      const esPantallasDeOtraVersion =
+      const esPantallasDeOtraVersion = otrasVersiones &&
         nombre.startsWith('pantallas-') && nombre !== CACHE_HTML && nombre !== CACHE_RSC;
       if (CACHES_ANTIGUOS.includes(nombre) || esPantallasDeOtraVersion) await caches.delete(nombre);
     }
@@ -426,6 +440,11 @@ self.addEventListener('install', (event) => {
     if (r.fatal) {
       throw new Error(`Versión ${ETIQUETA} sin instalar: ${r.motivos.join('; ')}`);
     }
+    // Si otra versión borró estos cachés mientras se llenaban (las copias
+    // quedan en un caché huérfano), no dar la instalación por buena.
+    if (!(await caches.has(CACHE_HTML)) || !(await caches.has(CACHE_RSC))) {
+      throw new Error(`Versión ${ETIQUETA} sin instalar: las pantallas guardadas se borraron durante la instalación`);
+    }
   })());
 });
 
@@ -437,7 +456,7 @@ serwist.addEventListeners();
 self.addEventListener('activate', (event) => {
   // De paso se repone cualquier archivo que haya quedado mal guardado.
   event.waitUntil(Promise.all([
-    borrarCachesAntiguos(),
+    borrarCachesAntiguos(true),
     repararCodigo().catch(() => {}),
   ]));
 });
