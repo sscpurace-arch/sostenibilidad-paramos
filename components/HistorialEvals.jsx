@@ -1,5 +1,8 @@
 'use client';
 import { useState } from 'react';
+// Único lector de fechas: '2024-06-15 12:00:00+00' (línea base) no lo
+// entiende el iPhone con new Date() y salía "Invalid Date".
+import { fechaLegible } from '@/lib/pdf-utils';
 
 /**
  * Lista del historial de evaluaciones con botón de eliminar de dos pasos.
@@ -19,7 +22,7 @@ export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, pued
   const confirmarYBorrar = (ev) => {
     setConfirmandoId(null);
     if (ev.estado === 'enviada' && !ev.es_prueba) {
-      const fecha = new Date(ev.fecha).toLocaleDateString('es-CO');
+      const fecha = fechaLegible(ev.fecha);
       const escrito = window.prompt(
         `Vas a borrar una evaluación YA ENVIADA (visita del ${fecha}).\n\n` +
         'Se borra también del servidor y NO se puede recuperar.\n\n' +
@@ -50,7 +53,7 @@ export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, pued
                     {ev.es_prueba && <span className="ml-2 text-[8px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full uppercase">Prueba</span>}
                   </p>
                   <p className="text-[10px] text-gray-400">
-                    {new Date(ev.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {fechaLegible(ev.fecha)}
                   </p>
                 </div>
 

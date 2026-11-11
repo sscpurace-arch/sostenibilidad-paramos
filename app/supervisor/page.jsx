@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { createClient } from '@/lib/supabase';
 import { DIMENSION_COLORS } from '@/lib/db-offline';
+import { fechaLegible } from '@/lib/pdf-utils';
 
 // ApexCharts no soporta SSR
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -108,7 +109,7 @@ export default function SupervisorDashboard() {
             <div key={e.id} className="flex items-center justify-between bg-white/5 rounded-xl px-4 py-3">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-white truncate">{e.productor}</p>
-                <p className="text-[10px] text-white/40">{e.vereda || 'Vereda no registrada'} · {new Date(e.fecha).toLocaleDateString('es-CO')}</p>
+                <p className="text-[10px] text-white/40">{e.vereda || 'Vereda no registrada'} · {fechaLegible(e.fecha, { mes: 'short' })}</p>
               </div>
               <span className="shrink-0 text-lg font-black text-pnn-verde">{e.promedio}</span>
             </div>

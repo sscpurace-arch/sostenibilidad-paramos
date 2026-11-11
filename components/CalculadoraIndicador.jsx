@@ -79,7 +79,10 @@ export const CALCULADORAS = {
     calcular: (v) => {
       const kg = v.adultos * v.pesoAdulto + v.jovenes * v.pesoJoven + v.terneros * v.pesoTernero;
       const ugg = kg / UGG_KG;
-      const valor = ugg / v.hectareas;
+      // Redondeado a 2 decimales, lo mismo que se muestra. Sin esto, 0,7 / 0,9
+      // / 1,1 exactos salían 0,6999… por la aritmética del computador y caían
+      // en la banda de abajo aunque la pantalla dijera "0.70 UGG/ha".
+      const valor = Math.round((ugg / v.hectareas) * 100) / 100;
       const cabezas = v.adultos + v.jovenes + v.terneros;
       return {
         valor,
@@ -90,7 +93,8 @@ export const CALCULADORAS = {
         ],
       };
     },
-    puntaje: (v) => porBandas([[1.51, 5], [1.1, 4], [0.9, 3], [0.7, 2]], v),
+    // Guía v1.1: "más de 1,5" = 5. Antes el corte era 1,51 y 1,505 daba 4.
+    puntaje: (v) => (v > 1.5 ? 5 : porBandas([[1.1, 4], [0.9, 3], [0.7, 2]], v)),
   },
 
   // ---- 27 · Tasa de mortalidad --------------------------------------------
@@ -99,14 +103,22 @@ export const CALCULADORAS = {
     titulo: 'Tasa de mortalidad anual',
     formula: '(nº de muertes en el año ÷ total de animales) × 100',
     campos: [
-      { key: 'muertes', label: 'Muertes en el último año', placeholder: 'Ej: 2',  decimal: false },
+      { key: 'muertes', label: 'Muertes en el último año (0 si ninguna)', placeholder: 'Ej: 2',  decimal: false },
       { key: 'total',   label: 'Total de animales',        placeholder: 'Ej: 40', decimal: false, requerido: true },
     ],
+    // Las muertes hay que escribirlas (aunque sea 0): vacío no es "ninguna".
+    // Antes un campo vacío contaba como 0 y sugería el puntaje máximo.
+    completo: (v, crudos) => String(crudos.muertes ?? '').trim() !== '' && v.total > 0 && v.muertes <= v.total,
+    aviso: (v, crudos) => (String(crudos.muertes ?? '').trim() !== '' && v.total > 0 && v.muertes > v.total
+      ? 'Las muertes no pueden ser más que el total de animales.'
+      : null),
     calcular: ({ muertes, total }) => {
       const valor = (muertes / total) * 100;
       return {
         valor,
-        texto: `${valor.toFixed(1)} % de mortalidad anual`,
+        // Dos decimales: con uno, 1,96 % se leía "2.0 %" y la app daba 5
+        // (menos de 2 %), lo que parecía un error.
+        texto: `${valor.toFixed(2)} % de mortalidad anual`,
         detalle: [`${muertes} de ${total} animales`],
       };
     },
@@ -129,7 +141,10 @@ export const CALCULADORAS = {
       texto: `${meses} meses entre partos`,
       detalle: [],
     }),
-    puntaje: (v) => (v <= 13 ? 5 : v <= 15 ? 4 : v <= 18 ? 3 : v < 21 ? 2 : 1),
+    // Guía v1.1, regla 2: un valor con decimales entre dos bandas va a la
+    // inferior (13,5 → 4; 15,5 → 3; 18,5 → 2; y por la misma regla 20,5 → 1).
+    // Antes 20,5 daba 2.
+    puntaje: (v) => (v <= 13 ? 5 : v <= 15 ? 4 : v <= 18 ? 3 : v <= 20 ? 2 : 1),
   },
 };
 
@@ -157,15 +172,24 @@ export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIn
 
   const numeros = useMemo(() => {
     const n = {};
-    (def?.campos || []).forEach(c => { n[c.key] = parseFloat(valores[c.key]) || 0; });
+    (def?.campos || []).forEach(c => {
+      const crudo = String(valores[c.key] ?? '').replace(',', '.').trim();
+      // Un peso de referencia borrado vuelve a su valor por defecto: antes
+      // contaba como 0 kg y la carga animal salía casi nula.
+      const texto = crudo === '' && c.defecto ? c.defecto : crudo;
+      const num = parseFloat(texto);
+      // Negativos no tienen sentido en ninguna calculadora
+      n[c.key] = isNaN(num) || num < 0 ? 0 : num;
+    });
     return n;
   }, [valores, def]);
 
   if (!def) return null;
 
   const completo = def.completo
-    ? def.completo(numeros)
+    ? def.completo(numeros, valores)
     : def.campos.filter(c => c.requerido).every(c => numeros[c.key] > 0);
+  const aviso = def.aviso ? def.aviso(numeros, valores) : null;
 
   const resultado = completo ? def.calcular(numeros) : null;
   const puntaje = resultado ? def.puntaje(resultado.valor) : null;
@@ -228,6 +252,10 @@ export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIn
         <p className="text-[10px] text-green-800/50 italic leading-relaxed">{def.nota}</p>
       )}
 
+      {aviso && (
+        <p role="alert" className="text-xs font-bold text-acento-rojo">{aviso}</p>
+      )}
+
       {resultado && (
         <div className="flex items-center justify-between gap-2 bg-white rounded-lg px-3 py-2 border border-green-100">
           <div className="text-xs text-gray-700 leading-snug min-w-0">
@@ -239,7 +267,7 @@ export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIn
           <button
             type="button"
             onClick={aplicar}
-            className="shrink-0 bg-[#03A64A] text-white text-xs font-bold px-3 py-2 rounded-lg active:scale-95 transition-all"
+            className="shrink-0 min-h-[44px] bg-pnn-verde text-white text-sm font-bold px-4 rounded-lg active:scale-95 transition-all"
           >
             Usar puntaje: {puntaje}
           </button>
@@ -251,7 +279,7 @@ export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIn
 
 function Etiqueta({ children }) {
   return (
-    <label className="block text-[9px] text-gray-500 font-bold uppercase leading-tight mb-1">
+    <label className="block text-[11px] text-gray-600 font-bold uppercase leading-tight mb-1">
       {children}
     </label>
   );
@@ -267,7 +295,7 @@ function Entrada({ campo, valores, setValores }) {
       value={valores[campo.key]}
       onChange={(e) => setValores(prev => ({ ...prev, [campo.key]: e.target.value }))}
       placeholder={campo.placeholder}
-      className={`w-full bg-white border rounded-lg px-2 py-2 text-sm text-gray-800 focus:border-[#03A64A] outline-none ${
+      className={`w-full bg-white border rounded-lg px-2 py-2.5 text-base text-gray-800 focus:border-[#03A64A] outline-none ${
         campo.auxiliar ? 'border-gray-100 text-gray-500' : 'border-gray-200'
       }`}
     />

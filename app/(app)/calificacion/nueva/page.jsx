@@ -96,15 +96,20 @@ function PerfilProductorContent() {
       nombre, color: DIMENSION_COLORS[nombre] || '#666'
     })));
 
-    // 1. CARGAR SIEMPRE PRIMERO DE INDEXEDDB (Inmediato)
-    try {
+    // Lo que se muestra sale SIEMPRE del celular. Lo que baja del servidor se
+    // guarda primero en el celular (sin pisar lo pendiente) y se vuelve a
+    // leer: antes la lista del servidor reemplazaba la local y una visita
+    // enviada sin señal, aún sin subir, desaparecía del historial.
+    const cargarLocal = async () => {
       const localEvals = await db.evaluaciones
         .where('finca_id').equals(productorId)
         .and(e => e.estado === 'enviada').reverse().sortBy('fecha');
       const limitEvals = localEvals.slice(0, 4);
 
       if (limitEvals.length > 0) {
-        setUltimaEval(limitEvals[0]);
+        // "Última evaluación" del productor = la última REAL; una de prueba
+        // solo cuenta si no hay ninguna real.
+        setUltimaEval(limitEvals.find(e => !e.es_prueba) || limitEvals[0]);
         setTodasEvals(limitEvals);
         const localRespuestas = await db.respuestas_indicadores
           .where('evaluacion_id').anyOf(limitEvals.map(e => e.id)).toArray();
@@ -114,6 +119,11 @@ function PerfilProductorContent() {
         setTodasEvals([]);
         setRadarData([]);
       }
+    };
+
+    // 1. CARGAR SIEMPRE PRIMERO DE INDEXEDDB (Inmediato)
+    try {
+      await cargarLocal();
     } catch (e) {
       console.error('Error cargando datos locales:', e);
     }
@@ -139,10 +149,8 @@ function PerfilProductorContent() {
             await guardarDesdeServidor('respuestas_indicadores', respuestas);
           }
 
-          // Actualizar estado de React con los datos frescos
-          setUltimaEval(evals[0]);
-          setTodasEvals(evals);
-          setRadarData(respuestas || []);
+          // Actualizar la pantalla con lo que quedó en el celular
+          await cargarLocal();
         }
       } catch (e) {
         console.error('Error sincronizando con Supabase en segundo plano:', e);

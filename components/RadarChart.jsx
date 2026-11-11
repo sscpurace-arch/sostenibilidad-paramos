@@ -98,21 +98,31 @@ function RadarChartComponent({
     setAnimatedDatasets(datasets ?? []);
   }, [datasets]);
 
-  // "No aplica" llega como null. Un eje donde NINGUNA serie tiene dato se
-  // quita del radar (no se dibuja como 0: hundiría el polígono sin razón).
+  // "No aplica" llega como null y nunca se dibuja como 0 (hundiría el
+  // polígono sin razón). Con UNA serie se quitan los ejes sin dato. Con DOS
+  // o más (comparación entre visitas) se quitan los ejes donde ALGUNA serie no
+  // tiene dato: ApexCharts dibuja un null como 0 cuando hay varias series, y
+  // la comparación mostraba una caída a 0 que no existió. Esos ejes se listan
+  // debajo para que no desaparezcan sin explicación.
   // Se conserva la numeración original (1..29) para que coincida con la
-  // leyenda de abajo y con la guía impresa. Si alguna serie sí tiene dato en
-  // ese eje, el eje se mantiene y la serie sin dato lleva null.
-  const ejesVisibles = useMemo(() => {
+  // leyenda de abajo y con la guía impresa.
+  const { ejesVisibles, ejesSinComparar } = useMemo(() => {
     const n = (labels ?? []).length;
+    const tieneDato = (ds, i) => typeof (ds.data ?? [])[i] === 'number';
     const idx = [];
+    const sinComparar = [];
     for (let i = 0; i < n; i++) {
-      const hayDato = animatedDatasets.some((ds) => typeof (ds.data ?? [])[i] === 'number');
-      if (hayDato) idx.push(i);
+      const alguna = animatedDatasets.some((ds) => tieneDato(ds, i));
+      const todas = animatedDatasets.every((ds) => tieneDato(ds, i));
+      if (animatedDatasets.length > 1 ? todas : alguna) idx.push(i);
+      else if (alguna) sinComparar.push(i + 1);
     }
     // Sin ningún dato (evaluación vacía) se dejan todos los ejes para que el
-    // radar se vea, aunque sea en cero.
-    return idx.length > 0 ? idx : Array.from({ length: n }, (_, i) => i);
+    // radar se vea, aunque sea en cero. Con menos de 3 ejes no hay radar.
+    if (idx.length < 3) {
+      return { ejesVisibles: Array.from({ length: n }, (_, i) => i), ejesSinComparar: [] };
+    }
+    return { ejesVisibles: idx, ejesSinComparar: sinComparar };
   }, [labels, animatedDatasets]);
 
   const series = useMemo(
@@ -226,6 +236,12 @@ function RadarChartComponent({
           />
         </GraficaSegura>
       </div>
+
+      {ejesSinComparar.length > 0 && (
+        <p className="text-[11px] text-gray-500 px-1 leading-snug">
+          Fuera de la comparación (sin puntaje en alguna de las visitas, por ejemplo &ldquo;No aplica&rdquo;): {ejesSinComparar.join(', ')}.
+        </p>
+      )}
 
       {indicadores && indicadores.length > 0 && (
         <div className="flex flex-col gap-2 px-1">

@@ -29,7 +29,11 @@ export default function ConteoArboles({ onAplicar, entradas }) {
 
   const completo = ne > 0 && ha > 0;
   const porHa = completo ? ne / ha : 0;
-  const supervivencia = ns > 0 && ne > 0 ? Math.round((ne / ns) * 100) : null;
+  const supervivencia = ns > 0 && ne > 0 && ne <= ns ? Math.round((ne / ns) * 100) : null;
+  const masQueSembrados = ns > 0 && ne > ns;
+  // Se muestra con un decimal: redondeado, 69,5 árboles/ha se leía "70" con
+  // puntaje 4 (la banda de 5 empieza en 70) y parecía un error de la app.
+  const porHaTexto = porHa.toLocaleString('es-CO', { maximumFractionDigits: 1 });
 
   // Bandas oficiales del indicador 8, aplicadas sobre árboles ESTABLECIDOS
   const puntaje = !completo ? null
@@ -42,9 +46,9 @@ export default function ConteoArboles({ onAplicar, entradas }) {
   const aplicar = () => {
     if (!completo) return;
     const partes = [
-      `${Math.round(porHa)} árboles establecidos/ha`,
+      `${porHaTexto} árboles establecidos/ha`,
       `${ne} establecidos y vivos en ${ha} ha`,
-      ns > 0 ? `${ns} sembrados (${supervivencia}% establecido)` : null,
+      supervivencia !== null ? `${ns} sembrados (${supervivencia}% establecido)` : null,
     ].filter(Boolean);
     onAplicar(puntaje, partes.join(' · '), {
       sembrados: ns, establecidos: ne, hectareas: ha,
@@ -73,17 +77,22 @@ export default function ConteoArboles({ onAplicar, entradas }) {
       {completo && (
         <div className="flex items-center justify-between gap-2 bg-white rounded-lg px-3 py-2 border border-green-100">
           <div className="text-xs text-gray-700 leading-snug min-w-0">
-            <p className="font-bold">{Math.round(porHa)} árboles establecidos/ha</p>
+            <p className="font-bold">{porHaTexto} árboles establecidos/ha</p>
             {supervivencia !== null && (
               <p className="text-[11px] text-gray-500">
                 {ne} de {ns} sembrados se establecieron ({supervivencia}%)
+              </p>
+            )}
+            {masQueSembrados && (
+              <p className="text-[11px] font-bold text-amber-700">
+                Hay más establecidos que sembrados: revisa los dos números (pueden contarse también árboles que ya estaban).
               </p>
             )}
           </div>
           <button
             type="button"
             onClick={aplicar}
-            className="shrink-0 bg-[#03A64A] text-white text-xs font-bold px-3 py-2 rounded-lg active:scale-95 transition-all"
+            className="shrink-0 min-h-[44px] bg-pnn-verde text-white text-sm font-bold px-4 rounded-lg active:scale-95 transition-all"
           >
             Usar puntaje: {puntaje}
           </button>
@@ -96,7 +105,7 @@ export default function ConteoArboles({ onAplicar, entradas }) {
 function Campo({ label, value, onChange, placeholder, decimal = false, auxiliar = false }) {
   return (
     <div>
-      <label className="block text-[9px] text-gray-500 font-bold uppercase leading-tight mb-1">
+      <label className="block text-[11px] text-gray-600 font-bold uppercase leading-tight mb-1">
         {label}
       </label>
       <input
@@ -107,7 +116,7 @@ function Campo({ label, value, onChange, placeholder, decimal = false, auxiliar 
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={`w-full bg-white border rounded-lg px-2 py-2 text-sm text-gray-800 focus:border-[#03A64A] outline-none ${
+        className={`w-full bg-white border rounded-lg px-2 py-2.5 text-base text-gray-800 focus:border-[#03A64A] outline-none ${
           auxiliar ? 'border-gray-100 text-gray-500' : 'border-gray-200'
         }`}
       />

@@ -190,9 +190,17 @@ function EvaluacionContent() {
       });
       setDetalles(detMap);
 
+      // Visita anterior = enviada, ANTERIOR en fecha y real (las de prueba
+      // solo se comparan con una evaluación que también sea de prueba). Antes
+      // se tomaba la más reciente sin más: al abrir una visita vieja se
+      // comparaba contra una posterior, o contra una prueba.
+      const tiempo = (f) => new Date(String(f || '').replace(' ', 'T')).getTime();
+      const tActual = tiempo(eval_.fecha);
       const prevEvals = await db.evaluaciones
         .where('finca_id').equals(eval_.finca_id)
-        .and(e => e.estado === 'enviada' && e.id !== eval_.id)
+        .and(e => e.estado === 'enviada' && e.id !== eval_.id
+          && (eval_.es_prueba || !e.es_prueba)
+          && !(tiempo(e.fecha) >= tActual))
         .reverse().sortBy('fecha');
       if (prevEvals.length > 0) {
         setLastResults(await db.respuestas_indicadores.where('evaluacion_id').equals(prevEvals[0].id).toArray());

@@ -1,5 +1,6 @@
 ﻿'use client';
 import RadarChart from '@/components/RadarChart';
+import { fechaLegible } from '@/lib/pdf-utils';
 
 // Mapa de abreviaciones para etiquetas de dimensión en la cuadrícula de resumen
 const ABREV_DIMENSION = {
@@ -41,7 +42,7 @@ export default function SostenibilidadPanel({
           <div className="text-right">
             <p className="text-[10px] text-gray-400 uppercase font-black">Última Visita</p>
             <p className="text-lg font-black text-[#03A64A]">
-              {new Date(ultimaEval.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+              {fechaLegible(ultimaEval.fecha, { mes: 'short', fallback: '—' })}
             </p>
           </div>
         )}

@@ -10,7 +10,7 @@ import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
 import { saveRecord } from '@/lib/sync-engine';
 import { guardarReportePdf } from '@/lib/reporte-sync';
 import { db } from '@/lib/db-offline';
-import { formatoPromedio } from '@/lib/validation';
+import { formatoPromedio, promedioGlobal } from '@/lib/validation';
 
 export default function ResultadosEvaluacion({
   evaluacionId,
@@ -40,6 +40,8 @@ export default function ResultadosEvaluacion({
   // es la copia que cargó page.jsx al entrar a esta pantalla y nunca se refresca
   // cuando el usuario firma aquí mismo — sin esto, el botón "Descargar PDF" seguía
   // bajando el PDF con las líneas de firma en blanco aunque ya se hubiera firmado.
+  const puntajeGlobal = currentAvgs ? promedioGlobal(currentAvgs) : null;
+
   const evaluacionConFirmas = evaluacion
     ? { ...evaluacion, firma_tecnico: firmaTecnico, firma_productor: firmaProductor }
     : evaluacion;
@@ -75,7 +77,7 @@ export default function ResultadosEvaluacion({
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
     try {
-      const salida = await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion: evaluacionConFirmas, tecnico: perfilTecnico });
+      const salida = await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion: evaluacionConFirmas, tecnico: perfilTecnico, puntajeGlobal });
       // Archivar el PDF (Storage, canal aparte). Si falla no se le quita la
       // descarga al técnico: el archivo ya está en su celular.
       if (salida?.blob && evaluacion?.id) {
@@ -201,9 +203,12 @@ export default function ResultadosEvaluacion({
                 <div className="flex items-center gap-2 mb-4 mt-2">
                   <span className="text-2xl">✨</span>
                   <h3 className="font-bold text-blue-900 flex-1">Diagnóstico Inteligente</h3>
-                  {diagnostico.score_global > 0 && (
+                  {/* Puntaje calculado aquí con la misma regla de toda la app
+                      (promedio de dimensiones, N/A fuera), no el que guardó la
+                      IA: los diagnósticos viejos usaban otra fórmula. */}
+                  {typeof puntajeGlobal === 'number' && (
                     <div className="text-center bg-white rounded-xl px-3 py-1.5 border border-blue-100 shadow-sm">
-                      <p className="text-lg font-black text-blue-700 leading-none">{Number(diagnostico.score_global).toFixed(1)}</p>
+                      <p className="text-lg font-black text-blue-700 leading-none">{formatoPromedio(puntajeGlobal)}</p>
                       <p className="text-[8px] text-blue-400 font-bold uppercase tracking-wider leading-none mt-0.5">/ 5</p>
                     </div>
                   )}
@@ -213,7 +218,10 @@ export default function ResultadosEvaluacion({
                 {lastAvgs && (
                   <div className="bg-white/70 rounded-xl p-3 mb-4 border border-blue-100">
                     <h4 className="text-[10px] font-black uppercase text-blue-400 mb-2 tracking-widest">Evolución desde la visita anterior</h4>
-                    <div className="grid grid-cols-3 gap-2">
+                    {/* 2 columnas y nombre completo: con 4 dimensiones, en 3
+                        columnas quedaba una sola abajo, y recortado a 6 letras
+                        "Socioambiental" y "Socioeconómica" se leían igual. */}
+                    <div className="grid grid-cols-2 gap-2">
                       {dimensiones.map(d => {
                         const actual = currentAvgs[d.nombre];
                         const anterior = lastAvgs[d.nombre];
@@ -221,7 +229,7 @@ export default function ResultadosEvaluacion({
                         if (typeof actual !== 'number' || typeof anterior !== 'number') {
                           return (
                             <div key={d.nombre} className="text-center">
-                              <p className="text-[8px] uppercase font-bold text-gray-400 truncate">{d.nombre.split(' ')[0].substring(0, 6)}</p>
+                              <p className="text-[10px] uppercase font-bold text-gray-500">{d.nombre}</p>
                               <p className="text-xs font-black text-gray-300">—</p>
                             </div>
                           );
@@ -231,8 +239,8 @@ export default function ResultadosEvaluacion({
                         const color = diff > 0.05 ? '#16A34A' : diff < -0.05 ? '#DC2626' : '#9CA3AF';
                         return (
                           <div key={d.nombre} className="text-center">
-                            <p className="text-[8px] uppercase font-bold text-gray-400 truncate">{d.nombre.split(' ')[0].substring(0, 6)}</p>
-                            <p className="text-xs font-black" style={{ color }}>
+                            <p className="text-[10px] uppercase font-bold text-gray-500">{d.nombre}</p>
+                            <p className="text-sm font-black" style={{ color }}>
                               {signo} {Math.abs(diff).toFixed(1)}
                             </p>
                           </div>

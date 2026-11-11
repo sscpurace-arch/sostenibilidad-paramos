@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { abrirPantalla } from "@/lib/navegar";
 import { db } from '@/lib/db-offline';
+import { fechaLegible } from '@/lib/pdf-utils';
 import { usuarioActualId, pendientesDeIA } from '@/lib/pendientes';
 import { borradoresVisibles } from '@/lib/ejemplos';
 import { useEnLinea } from '@/lib/hooks/useEnLinea';
@@ -71,7 +72,7 @@ export default function EnProcesoPage() {
                   <p className="text-xs text-gray-400">{item.productor?.vereda} - {item.productor?.municipio}</p>
                 </div>
                 <span className="text-[10px] bg-pnn-azul/10 text-pnn-azul px-2 py-1 rounded-full font-bold">
-                  {new Date(item.fecha).toLocaleDateString()}
+                  {fechaLegible(item.fecha, { mes: 'short' })}
                 </span>
               </div>
 
@@ -123,7 +124,7 @@ export default function EnProcesoPage() {
                   <p className="text-xs text-gray-400">{item.productor?.vereda} - {item.productor?.municipio}</p>
                 </div>
                 <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-bold">
-                  {new Date(item.fecha).toLocaleDateString()}
+                  {fechaLegible(item.fecha, { mes: 'short' })}
                 </span>
               </div>
               <div className="flex flex-wrap gap-2 mt-3">

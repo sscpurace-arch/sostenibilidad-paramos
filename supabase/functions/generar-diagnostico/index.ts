@@ -156,6 +156,10 @@ Deno.serve(async (req) => {
         .eq("estado", "enviada")
         .eq("es_prueba", false)
         .neq("id", evaluacion_id)
+        // La "anterior" es anterior en el tiempo. Sin este filtro, al
+        // regenerar el diagnóstico de una visita vieja se comparaba contra
+        // una visita POSTERIOR.
+        .lt("fecha", evaluacion.fecha)
         .order("fecha", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -211,11 +215,20 @@ Deno.serve(async (req) => {
     // (un LLM promediando hasta 29 números a mano comete errores; este
     // puntaje queda guardado como dato oficial del productor).
     // Los N/A quedan fuera del denominador: nunca valen 0 ni 1. ───
-    const valoresValidos = respuestasCalificadas
-      .map((r) => r.valor)
-      .filter((v): v is number => typeof v === "number");
-    const scoreGlobal = valoresValidos.length
-      ? Math.round((valoresValidos.reduce((a, b) => a + b, 0) / valoresValidos.length) * 10) / 10
+    // Misma fórmula que la app (promedioGlobal en lib/validation.js): primero
+    // el promedio de cada dimensión, después el promedio de esos promedios.
+    // Antes aquí se promediaban los indicadores sueltos, y el puntaje del PDF
+    // y de la pantalla de resultados no coincidía con el del resto de la app
+    // (las dimensiones tienen distinto número de indicadores).
+    const porDimension: Record<string, number[]> = {};
+    for (const r of respuestasCalificadas) {
+      (porDimension[r.dimension] ||= []).push(r.valor as number);
+    }
+    const promediosDim = Object.values(porDimension)
+      .filter((vs) => vs.length > 0)
+      .map((vs) => vs.reduce((a, b) => a + b, 0) / vs.length);
+    const scoreGlobal = promediosDim.length
+      ? Math.round((promediosDim.reduce((a, b) => a + b, 0) / promediosDim.length) * 10) / 10
       : 0;
 
     // ─── Construir sección de comparación ────────────────
