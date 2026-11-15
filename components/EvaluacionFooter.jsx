@@ -6,7 +6,7 @@
  * Compacto a propósito: antes eran dos filas de botones grandes y ocupaba
  * casi un tercio de la pantalla del celular, tapando los indicadores.
  */
-export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancelar, todosCompletos, totalRespondidos, totalIndicadores, fotosFaltantes = 0 }) {
+export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancelar, todosCompletos, totalRespondidos, totalIndicadores, fotosFaltantes = 0, editandoEnviada = false }) {
   return (
     // bottom-0: en esta pantalla la barra de navegación no se muestra (ver
     // Navbar.jsx), así que el pie ocupa el borde inferior con su margen seguro.
@@ -37,7 +37,9 @@ export default function EvaluacionFooter({ onGuardarSalir, onFinalizar, onCancel
                 : 'bg-gray-300 text-gray-500'
             }`}
           >
-            {todosCompletos ? '✅ ENVIAR' : `Enviar ${totalRespondidos}/${totalIndicadores}`}
+            {editandoEnviada
+              ? (todosCompletos ? '✅ GUARDAR CAMBIOS' : `Guardar ${totalRespondidos}/${totalIndicadores}`)
+              : (todosCompletos ? '✅ ENVIAR' : `Enviar ${totalRespondidos}/${totalIndicadores}`)}
           </button>
         </div>
 

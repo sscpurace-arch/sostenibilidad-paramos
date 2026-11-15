@@ -375,6 +375,14 @@ npm run lint      # ESLint
 ### Diagnóstico nov-2026 (rama `fable/diagnostico-2026-11`, sin fusionar a `main`)
 Informe completo, preguntas abiertas y pruebas pendientes en `docs/DIAGNOSTICO-FABLE-2026-11.md`. Puntaje global único: promedio de los promedios por dimensión (`promedioGlobal`), también en pantalla de resultados y PDF; la Edge Function `generar-diagnostico` quedó editada igual pero SIN desplegar. Migración `supabase/migrations/20261111_textos_niveles_guia_v11.sql` SIN CORRER.
 
+### Ajustes de campo 14-nov-2026 (misma rama `fable/diagnostico-2026-11`)
+- PDF del diagnóstico incluye el radar (anterior + actual), capturado de la pantalla de resultados (`radarComoPng` en `lib/radar-imagen.js`, JPEG recortado)
+- Panorámica con botón de galería (segundo input sin `capture`)
+- Comentario visible en los 29 indicadores; "Usar puntaje" de una calculadora ya no borra el comentario (resumen en `entradas._resumen`)
+- Ind. 27: total de animales precargado y vivo desde la carga animal del 25; lo que escriba el técnico manda
+- Firmas al final del formulario (`FirmasVisita.jsx`), sin cambiar el estado de la evaluación
+- Editar una evaluación ya enviada: "Editar calificaciones" en resultados → formulario con "Guardar cambios"; no reenvía Telegram y avisa regenerar el diagnóstico
+
 ### Pendiente / advertencias ⚠️
 - ✅ Evaluación `01bcb4d8` (31-jul-2026): se pasó a `enviada` y luego se borró en la limpieza de pruebas del 20-oct-2026 (con respaldo fuera del repo). Ya no hay nada pendiente con ella.
 - 🟡 No hay pantalla para listar/abrir los PDF archivados en `reportes_pdf` (solo se guardan).

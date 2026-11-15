@@ -10,6 +10,9 @@ import { useRef, useState } from 'react';
  */
 export default function PanoramicaCard({ foto, url, onAgregar, onBorrar, guardando = false }) {
   const input = useRef(null);
+  // Segundo input sin `capture`: con capture el celular abre la cámara directo
+  // y no deja escoger de la galería (taller 14-nov-2026).
+  const inputGaleria = useRef(null);
   const [confirmando, setConfirmando] = useState(false);
 
   const manejarArchivo = (e) => {
@@ -39,6 +42,13 @@ export default function PanoramicaCard({ foto, url, onAgregar, onBorrar, guardan
         type="file"
         accept="image/*"
         capture="environment"
+        onChange={manejarArchivo}
+        className="hidden"
+      />
+      <input
+        ref={inputGaleria}
+        type="file"
+        accept="image/*"
         onChange={manejarArchivo}
         className="hidden"
       />
@@ -83,6 +93,15 @@ export default function PanoramicaCard({ foto, url, onAgregar, onBorrar, guardan
               </button>
               <button
                 type="button"
+                onClick={() => inputGaleria.current?.click()}
+                disabled={guardando}
+                aria-label="Cambiar por una de la galería"
+                className="h-11 w-11 shrink-0 rounded-lg bg-gray-50 border border-gray-200 text-base flex items-center justify-center disabled:opacity-50"
+              >
+                🖼
+              </button>
+              <button
+                type="button"
                 onClick={() => setConfirmando(true)}
                 className="h-11 px-4 rounded-lg bg-gray-50 border border-gray-200 text-gray-500 font-bold text-xs"
               >
@@ -92,15 +111,26 @@ export default function PanoramicaCard({ foto, url, onAgregar, onBorrar, guardan
           )}
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={() => input.current?.click()}
-          disabled={guardando}
-          className="w-full h-14 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50"
-        >
-          <span className="text-lg">📷</span>
-          {guardando ? 'Guardando…' : 'Tomar panorámica'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => input.current?.click()}
+            disabled={guardando}
+            className="flex-1 h-14 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50"
+          >
+            <span className="text-lg">📷</span>
+            {guardando ? 'Guardando…' : 'Tomar panorámica'}
+          </button>
+          <button
+            type="button"
+            onClick={() => inputGaleria.current?.click()}
+            disabled={guardando}
+            aria-label="Elegir de la galería"
+            className="h-14 w-14 shrink-0 rounded-xl bg-gray-50 border border-gray-200 text-lg flex items-center justify-center active:scale-95 transition-all disabled:opacity-50"
+          >
+            🖼
+          </button>
+        </div>
       )}
     </div>
   );

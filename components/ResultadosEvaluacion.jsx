@@ -7,6 +7,7 @@ import FirmaModal from '@/components/FirmaModal';
 import { useDiagnostico } from '@/lib/hooks/useDiagnostico';
 import { useEnLinea } from '@/lib/hooks/useEnLinea';
 import { descargarDiagnosticoPdf } from '@/lib/pdf-diagnostico';
+import { radarComoPng } from '@/lib/radar-imagen';
 import { saveRecord } from '@/lib/sync-engine';
 import { guardarReportePdf } from '@/lib/reporte-sync';
 import { db } from '@/lib/db-offline';
@@ -23,9 +24,14 @@ export default function ResultadosEvaluacion({
   currentAvgs,
   lastAvgs,
   perfilTecnico = null,
+  fechaAnterior = null,          // fecha de la visita anterior (convención del radar en el PDF)
+  onEditar = null,               // volver al formulario para ajustar puntajes ya enviados
+  onFirmaGuardada = null,        // avisa a la página para que su copia de la evaluación no pierda la firma
+  calificacionesCambiadas = false,
   onVolver
 }) {
   const [tab, setTab] = useState('resultados');
+  const radarRef = useRef(null);
   const [descargandoPdf, setDescargandoPdf] = useState(false);
   const [firmaTecnico, setFirmaTecnico] = useState(evaluacion?.firma_tecnico || '');
   const [firmaProductor, setFirmaProductor] = useState(evaluacion?.firma_productor || '');
@@ -63,6 +69,9 @@ export default function ResultadosEvaluacion({
     firmasRef.current = { ...firmasRef.current, [campo]: dataUrl };
     if (campo === 'firma_tecnico') setFirmaTecnico(dataUrl);
     else setFirmaProductor(dataUrl);
+    // Sin esto, al volver a editar los puntajes la página guardaba su copia
+    // vieja de la evaluación y borraba la firma recién hecha aquí.
+    if (onFirmaGuardada) onFirmaGuardada(campo, dataUrl);
     if (!evaluacion) return;
     // Se parte de la fila que está en el celular, no del prop: el prop puede
     // ser la copia de antes de enviar, y guardarla entera devolvía la visita
@@ -77,7 +86,23 @@ export default function ResultadosEvaluacion({
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
     try {
-      const salida = await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion: evaluacionConFirmas, tecnico: perfilTecnico, puntajeGlobal });
+      // El radar va al PDF tal como se ve aquí: una serie por medición.
+      // Si no se puede capturar (gráfica sin dibujar), el PDF sale sin él.
+      let radar = null;
+      try {
+        const img = await radarComoPng(radarRef.current);
+        if (img) {
+          radar = {
+            ...img,
+            series: [
+              ...(lastAvgs ? [{ nombre: 'Anterior', fecha: fechaAnterior, color: '#94a3b8' }] : []),
+              { nombre: 'Actual', fecha: evaluacion?.fecha, color: '#42A5F5' },
+            ],
+            indicadores: indicadores.map((i, idx) => ({ orden: idx + 1, nombre: i.nombre })),
+          };
+        }
+      } catch (e) { console.error('No se pudo capturar el radar para el PDF:', e); }
+      const salida = await descargarDiagnosticoPdf({ diagnostico, productor, evaluacion: evaluacionConFirmas, tecnico: perfilTecnico, puntajeGlobal, radar });
       // Archivar el PDF (Storage, canal aparte). Si falla no se le quita la
       // descarga al técnico: el archivo ya está en su celular.
       if (salida?.blob && evaluacion?.id) {
@@ -135,7 +160,7 @@ export default function ResultadosEvaluacion({
           {/* Radar y Promedios */}
           <div className="bg-gray-50 rounded-2xl p-4 mb-6 border border-gray-100">
             <h3 className="text-xs font-black uppercase text-gray-400 mb-4 text-center tracking-widest">Balance de Sostenibilidad</h3>
-            <div className="mb-4">
+            <div className="mb-4" ref={radarRef}>
               {/* N/A va como null, nunca 0: RadarChart descarta los ejes sin dato
                   para que el polígono no se hunda hacia el centro sin razón. */}
               <RadarChart
@@ -164,6 +189,23 @@ export default function ResultadosEvaluacion({
               ))}
             </div>
           </div>
+
+          {/* Ajustar puntajes de una evaluación ya enviada (pedido 14-nov-2026) */}
+          {onEditar && (
+            <button
+              onClick={onEditar}
+              className="w-full mb-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-700 active:scale-95 transition-all"
+            >
+              <span>✏️</span> Editar calificaciones
+            </button>
+          )}
+
+          {calificacionesCambiadas && diagnostico && (
+            <div className="mb-4 rounded-xl p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs leading-snug">
+              <strong>Cambiaste calificaciones.</strong> El diagnóstico de abajo se hizo con los puntajes anteriores:
+              toca <strong>Volver a generar el diagnóstico</strong> (necesita señal) antes de descargar el PDF.
+            </div>
+          )}
 
           {/* Diagnóstico IA */}
           <div className="mb-6">

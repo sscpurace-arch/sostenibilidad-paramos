@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import CalculadoraIndicador, { tieneCalculadora } from '@/components/CalculadoraIndicador';
+import CalculadoraIndicador, { tieneCalculadora, CALCULADORAS } from '@/components/CalculadoraIndicador';
 import ConteoArboles from '@/components/ConteoArboles';
 import FotoEvidencia from '@/components/FotoEvidencia';
 import ConfirmarNoAplicaModal from '@/components/ConfirmarNoAplicaModal';
@@ -15,6 +15,33 @@ const INDICADOR_ARBOLES = 8;
 // ganadería del predio si la app la conoce (editable, es solo un punto de
 // partida).
 const CALCULADORAS_CON_HECTAREAS = [22, 25];
+
+// Ind. 27 (mortalidad): el total de animales se trae del ind. 25 (carga animal)
+export const INDICADOR_CARGA_ANIMAL = 25;
+export const INDICADOR_MORTALIDAD = 27;
+
+/** Total de cabezas contadas en la calculadora de carga animal, o null. */
+export function totalAnimalesCarga(entradas25) {
+  if (!entradas25) return null;
+  const n = (k) => (Number(entradas25[k]) > 0 ? Number(entradas25[k]) : 0);
+  const total = n('adultos') + n('jovenes') + n('terneros');
+  return total > 0 ? total : null;
+}
+
+/** Lo que el técnico escribió, sin el resumen del cálculo anterior. */
+function comentarioSinResumen(observacion, entradas, indicadorId) {
+  let texto = String(observacion || '');
+  let resumenViejo = entradas?._resumen || null;
+  if (!resumenViejo && entradas && CALCULADORAS[indicadorId]) {
+    // Registros de antes de guardar _resumen: se reconstruye con las entradas
+    try {
+      const r = CALCULADORAS[indicadorId].calcular(entradas);
+      resumenViejo = [r.texto, ...r.detalle].join(' · ');
+    } catch { /* entradas incompletas: se conserva el texto tal cual */ }
+  }
+  if (resumenViejo && texto.startsWith(resumenViejo)) texto = texto.slice(resumenViejo.length);
+  return texto.trim();
+}
 
 /**
  * IndicadorCard — Tarjeta de calificación por indicador
@@ -47,6 +74,7 @@ export default function IndicadorCard({
   entradas,
   onCalculoAplicado,
   hectareasPredio = null,
+  totalAnimales = null,   // cabezas de la carga animal (ind. 25), para el ind. 27
 }) {
   const [expanded, setExpanded] = useState(false);
   const [confirmandoNoAplica, setConfirmandoNoAplica] = useState(false);
@@ -69,6 +97,11 @@ export default function IndicadorCard({
 
   const valoresIniciales = CALCULADORAS_CON_HECTAREAS.includes(indicador.id) && hectareasPredio > 0
     ? { hectareas: String(hectareasPredio) }
+    : indicador.id === INDICADOR_MORTALIDAD && totalAnimales > 0
+      ? { total: String(totalAnimales) }
+      : null;
+  const notasIniciales = indicador.id === INDICADOR_MORTALIDAD && totalAnimales > 0
+    ? { total: 'Tomado de la carga animal (ind. 25). Puedes cambiarlo.' }
     : null;
 
   // Las calculadoras aplican puntaje, desglose y entradas de una sola vez.
@@ -77,12 +110,20 @@ export default function IndicadorCard({
   // cadena: esos tres callbacks leen el mismo estado del render actual, así que
   // encadenarlos hace que cada uno guarde con datos obsoletos y el último
   // sobreescriba a los anteriores. Se perdían la observación y las entradas.
+  //
+  // El resumen del cálculo va al inicio de la observación, pero el comentario
+  // que el técnico ya había escrito se conserva debajo: antes "Usar puntaje"
+  // lo reemplazaba entero. Para saber qué parte es el resumen viejo se guarda
+  // en entradas._resumen (en registros anteriores se reconstruye).
   const aplicarCalculo = (puntaje, resumen, entradasCalculo) => {
+    const comentario = comentarioSinResumen(observation, entradas, indicador.id);
+    const observacion = comentario ? `${resumen}\n${comentario}` : resumen;
+    const entradasConResumen = { ...(entradasCalculo || {}), _resumen: resumen };
     if (onCalculoAplicado) {
-      onCalculoAplicado({ valor: puntaje, observacion: resumen, entradas: entradasCalculo });
+      onCalculoAplicado({ valor: puntaje, observacion, entradas: entradasConResumen });
     } else {
       onScoreChange(puntaje);
-      onObservationChange(resumen);
+      onObservationChange(observacion);
     }
   };
 
@@ -173,7 +214,7 @@ export default function IndicadorCard({
         <ConteoArboles entradas={entradas} onAplicar={aplicarCalculo} />
       )}
       {!noAplica && tieneCalculadora(indicador.id) && (
-        <CalculadoraIndicador indicadorId={indicador.id} onAplicar={aplicarCalculo} valoresIniciales={valoresIniciales} />
+        <CalculadoraIndicador indicadorId={indicador.id} onAplicar={aplicarCalculo} valoresIniciales={valoresIniciales} notasIniciales={notasIniciales} />
       )}
 
       {/* Botones de score — rango dinámico. Elegir un número quita el N/A. */}
@@ -230,19 +271,24 @@ export default function IndicadorCard({
         </p>
       )}
 
-      {/* Observación — se muestra al seleccionar un score o marcar N/A */}
-      {resuelto && (
-        <textarea
-          className={`w-full p-3 border rounded-lg text-sm text-gray-800 outline-none transition-colors resize-none ${
-            noAplica && !String(observation || '').trim()
-              ? 'border-amber-300 bg-amber-50/50 placeholder-amber-700/60 focus:border-amber-400 focus:bg-white'
-              : 'border-gray-200 bg-gray-50 placeholder-gray-400 focus:border-[#03A64A] focus:bg-white'
-          }`}
-          placeholder={noAplica ? '¿Por qué no aplica en este predio? (motivo)' : 'Observaciones (opcional)...'}
-          rows={2}
-          value={observation || ''}
-          onChange={(e) => onObservationChange(e.target.value)}
-        />
+      {/* Comentario — en TODOS los indicadores, calificados o no (pedido
+          14-nov-2026: antes solo aparecía después de elegir puntaje y en
+          varios indicadores parecía que no había dónde comentar). */}
+      <textarea
+        className={`w-full p-3 border rounded-lg text-sm text-gray-800 outline-none transition-colors resize-none ${
+          noAplica && !String(observation || '').trim()
+            ? 'border-amber-300 bg-amber-50/50 placeholder-amber-700/60 focus:border-amber-400 focus:bg-white'
+            : 'border-gray-200 bg-gray-50 placeholder-gray-400 focus:border-[#03A64A] focus:bg-white'
+        }`}
+        placeholder={noAplica ? '¿Por qué no aplica en este predio? (motivo)' : 'Comentario u observaciones (opcional)...'}
+        rows={2}
+        value={observation || ''}
+        onChange={(e) => onObservationChange(e.target.value)}
+      />
+      {!resuelto && String(observation || '').trim() && (
+        <p className="text-[10px] text-gray-400 mt-1">
+          El comentario queda guardado cuando califiques el indicador o marques &quot;No aplica&quot;.
+        </p>
       )}
 
       {/* Evidencia fotográfica — también tras elegir score, como la observación.

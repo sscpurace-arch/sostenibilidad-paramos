@@ -19,6 +19,8 @@ import EvaluacionFooter from '@/components/EvaluacionFooter';
 import ValidationBanner from '@/components/ValidationBanner';
 import PanoramicaCard from '@/components/PanoramicaCard';
 import FotosFaltantesModal from '@/components/FotosFaltantesModal';
+import FirmasVisita from '@/components/FirmasVisita';
+import { totalAnimalesCarga, INDICADOR_CARGA_ANIMAL } from '@/components/IndicadorCard';
 
 // Ruta estática + parámetro por query (?id=EVAL) para funcionar sin conexión.
 function EvaluacionContent() {
@@ -42,6 +44,17 @@ function EvaluacionContent() {
   const [perfilTecnico, setPerfilTecnico] = useState(null); // { nombre, cargo } — snapshot al enviar
   const [fotosFaltantes, setFotosFaltantes] = useState([]);
   const [modalFotosAbierto, setModalFotosAbierto] = useState(false);
+  const [fechaAnterior, setFechaAnterior] = useState(null);
+  // Se tocaron puntajes de una evaluación YA enviada: el diagnóstico con IA
+  // quedó hecho con los anteriores y resultados lo advierte.
+  const [calificacionesCambiadas, setCalificacionesCambiadas] = useState(false);
+  const enviadaRef = useRef(false);
+  enviadaRef.current = evaluacion?.estado === 'enviada';
+  const marcarCambioTrasEnvio = () => { if (enviadaRef.current) setCalificacionesCambiadas(true); };
+
+  // Firmas más recientes (las de aquí y las de resultados). Ref y no solo
+  // estado: dos firmas seguidas no deben pisarse con una copia vieja.
+  const firmasRef = useRef({});
 
   const detallesRef = useRef(detalles);
   // Indicadores tocados desde el último autoguardado (no todos los 29)
@@ -155,6 +168,10 @@ function EvaluacionContent() {
         return;
       }
       setEvaluacion(eval_);
+      firmasRef.current = {
+        firma_tecnico: eval_.firma_tecnico || '',
+        firma_productor: eval_.firma_productor || '',
+      };
 
       const [prodLocal, inds, existingDets] = await Promise.all([
         db.productores.get(eval_.finca_id),
@@ -205,6 +222,7 @@ function EvaluacionContent() {
           && !(tiempo(e.fecha) >= tActual))
         .reverse().sortBy('fecha');
       if (prevEvals.length > 0) {
+        setFechaAnterior(prevEvals[0].fecha);
         setLastResults(await db.respuestas_indicadores.where('evaluacion_id').equals(prevEvals[0].id).toArray());
       }
       // Nombre y cargo del técnico: de IndexedDB si no hay señal (lib/perfil.js).
@@ -239,6 +257,7 @@ function EvaluacionContent() {
     const det = { ...detalles[indId], id: recordId, valor: score, no_aplica: false };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: score, no_aplica: false } }));
     dirtyRef.current.add(indId);
+    marcarCambioTrasEnvio();
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
   }, [detalles, validationErrors, idDeIndicador, payloadRespuesta]);
@@ -249,6 +268,7 @@ function EvaluacionContent() {
     const det = { ...detalles[indId], id: recordId, valor: null, no_aplica: noAplica, entradas: null };
     setDetalles(prev => ({ ...prev, [indId]: { ...prev[indId], id: recordId, valor: null, no_aplica: noAplica, entradas: null } }));
     dirtyRef.current.add(indId);
+    marcarCambioTrasEnvio();
     if (noAplica && validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     // Al quitar el N/A sin poner puntaje no hay nada válido que guardar: la fila
     // local queda sin valor y el guardado ocurre cuando elija un número.
@@ -291,6 +311,7 @@ function EvaluacionContent() {
       [indId]: { ...prev[indId], id: recordId, valor, observacion, entradas, no_aplica: false }
     }));
     dirtyRef.current.add(indId);
+    marcarCambioTrasEnvio();
     if (validationErrors[indId]) setValidationErrors(prev => { const n = { ...prev }; delete n[indId]; return n; });
     await saveRecord('respuestas_indicadores', payloadRespuesta(indId, det));
   }, [detalles, validationErrors, idDeIndicador, payloadRespuesta]);
@@ -332,10 +353,47 @@ function EvaluacionContent() {
     await finalizarEvaluacion();
   };
 
+  /**
+   * Firma desde el final del formulario, antes de enviar. Se guarda la fila
+   * que está en el celular con las firmas encima y SIN tocar el estado: un
+   * borrador sigue siendo borrador, una enviada sigue enviada.
+   */
+  const handleGuardarFirma = async (campo, dataUrl) => {
+    firmasRef.current = { ...firmasRef.current, [campo]: dataUrl };
+    setEvaluacion(prev => (prev ? { ...prev, [campo]: dataUrl } : prev));
+    let base = evaluacion;
+    try { base = (await db.evaluaciones.get(evalId)) || evaluacion; } catch { /* sin Dexie, la copia en memoria */ }
+    if (!(await saveRecord('evaluaciones', { ...base, ...firmasRef.current }))) {
+      window.alert('La firma no quedó guardada en el celular. Lee el aviso rojo de arriba y vuelve a firmar.');
+    }
+  };
+
+  // Firmó en resultados: la copia en memoria se pone al día, si no al editar
+  // los puntajes y volver a guardar se borraba esa firma.
+  const handleFirmaEnResultados = (campo, dataUrl) => {
+    firmasRef.current = { ...firmasRef.current, [campo]: dataUrl };
+    setEvaluacion(prev => (prev ? { ...prev, [campo]: dataUrl } : prev));
+  };
+
+  // Ajustar puntajes de una evaluación ya enviada: de resultados al formulario
+  const handleEditarEnviada = () => {
+    setShowResults(false);
+    setShowErrors(false);
+    window.scrollTo(0, 0);
+  };
+
   // Cierre real de la visita: marca enviada, avisa por Telegram y pasa a resultados.
+  // Si ya estaba enviada (se editaron puntajes), solo guarda: no vuelve a avisar.
   const finalizarEvaluacion = async () => {
+    const yaEstabaEnviada = evaluacion?.estado === 'enviada';
+    // Se parte de la fila del celular (trae las firmas más recientes) y no de
+    // la copia en memoria, que puede ser de antes de firmar.
+    let base = evaluacion;
+    try { base = (await db.evaluaciones.get(evalId)) || evaluacion; } catch { /* la copia en memoria */ }
     const enviada = {
       ...evaluacion,
+      ...base,
+      ...firmasRef.current,
       estado: 'enviada',
       // Snapshot de quién hizo la visita (ver lib/perfil.js). No se pisa si
       // ya venía de un envío anterior.
@@ -355,6 +413,11 @@ function EvaluacionContent() {
 
     const avgs = calculateAverages(detalles);
     const puntajeGlobal = formatoPromedio(promedioGlobal(avgs));
+
+    if (yaEstabaEnviada) {
+      setShowResults(true);
+      return;
+    }
 
     // Sin señal queda en cola y sale al volver la conexión (lib/notificar.js)
     notificarEnvio({
@@ -385,7 +448,10 @@ function EvaluacionContent() {
   const handleCancelar = () => {
     // Cada respuesta se guarda en el celular apenas se marca: el texto viejo
     // ("se perderán los cambios") asustaba sin razón.
-    if (window.confirm('¿Salir de la calificación?\n\nLo que ya marcaste queda guardado en el celular como borrador; puedes seguir después desde "Pendientes".')) {
+    const texto = evaluacion?.estado === 'enviada'
+      ? '¿Salir de la calificación?\n\nLos puntajes que cambiaste ya quedaron guardados en el celular y la evaluación sigue enviada.'
+      : '¿Salir de la calificación?\n\nLo que ya marcaste queda guardado en el celular como borrador; puedes seguir después desde "Pendientes".';
+    if (window.confirm(texto)) {
       router.push('/');
     }
   };
@@ -464,10 +530,20 @@ function EvaluacionContent() {
         productor={productor} indicadores={indicadores} dimensiones={dimensiones}
         detalles={detalles} lastResults={lastResults}
         currentAvgs={currentAvgs} lastAvgs={lastAvgs}
+        fechaAnterior={fechaAnterior}
+        onEditar={handleEditarEnviada}
+        onFirmaGuardada={handleFirmaEnResultados}
+        calificacionesCambiadas={calificacionesCambiadas}
         onVolver={() => router.push('/')}
       />
     );
   }
+
+  const editandoEnviada = evaluacion?.estado === 'enviada';
+  const labelProductor = evaluacion?.receptor_es_otro && evaluacion?.receptor_nombre
+    ? `${evaluacion.receptor_nombre.split(' ')[0]} (${evaluacion.receptor_parentesco || 'receptor'})`
+    : 'Productor';
+  const totalAnimales = totalAnimalesCarga(detalles[INDICADOR_CARGA_ANIMAL]?.entradas);
 
   return (
     <div className="flex flex-col gap-4 pb-36">
@@ -476,6 +552,13 @@ function EvaluacionContent() {
         totalRespondidos={totalRespondidos} totalIndicadores={totalIndicadores}
         todosCompletos={todosCompletos} autoSaveMsg={autoSaveMsg} pendingCount={pendingCount}
       />
+
+      {editandoEnviada && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-900 leading-relaxed">
+          <strong>Estás editando una evaluación ya enviada.</strong> Cada cambio se guarda al instante.
+          Al terminar toca <strong>Guardar cambios</strong> para volver a los resultados.
+        </div>
+      )}
 
       {fotos.aviso && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
@@ -509,6 +592,7 @@ function EvaluacionContent() {
                 onObservationChange={(t) => handleObservationChange(ind.id, t)}
                 showError={showErrors && !estaCalificado(detalles[ind.id])}
                 hectareasPredio={productor?.area_ganaderia_ha ?? null}
+                totalAnimales={totalAnimales}
                 fotos={fotos.porIndicador[ind.id] || []}
                 fotoUrls={fotos.urls}
                 onAgregarFoto={fotos.agregar}
@@ -524,6 +608,14 @@ function EvaluacionContent() {
         </div>
       ))}
 
+      {/* Firmas al final de los indicadores, sin tener que enviar primero */}
+      <FirmasVisita
+        firmaTecnico={evaluacion?.firma_tecnico || ''}
+        firmaProductor={evaluacion?.firma_productor || ''}
+        labelProductor={labelProductor}
+        onGuardar={handleGuardarFirma}
+      />
+
       {showErrors && (
         <ValidationBanner
           errorCount={Object.keys(validationErrors).length}
@@ -537,6 +629,7 @@ function EvaluacionContent() {
         todosCompletos={todosCompletos} totalRespondidos={totalRespondidos}
         totalIndicadores={totalIndicadores}
         fotosFaltantes={fotosFaltantes.length}
+        editandoEnviada={editandoEnviada}
       />
 
       {modalFotosAbierto && (

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 
 /**
  * CalculadoraIndicador — hace en la app las cuentas que el técnico hacía a mano.
@@ -161,8 +161,35 @@ export function tieneCalculadora(indicadorId) {
 // valoresIniciales: { [key]: string } — p. ej. las hectáreas en ganadería del
 // predio, cuando la app las conoce. Solo es el punto de partida: el técnico
 // puede corregirlas si en la visita el dato es otro.
-export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIniciales = null }) {
+//
+// Los valores iniciales son "vivos": si cambian (p. ej. el total de animales
+// del ind. 27 cuando se corrige la carga animal del 25), el campo se actualiza
+// solo mientras el técnico no lo haya escrito a mano. Lo que escriba él manda.
+// notasIniciales: { [key]: texto } — de dónde salió el valor precargado.
+export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIniciales = null, notasIniciales = null }) {
   const def = CALCULADORAS[indicadorId];
+  const editadosRef = useRef(new Set());
+  const [editados, setEditados] = useState(() => new Set());
+
+  const firmaIniciales = JSON.stringify(valoresIniciales || {});
+  useEffect(() => {
+    const iniciales = JSON.parse(firmaIniciales);
+    setValores(prev => {
+      let cambio = false;
+      const sig = { ...prev };
+      Object.entries(iniciales).forEach(([k, v]) => {
+        if (editadosRef.current.has(k) || v == null || v === '') return;
+        if (sig[k] !== String(v)) { sig[k] = String(v); cambio = true; }
+      });
+      return cambio ? sig : prev;
+    });
+  }, [firmaIniciales]);
+
+  const marcarEditado = (key) => {
+    if (editadosRef.current.has(key)) return;
+    editadosRef.current.add(key);
+    setEditados(new Set(editadosRef.current));
+  };
 
   const [valores, setValores] = useState(() => {
     const inicial = {};
@@ -228,12 +255,12 @@ export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIn
             <div key={cantidad.key} className="flex gap-2 items-end">
               <div className="flex-1">
                 <Etiqueta>{cantidad.label}</Etiqueta>
-                <Entrada campo={cantidad} valores={valores} setValores={setValores} />
+                <Entrada campo={cantidad} valores={valores} setValores={setValores} onEditar={marcarEditado} />
               </div>
               {peso && (
                 <div className="w-20 shrink-0">
                   <Etiqueta>{peso.label}</Etiqueta>
-                  <Entrada campo={peso} valores={valores} setValores={setValores} />
+                  <Entrada campo={peso} valores={valores} setValores={setValores} onEditar={marcarEditado} />
                 </div>
               )}
             </div>
@@ -246,7 +273,10 @@ export default function CalculadoraIndicador({ indicadorId, onAplicar, valoresIn
           {enRejilla.map(campo => (
             <div key={campo.key}>
               <Etiqueta>{campo.label}</Etiqueta>
-              <Entrada campo={campo} valores={valores} setValores={setValores} />
+              <Entrada campo={campo} valores={valores} setValores={setValores} onEditar={marcarEditado} />
+              {notasIniciales?.[campo.key] && !editados.has(campo.key) && (
+                <p className="text-[10px] text-green-800/70 mt-1 leading-snug">{notasIniciales[campo.key]}</p>
+              )}
             </div>
           ))}
         </div>
@@ -289,7 +319,7 @@ function Etiqueta({ children }) {
   );
 }
 
-function Entrada({ campo, valores, setValores }) {
+function Entrada({ campo, valores, setValores, onEditar }) {
   return (
     <input
       type="number"
@@ -297,7 +327,10 @@ function Entrada({ campo, valores, setValores }) {
       min="0"
       step={campo.decimal ? '0.1' : '1'}
       value={valores[campo.key]}
-      onChange={(e) => setValores(prev => ({ ...prev, [campo.key]: e.target.value }))}
+      onChange={(e) => {
+        if (onEditar) onEditar(campo.key);
+        setValores(prev => ({ ...prev, [campo.key]: e.target.value }));
+      }}
       placeholder={campo.placeholder}
       className={`w-full bg-white border rounded-lg px-2 py-2.5 text-base text-gray-800 focus:border-[#03A64A] outline-none ${
         campo.auxiliar ? 'border-gray-100 text-gray-500' : 'border-gray-200'
