@@ -372,8 +372,14 @@ npm run lint      # ESLint
 - En producción en Vercel (deploy automático desde rama `main`)
 - URL prod: https://sostenibilidad-paramos.vercel.app
 
-### Diagnóstico nov-2026 (rama `fable/diagnostico-2026-11`, sin fusionar a `main`)
+### Diagnóstico nov-2026 (rama `fable/diagnostico-2026-11`, FUSIONADA a `main` el 17-nov-2026; `generar-diagnostico` desplegada y migración 20261111 corrida ese día)
 Informe completo, preguntas abiertas y pruebas pendientes en `docs/DIAGNOSTICO-FABLE-2026-11.md`. Puntaje global único: promedio de los promedios por dimensión (`promedioGlobal`), también en pantalla de resultados y PDF; la Edge Function `generar-diagnostico` quedó editada igual pero SIN desplegar. Migración `supabase/migrations/20261111_textos_niveles_guia_v11.sql` SIN CORRER.
+
+### Ajustes de campo 17-nov-2026 (en `main`)
+- Historial del perfil: "Ver calificaciones" y "Documentos generados" por visita (`DetalleEvaluacion.jsx`, `documentosDeEvaluacion`/`abrirPdf` en `lib/reporte-sync.js`)
+- Plan de acción regenerable con IA tras enviar (todo o un indicador, con confirmación)
+- PDF del diagnóstico cierra con nombre, cargo y firmas (`bloqueFirmas` en `lib/pdf-utils.js`, compartido con el plan)
+- N/A con calificación anterior: se conserva el puntaje anterior para promedios, radar e IA (`lib/calificacion-anterior.js`, también en `generar-diagnostico`); lo guardado sigue siendo N/A y no entra al plan
 
 ### Ajustes de campo 14-nov-2026 (misma rama `fable/diagnostico-2026-11`)
 - PDF del diagnóstico incluye el radar (anterior + actual), capturado de la pantalla de resultados (`radarComoPng` en `lib/radar-imagen.js`, JPEG recortado)
