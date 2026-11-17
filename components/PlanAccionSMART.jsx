@@ -34,7 +34,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
   // Indicadores respondidos, ordenados de menor a mayor puntaje
   const ordenadosPorScore = useMemo(() => (
     [...indicadores]
-      .filter(i => detalles[i.id]?.valor)
+      // Un N/A que conserva la calificación anterior no es meta de hoy
+      .filter(i => detalles[i.id]?.valor && !detalles[i.id]?.heredado)
       .sort((a, b) => (detalles[a.id]?.valor || 0) - (detalles[b.id]?.valor || 0))
   ), [indicadores, detalles]);
 
@@ -129,10 +130,15 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
     await eliminarPlan(id);
   };
 
-  const handleSugerirIA = async () => {
+  // reemplazar: volver a generar aunque ya haya metas escritas (pedido
+  // 17-nov-2026: el técnico acordó cambios con el productor después de
+  // enviar). soloId: regenerar un indicador; sin él, todo el plan.
+  const handleSugerirIA = async ({ reemplazar = false, soloId = null } = {}) => {
     const indsPlan = seleccionados
+      .filter(id => soloId == null || id === Number(soloId))
       .map(id => indicadores.find(i => i.id === id))
       .filter(Boolean);
+    if (indsPlan.length === 0) return;
     const payload = indsPlan.map(i => ({
       id: i.id,
       nombre: i.nombre,
@@ -149,8 +155,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
     const next = { ...formRef.current };
     sugerencias.forEach(s => {
       const id = Number(s.indicador_id);
-      // Solo pre-rellenar si el técnico no ha escrito ya su propio plan
-      if (!next[id]?.especifico?.trim()) {
+      // Sin reemplazar, solo se pre-rellena lo que el técnico no ha escrito
+      if (reemplazar || !next[id]?.especifico?.trim()) {
         next[id] = {
           ...next[id],
           especifico: s.especifico || '',
@@ -172,6 +178,14 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
 
   const disponiblesParaAgregar = ordenadosPorScore.filter(i => !seleccionados.includes(i.id));
   const conMeta = seleccionados.filter(id => form[id]?.especifico?.trim()).length;
+
+  const confirmarRegenerar = (soloId = null) => {
+    if (!enLinea) { window.alert('Para volver a generar el plan con IA necesitas señal.'); return; }
+    const texto = soloId == null
+      ? '¿Volver a generar TODO el plan con IA?\n\nLas metas actuales se reemplazan por unas nuevas. Si escribiste una idea en cada indicador (lo acordado con el productor), la IA la usa.'
+      : '¿Volver a generar la meta de este indicador con IA?\n\nLa meta actual se reemplaza. Si escribiste la idea acordada con el productor, la IA la usa.';
+    if (window.confirm(texto)) handleSugerirIA({ reemplazar: true, soloId });
+  };
 
   const handleDescargarPdf = async () => {
     setDescargandoPdf(true);
@@ -217,7 +231,7 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
 
       {/* Botón Sugerir con IA */}
       <button
-        onClick={handleSugerirIA}
+        onClick={() => (conMeta > 0 ? confirmarRegenerar() : handleSugerirIA())}
         disabled={isLoadingIA || indsSeleccionados.length === 0 || !enLinea}
         className={`w-full py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-md ${
           isLoadingIA || indsSeleccionados.length === 0 || !enLinea
@@ -229,6 +243,8 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
           <><span className="animate-spin text-lg">✨</span> Generando plan...</>
         ) : !enLinea ? (
           <><span>⏳</span> Plan con IA: necesita señal</>
+        ) : conMeta > 0 ? (
+          <><span>✨</span> Volver a generar el plan con IA</>
         ) : (
           <><span>✨</span> Generar plan con IA</>
         )}
@@ -307,6 +323,18 @@ export default function PlanAccionSMART({ indicadores, detalles, evaluacionId, e
             {f.sugerida_por_ia && f.especifico && (
               <div className="bg-indigo-50 px-4 py-2 border-b border-indigo-100">
                 <p className="text-[10px] text-indigo-600 font-bold">✨ Sugerido por IA — revísalo con el productor y edita lo que haga falta</p>
+              </div>
+            )}
+
+            {tieneSmart && enLinea && (
+              <div className="px-4 pt-2">
+                <button
+                  onClick={() => confirmarRegenerar(ind.id)}
+                  disabled={isLoadingIA}
+                  className="text-xs text-indigo-600 font-bold underline disabled:opacity-50"
+                >
+                  ↻ Volver a generar esta meta con IA
+                </button>
               </div>
             )}
 

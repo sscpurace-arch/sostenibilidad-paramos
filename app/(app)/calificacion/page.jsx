@@ -1,12 +1,13 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
-import { leerParametro } from "@/lib/navegar";
+import { leerParametro, abrirPantalla } from "@/lib/navegar";
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { saveRecord } from '@/lib/sync-engine';
 import { notificarEnvio } from '@/lib/notificar';
 import useOfflineSync from '@/lib/hooks/useOfflineSync';
 import { crearSchemaEvaluacion, validarEvidenciaFotografica, estaCalificado, promedioDimension, promedioGlobal, formatoPromedio } from '@/lib/validation';
 import { leerFecha } from '@/lib/pdf-utils';
+import { conCalificacionAnterior } from '@/lib/calificacion-anterior';
 import { useFotos } from '@/lib/hooks/useFotos';
 import { createClient, getMockSession } from '@/lib/supabase';
 import { obtenerPerfilTecnico } from '@/lib/perfil';
@@ -517,8 +518,13 @@ function EvaluacionContent() {
     return results;
   };
 
+  // N/A hoy pero calificado en la visita anterior: para puntaje, radar,
+  // diagnóstico y PDF se conserva la calificación anterior (17-nov-2026).
+  // Lo guardado sigue siendo N/A; esto es solo la vista para calcular.
+  const detallesEfectivos = conCalificacionAnterior(detalles, lastResults);
+
   if (showResults) {
-    const currentAvgs = calculateAverages(detalles);
+    const currentAvgs = calculateAverages(detallesEfectivos);
     const lastAvgs = lastResults ? calculateAverages(
       lastResults.reduce((acc, d) => ({ ...acc, [d.indicador_id]: { valor: d.valor, no_aplica: d.no_aplica === true } }), {})
     ) : null;
@@ -528,13 +534,13 @@ function EvaluacionContent() {
         evaluacion={evaluacion}
         perfilTecnico={perfilTecnico}
         productor={productor} indicadores={indicadores} dimensiones={dimensiones}
-        detalles={detalles} lastResults={lastResults}
+        detalles={detallesEfectivos} lastResults={lastResults}
         currentAvgs={currentAvgs} lastAvgs={lastAvgs}
         fechaAnterior={fechaAnterior}
         onEditar={handleEditarEnviada}
         onFirmaGuardada={handleFirmaEnResultados}
         calificacionesCambiadas={calificacionesCambiadas}
-        onVolver={() => router.push('/')}
+        onVolver={() => abrirPantalla(evaluacion?.finca_id ? `/calificacion/nueva?productor=${evaluacion.finca_id}` : '/')}
       />
     );
   }
@@ -603,6 +609,11 @@ function EvaluacionContent() {
                 entradas={detalles[ind.id]?.entradas}
                 onCalculoAplicado={(r) => handleCalculoAplicado(ind.id, r)}
               />
+              {detallesEfectivos[ind.id]?.heredado && (
+                <p className="mt-1 px-3 text-[11px] leading-snug text-blue-800 bg-blue-50 border border-blue-100 rounded-lg py-1.5">
+                  No aplica hoy. Para el puntaje se conserva la calificación de la visita anterior: <strong>{detallesEfectivos[ind.id].valor}</strong>.
+                </p>
+              )}
             </div>
           ))}
         </div>

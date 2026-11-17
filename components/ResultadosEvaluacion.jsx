@@ -417,11 +417,18 @@ export default function ResultadosEvaluacion({
         className="flex-shrink-0 px-6 pt-3 bg-white border-t border-gray-100"
         style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
       >
+        {/* Nada queda cerrado (pedido 17-nov-2026): firmas, plan y
+            calificaciones se guardan al instante y la visita se vuelve a abrir
+            desde el perfil del productor → Historial → Ver resultados. */}
+        <p className="max-w-xl mx-auto text-[11px] text-gray-500 text-center mb-2 leading-snug">
+          Todo queda guardado. Puedes volver a esta visita desde el perfil del productor para firmar,
+          editar calificaciones o volver a generar el plan y el diagnóstico.
+        </p>
         <button
           onClick={onVolver}
           className="w-full max-w-xl mx-auto block bg-gray-800 text-white py-4 rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-all"
         >
-          Finalizar y Salir
+          Guardar y volver al productor
         </button>
       </div>
 

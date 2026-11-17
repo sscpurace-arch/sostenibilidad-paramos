@@ -3,6 +3,7 @@ import { useState } from 'react';
 // Único lector de fechas: '2024-06-15 12:00:00+00' (línea base) no lo
 // entiende el iPhone con new Date() y salía "Invalid Date".
 import { fechaLegible } from '@/lib/pdf-utils';
+import DetalleEvaluacion from '@/components/DetalleEvaluacion';
 
 /**
  * Lista del historial de evaluaciones con botón de eliminar de dos pasos.
@@ -13,7 +14,7 @@ import { fechaLegible } from '@/lib/pdf-utils';
  * solo se podía borrar y una evaluación enviada sin señal quedaba sin forma de
  * completarse.
  */
-export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, puedeAbrir, puedeBorrar, estadoIA = {} }) {
+export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, puedeAbrir, puedeBorrar, estadoIA = {}, respuestas = [], indicadores = [], dimensiones = [], productor = null }) {
   const [confirmandoId, setConfirmandoId] = useState(null);
 
   // Una evaluación ENVIADA y real se borra también del servidor, que no tiene
@@ -84,6 +85,14 @@ export default function HistorialEvals({ evaluaciones, onEliminar, onAbrir, pued
                   </button>
                 )}
               </div>
+
+              <DetalleEvaluacion
+                evaluacion={ev}
+                respuestas={respuestas.filter(r => r.evaluacion_id === ev.id)}
+                indicadores={indicadores}
+                dimensiones={dimensiones}
+                productor={productor}
+              />
 
               {abrible && (
                 <div className="flex flex-wrap items-center gap-2">

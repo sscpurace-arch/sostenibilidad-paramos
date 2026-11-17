@@ -13,6 +13,7 @@ import SostenibilidadPanel from '@/components/SostenibilidadPanel';
 import HistorialEvals from '@/components/HistorialEvals';
 import NuevaEvalForm from '@/components/NuevaEvalForm';
 import { usuarioActualId, estadoIAde } from '@/lib/pendientes';
+import { heredarEnHistorial } from '@/lib/calificacion-anterior';
 
 // Ruta estática + parámetro por query (?productor=ID) para que funcione sin
 // conexión: las rutas dinámicas de App Router exigen datos del servidor y se
@@ -111,9 +112,13 @@ function PerfilProductorContent() {
         // solo cuenta si no hay ninguna real.
         setUltimaEval(limitEvals.find(e => !e.es_prueba) || limitEvals[0]);
         setTodasEvals(limitEvals);
+        // Todas las visitas del productor (no solo las 4 del radar): un N/A
+        // hereda el último puntaje que tuvo ese indicador, aunque sea de una
+        // visita más vieja (17-nov-2026). Solo para mostrar; lo guardado no cambia.
         const localRespuestas = await db.respuestas_indicadores
-          .where('evaluacion_id').anyOf(limitEvals.map(e => e.id)).toArray();
-        setRadarData(localRespuestas);
+          .where('evaluacion_id').anyOf(localEvals.map(e => e.id)).toArray();
+        const mostradas = new Set(limitEvals.map(e => e.id));
+        setRadarData(heredarEnHistorial(localEvals, localRespuestas).filter(r => mostradas.has(r.evaluacion_id)));
       } else {
         setUltimaEval(null);
         setTodasEvals([]);
@@ -307,6 +312,10 @@ function PerfilProductorContent() {
               || (typeof window !== 'undefined' && !!localStorage.getItem('mock-user-session'))
               || (!!miId && ev.tecnico_id === miId)}
             onAbrir={(ev) => abrirPantalla(`/calificacion?id=${ev.id}&resultados=1`)}
+            respuestas={radarData || []}
+            indicadores={indicadores}
+            dimensiones={dimensiones}
+            productor={productor}
           />
         </section>
       )}

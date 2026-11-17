@@ -196,14 +196,20 @@ Deno.serve(async (req) => {
     const respuestasConNombre = (respuestas || []).map((r: any) => {
       const ind = (indicadores || []).find((i) => i.id === r.indicador_id);
       const prev = respuestasPrevias.find((p) => p.indicador_id === r.indicador_id);
-      const noAplica = r.no_aplica === true;
+      const valorAnterior = prev && prev.no_aplica !== true && typeof prev.valor === "number" ? prev.valor : null;
+      // N/A hoy pero calificado en la visita anterior (17-nov-2026): se
+      // conserva la calificación anterior, igual que en la app
+      // (lib/calificacion-anterior.js). No queda vacío ni en 1.
+      const heredado = r.no_aplica === true && valorAnterior !== null;
+      const noAplica = r.no_aplica === true && !heredado;
       return {
         nombre: ind?.nombre || "Indicador",
         dimension: ind?.dimension || "Sin dimensión",
         descripcion: ind?.descripcion || "",
-        valor: typeof r.valor === "number" ? r.valor : null,
+        valor: heredado ? valorAnterior : (typeof r.valor === "number" ? r.valor : null),
         noAplica,
-        valorAnterior: prev && typeof prev.valor === "number" ? prev.valor : null,
+        heredado,
+        valorAnterior,
         observacion: r.observacion || null,
       };
     });
@@ -272,7 +278,8 @@ INDICADORES EVALUADOS (escala 1 a 5). Interpreta los puntajes así: 1-2 = situac
 ${respuestasCalificadas
   .map((r) => {
     const obs = r.observacion ? ` [Nota del técnico: "${r.observacion}"]` : "";
-    return `- [${r.dimension}] ${r.nombre}: ${r.valor}/5${obs}`;
+    const her = r.heredado ? " [Hoy no aplica; se conserva la calificación de la visita anterior. No lo presentes como cambio ni como meta nueva]" : "";
+    return `- [${r.dimension}] ${r.nombre}: ${r.valor}/5${her}${obs}`;
   })
   .join("\n")}
 ${respuestasNoAplica.length > 0 ? `
