@@ -43,6 +43,8 @@ app/
     calificacion/nueva/page.jsx ← Perfil del productor + arranque de evaluación (query ?productor=)
     calificacion/page.jsx ← Formulario de evaluación, 29 indicadores (query ?id=)
     diagnostico/page.jsx ← Pantalla de mantenimiento: prueba cada cambio atascado contra el servidor, fuerza actualización de versión (borra SW/caché, conserva IndexedDB). Enlazada desde el pie del inicio
+    mis-calificaciones/page.jsx ← Panel del técnico: SUS evaluaciones por vereda/municipio, con totales y promedios. Con señal usa la RPC `panel_calificaciones`; sin señal, IndexedDB
+    admin/page.jsx       ← Panel admin: pestaña "Calificaciones" (todas, por técnico/vereda/municipio, filtros, CSV) + pestaña "Usuarios" (roles y aprobación)
     base-datos/page.jsx  ← Tabla de productores (solo lectura; NO hay exportación XLSX en la app, `xlsx` se usa solo en scripts/)
   (auth)/
     login/page.jsx       ← Login con Supabase Auth
@@ -56,6 +58,7 @@ lib/
   sync-engine.js         ← Motor offline-first: saveRecord, deleteRecord, syncQueue, initSyncEngine, retryFailed
   foto-sync.js           ← Canal SEPARADO para fotos de evidencia (Storage), no toca sync-engine.js
   reporte-sync.js        ← Canal SEPARADO para los PDF generados (bucket `reportes`), calcado de foto-sync
+  panel-calificaciones.js ← Carga (servidor/celular), filtros, agrupación y CSV de los paneles de calificaciones. Promedio de una evaluación = promedio de promedios por dimensión (igual que `lib/validation.js` y la RPC); borradores y N/A no entran
   perfil.js              ← Nombre y cargo del técnico, con caché en IndexedDB (perfil_tecnico) para verlos sin señal
   foto-utils.js          ← Compresión de imágenes (canvas → JPEG ~200KB) y geolocalización
   data-prefetch.js       ← prepararOffline(), calentarPantallas() (precachea pantallas a mano)
@@ -84,6 +87,7 @@ components/
   PanoramicaCard.jsx     ← Foto panorámica del predio, al inicio del formulario
   EvaluacionHeader.jsx   ← Header sticky con progreso de evaluación
   EvaluacionFooter.jsx   ← Footer fijo con guardar/finalizar
+  PanelCalificaciones.jsx ← Panel compartido admin/técnico (KPIs, filtros, agrupar por técnico/vereda/municipio, cobertura). Quién ve qué lo decide la RPC en la base, no este componente
   ResultadosEvaluacion.jsx ← Pantalla post-evaluación con diagnóstico IA (Gemini) y firma
   PlanAccionSMART.jsx    ← Plan de acción con IA, 5 indicadores priorizados
   FirmaModal.jsx         ← Captura de firma en canvas (técnico + productor). `valores` va por ref: NUNCA volver a ponerlo como dependencia del efecto (un re-render del padre borraba el trazo y repintaba la firma vieja)
@@ -164,7 +168,8 @@ Usuario → componente
 
 **RLS:** todas las tablas de trabajo filtran por `tecnico_id = auth.uid()` (directo o vía `evaluacion_id`), **más `OR public.es_admin()`** — función SECURITY DEFINER que valida `rol='admin' AND activo` en `usuarios` sin recursar sobre sus propias policies. El admin (hoy solo Santiago) puede leer/escribir cualquier registro; un técnico normal sigue sin poder tocar lo ajeno. La UI para que el admin busque y edite registros de otros técnicos **todavía no existe** — el permiso de base de datos sí.
 **Excepción de solo LECTURA (19-oct-2026, `supabase/migrations/20261019_tecnicos_leen_linea_base.sql`):** cualquier usuario activo (`es_usuario_activo()`) puede LEER las evaluaciones `enviada` y `es_prueba` falso, y sus respuestas, de todos los productores. Sin esto los técnicos no veían la línea base (las 270 evaluaciones de 2024-2025 están a nombre del admin) y todo productor salía "sin evaluaciones previas". Escribir y borrar sigue siendo solo del dueño o del admin. **Borrar en Supabase es irreversible** (plan free, sin respaldos): nunca borrar filas por suposición.
-**Pantallas offline (rediseño nov-2026, ver sección 9):** las guarda el propio service worker al instalarse, con la misma versión que su código. Causa del fallo de campo del 19-oct ("Cargando perfil…" sin señal): pantallas y código se guardaban en pasos separados y con señal débil quedaba el HTML de una versión con el JS de otra. `/diagnostico` muestra "N de 9 guardadas", si el código está completo y si la copia es de la versión abierta.
+**Panel de calificaciones (19-nov-2026, `supabase/migrations/20261119_panel_calificaciones.sql`, APLICADA en Supabase el 19-nov-2026 y verificada como admin y como técnico):** RPC `panel_calificaciones()` SECURITY DEFINER, solo lectura. Admin recibe todas las evaluaciones reales (enviadas y borradores); cualquier otro usuario activo, solo las suyas; nunca `es_prueba`. Va por RPC y no por consultas desde el navegador por el tope de 1.000 filas. Las 270 evaluaciones de línea base (2024-2025) están a nombre del admin: en "por técnico" salen bajo su nombre; el filtro de año las separa.
+**Pantallas offline (rediseño nov-2026, ver sección 9):** las guarda el propio service worker al instalarse, con la misma versión que su código. Causa del fallo de campo del 19-oct ("Cargando perfil…" sin señal): pantallas y código se guardaban en pasos separados y con señal débil quedaba el HTML de una versión con el JS de otra. `/diagnostico` muestra "N de 10 guardadas", si el código está completo y si la copia es de la versión abierta.
 
 ### Dimensiones (constante, no tabla)
 ```js

@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { createClient, getMockSession } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { cargarDelServidor } from '@/lib/panel-calificaciones';
+import PanelCalificaciones from '@/components/PanelCalificaciones';
 const ADMIN_EMAIL = 'sscpurace@gmail.com';
 
 const ROLES = ['tecnico', 'admin', 'supervisor', 'visitante'];
@@ -37,6 +39,9 @@ export default function AdminPage() {
   const [loading, setLoading]     = useState(true);
   const [error, setError]         = useState(null);
   const [guardandoId, setGuardandoId] = useState(null);
+  const [pestana, setPestana]     = useState('calificaciones');
+  const [panel, setPanel]         = useState(null);       // datos de panel_calificaciones
+  const [panelError, setPanelError] = useState(null);
   const supabase = createClient();
   const router   = useRouter();
 
@@ -76,6 +81,21 @@ export default function AdminPage() {
         esAdmin = ud?.rol === 'admin';
       }
       if (!esAdmin) { router.replace('/'); return; }
+
+      // 2b. Panel de calificaciones: lo calcula la base (función
+      // panel_calificaciones). No bloquea la lista de usuarios si tarda o falla.
+      cargarDelServidor(supabase)
+        .then(setPanel)
+        .catch((e) => {
+          const sinFuncion = e?.code === 'PGRST202' || /panel_calificaciones/.test(e?.message || '');
+          setPanelError(
+            !navigator.onLine
+              ? 'El panel de calificaciones necesita conexión a internet.'
+              : sinFuncion
+                ? 'Falta aplicar la migración 20261119_panel_calificaciones.sql en Supabase.'
+                : 'No se pudieron cargar las calificaciones. Intenta de nuevo en un momento.'
+          );
+        });
 
       // 3. Traer todos los usuarios
       const { data: usersData, error: usersErr } = await supabase
@@ -146,7 +166,41 @@ export default function AdminPage() {
             <StatCard value={globalStats.pruebas} label="Pruebas" color="text-acento-amarillo" />
           </div>
 
+          {/* ═══ Pestañas ═══ */}
+          <div role="tablist" className="flex gap-1 p-1 rounded-2xl bg-white/5 border border-white/10">
+            {[['calificaciones', 'Calificaciones'], ['usuarios', 'Usuarios']].map(([id, etiqueta]) => (
+              <button
+                key={id}
+                role="tab"
+                aria-selected={pestana === id}
+                onClick={() => setPestana(id)}
+                className={`flex-1 min-h-[40px] rounded-xl text-xs font-black uppercase tracking-wider transition-colors ${
+                  pestana === id ? 'bg-pnn-verde/25 text-pnn-verde' : 'text-white/50 hover:text-white/80'
+                }`}
+              >
+                {etiqueta}
+              </button>
+            ))}
+          </div>
+
+          {/* ═══ Calificaciones: por técnico, vereda y municipio ═══ */}
+          {pestana === 'calificaciones' && (
+            panelError ? (
+              <div className="card-glass p-4 border border-amber-500/30 bg-amber-950/20">
+                <p className="text-amber-300 text-sm font-semibold">{panelError}</p>
+              </div>
+            ) : !panel ? (
+              <div className="card-glass p-8 text-center">
+                <div className="w-8 h-8 border-2 border-pnn-verde border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-white/50 text-sm">Cargando calificaciones…</p>
+              </div>
+            ) : (
+              <PanelCalificaciones datos={panel} esAdmin />
+            )
+          )}
+
           {/* ═══ Lista de usuarios ═══ */}
+          {pestana === 'usuarios' && (
           <section className="flex flex-col gap-3 animate-entry animate-entry-d1">
             <h2 className="text-xs font-black text-white/40 uppercase tracking-widest px-1">
               Usuarios registrados — {globalStats.users}
@@ -233,6 +287,7 @@ export default function AdminPage() {
               </div>
             )}
           </section>
+          )}
         </>
       )}
     </div>

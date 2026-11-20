@@ -7,6 +7,7 @@ import { subscribe } from '@/lib/sync-engine';
 import { obtenerPerfilTecnico } from '@/lib/perfil';
 import { getMockSession } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import PrepararOffline from '@/components/PrepararOffline';
 
 export default function Dashboard() {
@@ -117,6 +118,25 @@ export default function Dashboard() {
         </div>
       </div>
 
+
+      {/* ═══ Acceso a las calificaciones propias ═══ */}
+      <Link
+        href="/mis-calificaciones"
+        className="card-glass p-4 flex items-center gap-3 animate-entry animate-entry-d1 hover:bg-white/10 transition-colors"
+      >
+        <div className="shrink-0 w-10 h-10 rounded-xl bg-pnn-verde/15 border border-pnn-verde/30 flex items-center justify-center text-pnn-verde">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-black text-white leading-tight">Mis calificaciones</p>
+          <p className="text-[11px] text-white/50 font-medium">Lo que has evaluado, por vereda y municipio</p>
+        </div>
+        <span className="text-white/40 text-lg" aria-hidden="true">›</span>
+      </Link>
 
       {/* ═══ Preparar / estado offline ═══ */}
       <PrepararOffline />
