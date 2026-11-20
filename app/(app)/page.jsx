@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/db-offline';
-import { borradoresVisibles, sembrarEjemplosAdmin } from '@/lib/ejemplos';
+import { borradoresVisibles, sembrarEjemplosAdmin, limpiarPruebas } from '@/lib/ejemplos';
 import { createClient } from '@/lib/supabase';
 import { subscribe } from '@/lib/sync-engine';
 import { obtenerPerfilTecnico } from '@/lib/perfil';
@@ -26,6 +26,8 @@ export default function Dashboard() {
         if (perfil) setUser(perfil);
         // El administrador siempre tiene sus borradores de ejemplo a mano (lib/ejemplos.js)
         await sembrarEjemplosAdmin(perfil);
+        // Sin pruebas en el celular de quien trabaja con datos reales (20-nov-2026)
+        await limpiarPruebas();
       } catch { /* sin sesión: el saludo no sale */ }
 
       const [total, borradores, completadas] = await Promise.all([
