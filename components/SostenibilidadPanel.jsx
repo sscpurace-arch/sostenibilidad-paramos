@@ -1,5 +1,5 @@
 ﻿'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RadarChart from '@/components/RadarChart';
 import { fechaLegible } from '@/lib/pdf-utils';
 
@@ -47,6 +47,12 @@ export default function SostenibilidadPanel({
 }) {
   const radarRef = useRef(null);
   const [exportando, setExportando] = useState(false);
+  // En el computador el botón descarga la imagen; en el celular la comparte o
+  // la guarda en la galería. Se decide después de montar (el servidor no sabe).
+  const [enComputador, setEnComputador] = useState(false);
+  useEffect(() => {
+    import('@/lib/radar-imagen').then(m => setEnComputador(m.esEquipoConRaton())).catch(() => {});
+  }, []);
 
   const exportarImagen = async () => {
     setExportando(true);
@@ -113,7 +119,11 @@ export default function SostenibilidadPanel({
             disabled={exportando}
             className="min-h-[48px] w-full rounded-xl border-2 border-pnn-verde/30 text-pnn-verde-oscuro font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-60"
           >
-            {exportando ? 'Creando imagen…' : '🖼 Guardar o compartir el radar como imagen'}
+            {exportando
+              ? 'Creando imagen…'
+              : enComputador
+                ? '🖼 Descargar el radar como imagen'
+                : '🖼 Guardar o compartir el radar como imagen'}
           </button>
 
           <div className="grid grid-cols-4 gap-2">
