@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { abrirPantalla, leerParametro } from "@/lib/navegar";
 import { db, DIMENSION_COLORS } from '@/lib/db-offline';
 import { createClient } from '@/lib/supabase';
@@ -13,7 +13,10 @@ import SostenibilidadPanel from '@/components/SostenibilidadPanel';
 import HistorialEvals from '@/components/HistorialEvals';
 import NuevaEvalForm from '@/components/NuevaEvalForm';
 import { usuarioActualId, estadoIAde } from '@/lib/pendientes';
+import { esEjemplo } from '@/lib/ejemplos';
+import { traerMisBorradores, contarRespuestas, agruparPorProductor } from '@/lib/borradores';
 import { heredarEnHistorial } from '@/lib/calificacion-anterior';
+import { fechaLegible } from '@/lib/pdf-utils';
 
 // Ruta estática + parámetro por query (?productor=ID) para que funcione sin
 // conexión: las rutas dinámicas de App Router exigen datos del servidor y se
@@ -25,6 +28,8 @@ function PerfilProductorContent() {
   const [productor, setProductor] = useState(null);
   const [ultimaEval, setUltimaEval] = useState(null);
   const [todasEvals, setTodasEvals] = useState([]);
+  const [borradores, setBorradores] = useState([]); // propios sin enviar, el más avanzado primero
+  const iniciandoRef = useRef(false);               // evita crear dos evaluaciones con dos toques
   const [radarData, setRadarData] = useState(null);
   const [indicadores, setIndicadores] = useState([]);
   const [dimensiones, setDimensiones] = useState([]);
@@ -102,6 +107,22 @@ function PerfilProductorContent() {
     // leer: antes la lista del servidor reemplazaba la local y una visita
     // enviada sin señal, aún sin subir, desaparecía del historial.
     const cargarLocal = async () => {
+      // Borradores propios de este productor (empezados y sin enviar), el más
+      // avanzado primero. Antes el perfil solo mostraba las enviadas y un
+      // borrador adelantado "no existía" aquí (19-nov-2026).
+      try {
+        const uid = await usuarioActualId();
+        const propios = (await db.evaluaciones
+          .where('finca_id').equals(productorId)
+          .and(e => e.estado === 'borrador' && !esEjemplo(e)
+            && (!uid || !e.tecnico_id || e.tecnico_id === uid))
+          .toArray());
+        const cuentas = await contarRespuestas(propios.map(e => e.id));
+        setBorradores(agruparPorProductor(
+          propios.map(e => ({ ...e, respondidos: cuentas.get(e.id) || 0 }))
+        ).flatMap(g => [g.principal, ...g.otros]));
+      } catch (e) { console.error('Error leyendo los borradores del productor:', e); }
+
       const localEvals = await db.evaluaciones
         .where('finca_id').equals(productorId)
         .and(e => e.estado === 'enviada').reverse().sortBy('fecha');
@@ -136,6 +157,12 @@ function PerfilProductorContent() {
 
     // 2. SINCRONIZAR CON SUPABASE EN SEGUNDO PLANO (Si hay conexión)
     if (navigator.onLine) {
+      // Borradores propios de este productor que estén en el servidor y no en
+      // este equipo (p. ej. empezados en el celular y revisados en el computador).
+      try {
+        if (await traerMisBorradores(await usuarioActualId(), productorId)) await cargarLocal();
+      } catch (e) { console.error('Error trayendo los borradores del servidor:', e); }
+
       try {
         const { data: evals } = await supabase
           .from('evaluaciones').select('*')
@@ -181,13 +208,28 @@ function PerfilProductorContent() {
   }, [cargarDatos]);
 
   const handleIniciar = async () => {
+    if (iniciandoRef.current) return; // ya se está creando: un segundo toque no crea otra
+    iniciandoRef.current = true;
     const isMock = typeof window !== 'undefined' && !!localStorage.getItem('mock-user-session');
+
+    // Si ya hay una evaluación en borrador de este productor (del mismo tipo:
+    // real o de prueba), se CONTINÚA esa en vez de crear otra. Con mala señal
+    // el técnico volvía y la iniciaba de nuevo: quedaban 2 y 3 borradores
+    // repetidos del mismo productor.
+    const quierePrueba = isMock || esPrueba;
+    const existente = borradores.find(b => !!b.es_prueba === quierePrueba);
+    if (existente) {
+      abrirPantalla(`/calificacion?id=${existente.id}`);
+      return;
+    }
+
     let userId = 'e81ba52c-23df-4f4e-808d-937fd606426c';
     if (!isMock) {
       const { data: { user } } = await supabase.auth.getUser();
       // Sin sesión el botón no hacía absolutamente nada y el técnico se quedaba
       // tocándolo sin entender. Mejor decirlo.
       if (!user) {
+        iniciandoRef.current = false;
         alert('No se pudo confirmar tu sesión. Cierra y vuelve a abrir la app, o entra de nuevo con tu correo.');
         return;
       }
@@ -205,6 +247,7 @@ function PerfilProductorContent() {
     // Si no quedó en el celular, abrir el formulario daría "no se encontró la
     // evaluación" y el técnico no sabría por qué.
     if (!(await saveRecord('evaluaciones', newEval))) {
+      iniciandoRef.current = false;
       alert('No se pudo crear la calificación en el celular. Lee el aviso rojo de arriba y vuelve a intentarlo.');
       return;
     }
@@ -317,6 +360,45 @@ function PerfilProductorContent() {
             dimensiones={dimensiones}
             productor={productor}
           />
+        </section>
+      )}
+
+      {borradores.length > 0 && (
+        <section className="bg-white p-6 rounded-2xl shadow-sm border border-amber-200">
+          <h3 className="font-bold text-gray-700 mb-1">Evaluación en curso</h3>
+          <p className="text-[11px] text-gray-500 leading-snug mb-4">
+            Ya empezaste una evaluación de este productor y no se ha enviado. Continúala en vez de iniciar otra:
+            al tocar «Iniciar Calificación» abajo también se abre esta.
+          </p>
+          <div className="flex flex-col gap-3">
+            {borradores.map((b, i) => (
+              <div key={b.id} className="bg-amber-50/60 border border-amber-100 rounded-xl p-3">
+                <div className="flex justify-between items-center gap-2">
+                  <p className="text-xs font-bold text-gray-700">
+                    {i === 0 ? 'Más avanzada' : 'Borrador repetido'}{b.es_prueba ? ' · de prueba' : ''}
+                  </p>
+                  <span className="text-[10px] text-gray-500 font-semibold">
+                    {fechaLegible(b.fecha, { mes: 'short' })}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 mt-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#03A64A] rounded-full"
+                      style={{ width: `${Math.min(100, (b.respondidos / (indicadores.length || 29)) * 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-bold text-gray-500">{b.respondidos} / {indicadores.length || 29}</span>
+                </div>
+                <button
+                  onClick={() => abrirPantalla(`/calificacion?id=${b.id}`)}
+                  className="w-full mt-3 bg-[#03A64A] text-white py-3 rounded-xl font-bold text-sm active:scale-95 transition-all"
+                >
+                  Continuar evaluación →
+                </button>
+              </div>
+            ))}
+          </div>
         </section>
       )}
 

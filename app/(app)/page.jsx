@@ -34,7 +34,7 @@ export default function Dashboard() {
         db.evaluaciones.where('estado').equals('enviada').count(),
       ]);
 
-      setStats({ total, pendientes: borradores.length, completadas });
+      setStats({ total, pendientes: new Set(borradores.map(b => b.finca_id)).size, completadas });
     }
 
     cargarDatos();

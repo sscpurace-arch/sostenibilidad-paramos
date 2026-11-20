@@ -5,6 +5,7 @@ import { db } from '@/lib/db-offline';
 import { fechaLegible } from '@/lib/pdf-utils';
 import { usuarioActualId, pendientesDeIA } from '@/lib/pendientes';
 import { borradoresVisibles } from '@/lib/ejemplos';
+import { traerMisBorradores, contarRespuestas, agruparPorProductor } from '@/lib/borradores';
 import { useEnLinea } from '@/lib/hooks/useEnLinea';
 import { useRouter } from 'next/navigation';
 
@@ -17,26 +18,33 @@ export default function EnProcesoPage() {
   const enLinea = useEnLinea();
 
   useEffect(() => {
-    cargarPendientes();
+    (async () => {
+      await cargarPendientes();
+      // Con señal, se traen también los borradores propios que estén en el
+      // servidor y no en este equipo (empezados en otro celular o computador).
+      const uid = await usuarioActualId();
+      if (await traerMisBorradores(uid)) await cargarPendientes(false);
+    })();
   }, []);
 
-  async function cargarPendientes() {
-    setLoading(true);
+  async function cargarPendientes(conCargador = true) {
+    if (conCargador) setLoading(true);
     const indCount = await db.indicadores.count();
     const totalInd = indCount > 0 ? indCount : 29;
     setTotalIndicadores(totalInd);
 
     // Los borradores de ejemplo están apagados (lib/ejemplos.js)
-    const evals = (await borradoresVisibles())
-      .sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
+    const evals = await borradoresVisibles();
+    const cuentas = await contarRespuestas(evals.map(e => e.id));
+    const conAvance = await Promise.all(evals.map(async (e) => ({
+      ...e,
+      productor: await db.productores.get(e.finca_id),
+      respondidos: cuentas.get(e.id) || 0,
+    })));
 
-    const results = await Promise.all(evals.map(async (e) => {
-      const prod = await db.productores.get(e.finca_id);
-      const detCount = await db.respuestas_indicadores.where('evaluacion_id').equals(e.id).count();
-      return { ...e, productor: prod, respondidos: detCount };
-    }));
-
-    setItems(results);
+    // Un productor = una tarjeta (el borrador más avanzado). Los demás
+    // borradores del mismo productor no se borran: quedan como alternos.
+    setItems(agruparPorProductor(conAvance));
     await cargarSinDiagnostico();
     setLoading(false);
   }
@@ -64,7 +72,7 @@ export default function EnProcesoPage() {
         {loading ? (
           <div className="text-center py-10 text-white/40">Cargando pendientes...</div>
         ) : items.length > 0 ? (
-          items.map(item => (
+          items.map(({ finca_id, principal: item, otros }) => (
             <div key={item.id} className="card-solid">
               <div className="flex justify-between items-start mb-2">
                 <div>
@@ -92,6 +100,32 @@ export default function EnProcesoPage() {
               >
                 Continuar Evaluación →
               </button>
+              <button
+                onClick={() => abrirPantalla(`/calificacion/nueva?productor=${encodeURIComponent(finca_id)}`)}
+                className="w-full mt-2 text-xs font-bold text-gray-500 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                Ver perfil del productor
+              </button>
+
+              {otros.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-gray-100">
+                  <p className="text-[11px] text-gray-500 leading-snug">
+                    Este productor tiene {otros.length === 1 ? 'otro borrador' : `${otros.length} borradores más`} con menos avance
+                    (repetidos al iniciar la calificación más de una vez). No se borró ninguno.
+                  </p>
+                  <div className="flex flex-col gap-1.5 mt-2">
+                    {otros.map(o => (
+                      <button
+                        key={o.id}
+                        onClick={() => abrirPantalla(`/calificacion?id=${o.id}`)}
+                        className="text-left text-[11px] font-bold text-pnn-azul bg-pnn-azul/5 hover:bg-pnn-azul/10 rounded-lg px-3 py-2 transition-colors"
+                      >
+                        Abrir borrador alterno · {o.respondidos} / {totalIndicadores} · {fechaLegible(o.fecha, { mes: 'short' })}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ))
         ) : (

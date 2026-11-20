@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import { DIMENSION_COLORS } from '@/lib/db-offline';
 import { fechaLegible } from '@/lib/pdf-utils';
+import { abrirPantalla } from '@/lib/navegar';
 import {
   DIMENSIONES, ORDENES, agrupar, anioDe, aCsv, filtrar, resumir,
 } from '@/lib/panel-calificaciones';
@@ -99,18 +100,37 @@ function Dimensiones({ valores }) {
 }
 
 function FilaEvaluacion({ ev, mostrarTecnico, onAbrir, puedeAbrir }) {
+  // Tocar al productor abre su PERFIL (historial, borradores, nueva evaluación).
+  // Si además esta evaluación se puede abrir directo en este equipo, hay un
+  // botón aparte a la derecha (no se anidan botones).
   const abrible = !!(onAbrir && puedeAbrir && puedeAbrir(ev));
-  const contenido = (
+  const tienePerfil = !!ev.productor_id;
+  const info = (
     <>
-      <div className="min-w-0 flex-1 text-left">
-        <p className="text-sm font-bold text-white truncate">{ev.productor || 'Productor sin nombre'}</p>
-        <p className="text-[10px] text-white/45 truncate">
-          {[ev.vereda, ev.municipio].filter(Boolean).join(' · ') || 'Sin vereda'} · {fechaLegible(ev.fecha, { mes: 'short' })}
-        </p>
-        {mostrarTecnico && (
-          <p className="text-[10px] text-white/35 truncate">Técnico: {ev.tecnico || 'sin registrar'}</p>
-        )}
-      </div>
+      <p className="text-sm font-bold text-white truncate">{ev.productor || 'Productor sin nombre'}</p>
+      <p className="text-[10px] text-white/45 truncate">
+        {[ev.vereda, ev.municipio].filter(Boolean).join(' · ') || 'Sin vereda'} · {fechaLegible(ev.fecha, { mes: 'short' })}
+      </p>
+      {mostrarTecnico && (
+        <p className="text-[10px] text-white/35 truncate">Técnico: {ev.tecnico || 'sin registrar'}</p>
+      )}
+      {tienePerfil && <p className="text-[10px] text-pnn-azul-claro/80 font-semibold">Ver perfil ›</p>}
+    </>
+  );
+  const clases = 'flex items-center gap-3 bg-white/5 rounded-xl px-3 py-2.5 w-full';
+  return (
+    <div className={clases}>
+      {tienePerfil ? (
+        <button
+          type="button"
+          onClick={() => abrirPantalla(`/calificacion/nueva?productor=${encodeURIComponent(ev.productor_id)}`)}
+          className="min-w-0 flex-1 text-left min-h-[44px] flex flex-col justify-center hover:opacity-80 active:opacity-60 transition-opacity"
+        >
+          {info}
+        </button>
+      ) : (
+        <div className="min-w-0 flex-1 text-left">{info}</div>
+      )}
       <div className="shrink-0 text-right">
         <p className="text-lg font-black leading-none text-pnn-verde tabular-nums">
           {ev.estado === 'enviada' && typeof ev.promedio === 'number' ? ev.promedio.toFixed(1) : '—'}
@@ -121,15 +141,17 @@ function FilaEvaluacion({ ev, mostrarTecnico, onAbrir, puedeAbrir }) {
           {ev.estado === 'enviada' ? 'Enviada' : 'Borrador'}
         </span>
       </div>
-    </>
-  );
-  const clases = 'flex items-center gap-3 bg-white/5 rounded-xl px-3 py-2.5 w-full';
-  return abrible ? (
-    <button type="button" onClick={() => onAbrir(ev)} className={`${clases} hover:bg-white/10 active:bg-white/15 transition-colors`}>
-      {contenido}
-    </button>
-  ) : (
-    <div className={clases}>{contenido}</div>
+      {abrible && (
+        <button
+          type="button"
+          onClick={() => onAbrir(ev)}
+          aria-label="Abrir esta evaluación"
+          className="shrink-0 min-h-[44px] min-w-[36px] text-white/50 hover:text-white text-xl"
+        >
+          ›
+        </button>
+      )}
+    </div>
   );
 }
 
