@@ -14,7 +14,7 @@ import HistorialEvals from '@/components/HistorialEvals';
 import NuevaEvalForm from '@/components/NuevaEvalForm';
 import { usuarioActualId, estadoIAde } from '@/lib/pendientes';
 import { esEjemplo } from '@/lib/ejemplos';
-import { traerMisBorradores, contarRespuestas, agruparPorProductor } from '@/lib/borradores';
+import { traerMisBorradores, contarRespuestas, agruparPorProductor, sinBorradoresRedundantes } from '@/lib/borradores';
 import { heredarEnHistorial } from '@/lib/calificacion-anterior';
 import { fechaLegible } from '@/lib/pdf-utils';
 
@@ -117,9 +117,12 @@ function PerfilProductorContent() {
           .and(e => e.estado === 'borrador' && !esEjemplo(e)
             && (!uid || !e.tecnico_id || e.tecnico_id === uid))
           .toArray());
-        const cuentas = await contarRespuestas(propios.map(e => e.id));
+        // Sin los sobrantes: si ya hay una evaluación enviada de este año, un
+        // borrador no es "en curso" (máximo dos evaluaciones por productor).
+        const vigentes = await sinBorradoresRedundantes(propios);
+        const cuentas = await contarRespuestas(vigentes.map(e => e.id));
         setBorradores(agruparPorProductor(
-          propios.map(e => ({ ...e, respondidos: cuentas.get(e.id) || 0 }))
+          vigentes.map(e => ({ ...e, respondidos: cuentas.get(e.id) || 0 }))
         ).flatMap(g => [g.principal, ...g.otros]));
       } catch (e) { console.error('Error leyendo los borradores del productor:', e); }
 
