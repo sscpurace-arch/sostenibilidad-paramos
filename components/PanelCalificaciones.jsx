@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { DIMENSION_COLORS } from '@/lib/db-offline';
 import { fechaLegible } from '@/lib/pdf-utils';
 import { abrirPantalla } from '@/lib/navegar';
+import ResumenSeguimiento from '@/components/ResumenSeguimiento';
 import {
   DIMENSIONES, ORDENES, agrupar, anioDe, aCsv, filtrar, resumir,
 } from '@/lib/panel-calificaciones';
@@ -163,7 +164,12 @@ export default function PanelCalificaciones({ datos, esAdmin = false, onAbrir, p
 
   const [vista, setVista] = useState(esAdmin ? 'tecnico' : 'lista');
   const [estado, setEstado] = useState('todas');
-  const [anio, setAnio] = useState('');
+  // Se abre en el año más reciente: la línea base de 2024-2025 (270 evaluaciones)
+  // no debe tapar el trabajo en curso. "Todos" sigue disponible en el filtro.
+  const [anio, setAnio] = useState(() => {
+    const años = [...new Set((datos?.evaluaciones ?? []).map(f => anioDe(f.fecha)).filter(Boolean))].sort().reverse();
+    return años.length > 1 ? años[0] : '';
+  });
   const [tecnico, setTecnico] = useState('');
   const [municipio, setMunicipio] = useState('');
   const [orden, setOrden] = useState('total');
@@ -193,6 +199,13 @@ export default function PanelCalificaciones({ datos, esAdmin = false, onAbrir, p
     [todas, estado, anio, tecnico, municipio]
   );
   const total = useMemo(() => resumir(filas), [filas]);
+  // El seguimiento mira enviadas Y borradores, aunque el filtro de estado
+  // esté en "Enviadas": si no, los pendientes desaparecerían.
+  const filasSeguimiento = useMemo(
+    () => filtrar(todas, { estado: 'todas', anio, tecnico, municipio }),
+    [todas, anio, tecnico, municipio]
+  );
+  const miId = datos?.miId || null;
 
   const campo = vista === 'lista' ? null : vista;
   const grupos = useMemo(() => {
@@ -249,12 +262,22 @@ export default function PanelCalificaciones({ datos, esAdmin = false, onAbrir, p
         )}
       </div>
 
+      <ResumenSeguimiento filas={filasSeguimiento} esAdmin={esAdmin} />
+
       {/* Filtros */}
       <div className="card-glass p-3 flex flex-col gap-3">
         <div className="flex flex-wrap gap-2">
           {ESTADOS.map(e => (
             <Chip key={e.id} activo={estado === e.id} onClick={() => setEstado(e.id)}>{e.etiqueta}</Chip>
           ))}
+          {/* El administrador alterna entre el panel de todos y el suyo */}
+          {esAdmin && miId && (
+            <>
+              <span className="w-px bg-white/10 mx-1" aria-hidden="true" />
+              <Chip activo={tecnico === ''} onClick={() => setTecnico('')}>De todos</Chip>
+              <Chip activo={tecnico === miId} onClick={() => setTecnico(miId)}>Solo las mías</Chip>
+            </>
+          )}
         </div>
         <div className="flex flex-wrap gap-2">
           {anios.length > 1 && (

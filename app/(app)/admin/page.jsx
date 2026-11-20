@@ -85,7 +85,7 @@ export default function AdminPage() {
       // 2b. Panel de calificaciones: lo calcula la base (función
       // panel_calificaciones). No bloquea la lista de usuarios si tarda o falla.
       cargarDelServidor(supabase)
-        .then(setPanel)
+        .then(d => setPanel({ ...d, miId: authUser.id }))
         .catch((e) => {
           const sinFuncion = e?.code === 'PGRST202' || /panel_calificaciones/.test(e?.message || '');
           setPanelError(
